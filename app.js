@@ -35,12 +35,17 @@ $('.diagram-panel>.model-note:not(#comparison-highlight)').textContent=artworkMo
 $('#plate-number').textContent='PLATE '+String(Object.keys(specimenCatalog).indexOf(type)+1).padStart(2,'0');
 $('#cell-classification').textContent=spec.classification==='Prokaryote'?'Prokaryotes':'Eukaryotes';
 $('#specimen-context').textContent=spec.note;
+const funFact=cellFunFacts[type];
+$('#cell-fun-fact-title').textContent=funFact.title;
+$('#cell-fun-fact-text').textContent=funFact.text;
+$('#cell-fun-fact-source').href=funFact.source;
+$('#cell-fun-fact-source').setAttribute('aria-label','Read the source for the '+spec.name.toLowerCase()+' fun fact');
 $('#specimen-location').textContent=spec.where;
 $('#structure-count').textContent=String(available().length).padStart(2,'0');
 $('#organelle-list').innerHTML=available().map(s=>`<button data-select="${s.id}" class="${selected===s.id?'active':''}" aria-pressed="${selected===s.id}"><span class="organelle-swatch" style="--swatch:${structureColors[s.id]||'#a58eb4'}"></span><span>${s.name}</span><span class="row-arrow">↗</span></button>`).join('');
 const s=structures.find(s=>s.id===selected)||structures.find(s=>s.id===spec.default),index=available().findIndex(a=>a.id===selected);
 $('#detail-title').textContent=s.name;$('#detail-kicker').textContent=s.kicker;$('#description').textContent=s.description;$('#function').textContent=s.fn;$('#fact').textContent=s.fact;$('#category').textContent=s.category.toUpperCase();$('#detail-number').textContent=`${String(index+1).padStart(2,'0')} / CELL STRUCTURE`;$('#position').textContent=`${String(index+1).padStart(2,'0')} OF ${available().length}`;
-renderCloseup(s);
+renderCloseup(s);renderStructureProfile(s);
 setZoom(zoom);
 if(focusId)$(`#cell [data-id="${focusId}"]`)?.focus();
 if(focusSelect)$(`[data-select="${focusSelect}"]`)?.focus();
@@ -57,9 +62,9 @@ document.querySelectorAll('[data-art]').forEach(button=>button.onclick=()=>{artw
 $('#labels').addEventListener('change',render);
 for(const [id,delta] of [['previous',-1],['next',1]])$('#'+id).onclick=()=>{const a=available();select(a[(a.findIndex(s=>s.id===selected)+delta+a.length)%a.length].id)};
 let questions=[], attempts=0, hintsUsed=0, assisted=0, usedHelp=false;
-const explorationPanels = 'aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, #closeup, .specimen-context, .detail-nav';
+const explorationPanels = '#cell-fun-fact, aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, #closeup, #structure-profile, .specimen-context, .detail-nav';
 function stopQuiz(){
- quiz=false;$('#cell').classList.remove('quiz-mode');$('#quiz').textContent='↗ Test yourself';$('#quiz-area').hidden=true;$('#labels').disabled=false;
+ quiz=false;$('#quiz-save-status').hidden=true;$('#cell').classList.remove('quiz-mode');$('#quiz').textContent='↗ Test yourself';$('#quiz-area').hidden=true;$('#labels').disabled=false;
  document.querySelectorAll(explorationPanels).forEach(e=>e.hidden=false);
 }
 $('#quiz').onclick=()=>{
@@ -67,7 +72,7 @@ $('#quiz').onclick=()=>{
  quiz=true;question=0;score=0;assisted=0;hintsUsed=0;resetZoom();
  questions=[...available()];
  for(let i=questions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]]}
- questions=questions.slice(0,5);$('#quiz').textContent='× Exit quiz';$('#labels').disabled=true;showQuestion();
+ questions=questions.slice(0,5);$('#quiz-save-status').hidden=false;window.QuizStore?.begin(type,questions.map(q=>q.id));$('#quiz').textContent='× Exit quiz';$('#labels').disabled=true;showQuestion();
  if(matchMedia('(max-width:1050px)').matches)$('#cell-details').scrollIntoView({block:'start'});
 };
 function showQuestion(){
@@ -79,13 +84,14 @@ function showQuestion(){
  $('#quiz-area').innerHTML=`<p>Which structure ${fn.charAt(0).toLowerCase()+fn.slice(1).replace(/\.$/,'')}?</p><p>Choose below or select it in the diagram.</p><div id="quiz-options"></div><p id="feedback" role="status"></p><div class="quiz-actions"><button id="hint" class="quiz-choice">Give me a hint</button><button id="reveal" class="quiz-choice">Show answer</button></div><p id="hint-text" class="hint-text" hidden></p>`;
  $('#quiz-options').innerHTML=available().map(s=>`<button class="quiz-option" data-answer="${s.id}">${s.name}</button>`).join('');
  $('#quiz-options').onclick=e=>{if(e.target.dataset.answer)check(e.target.dataset.answer)};
- $('#hint').onclick=()=>{if(!usedHelp)hintsUsed++;usedHelp=true;$('#hint-text').hidden=false;$('#hint-text').textContent=structureHints[questions[question].id];$('#hint').disabled=true};
+ $('#hint').onclick=()=>{window.QuizStore?.record('hint',question+1);if(!usedHelp)hintsUsed++;usedHelp=true;$('#hint-text').hidden=false;$('#hint-text').textContent=structureHints[questions[question].id];$('#hint').disabled=true};
  $('#reveal').onclick=()=>{if(answered)return;usedHelp=true;finishAnswer(false,true)};
 }
 function check(id){
  if(answered)return;
  const target=questions[question],chosen=structures.find(s=>s.id===id);
- if(!chosen)return;
+ if(!chosen||!available().some(s=>s.id===id))return;
+ window.QuizStore?.record('answer',question+1,id);
  if(id!==target.id){
   attempts++;$('#feedback').textContent=`${chosen.name}: ${chosen.fn} That function differs from the one in the question. Try another structure, or use a hint.`;
   const option=$(`[data-answer="${id}"]`);if(option)option.disabled=true;
@@ -94,7 +100,7 @@ function check(id){
  finishAnswer(attempts===0&&!usedHelp,false);
 }
 function finishAnswer(independent,revealed){
- answered=true;const target=questions[question];
+ answered=true;const target=questions[question];if(revealed)window.QuizStore?.record('reveal',question+1);
  if(independent)score++;else if(!revealed)assisted++;
  $('#feedback').textContent=`${revealed?'The answer is': 'Correct!'} ${target.name}. ${target.fn} ${revealed?'Explore it, then continue.':independent?'You identified it on your first try.':'You found it with practice.'}`;
  selected=target.id;

@@ -15,3 +15,13 @@ design/*-ui-concept.png
 .env
 .env.*
 !.env.example
+
+# Private quiz records and exports
+backend/data/
+*.sqlite3
+*.sqlite3-*
+quiz-export*.csv
+__pycache__/
+
+# Admin credential hashes must never be committed.
+admin.json

@@ -1,127 +1,184 @@
-# Cellscape — Cell Atlas
+# Cellscape
 
-Explore seven cell specimens through AI-generated cutaway artwork, interactive hotspots, close-ups, and a three-panel cell atlas. Select a structure to learn about its function, or try a five-question identification quiz.
+An interactive cell-biology notebook with rotatable 3D cells, illustrated organelles, short lessons, quizzes, and a private results dashboard.
 
-## Local preview
+Explore seven specimens: **plant cell, animal cell, white blood cell, neuron, epithelial cell, bacterium, and skeletal muscle fiber**.
 
-No build step or npm install is required. For 3D, use VS Code Live Server or run the local HTTP server below. Opening `index.html` as a file supports illustrations, but browser security prevents the 3D ES modules from loading.
+## 1. What you need
+
+- **Git**, to download the project.
+- **Python 3.10 or newer**, to run the website and save quiz answers.
+- A current browser with WebGL 2 support for 3D. Illustration mode is available if 3D is unsupported.
+- VS Code is optional, but useful for editing the files and opening a terminal.
+
+**This project does not use npm.** You do not need `npm create`, `npm install`, a `package.json`, or a frontend build step. The website uses HTML, CSS, and JavaScript; the backend uses Python's standard library and SQLite. Three.js is already included in the repository. Node.js is only optional for running the 3D geometry test.
+
+## 2. Clone the repository
+
+Open a terminal in the folder where you want to keep the project:
 
 ```sh
-python3 -m http.server 5173 --bind 127.0.0.1
+git clone https://github.com/aaravcdesai-ui/CellBiologyWebsite.git
+cd CellBiologyWebsite
 ```
 
-Visit http://127.0.0.1:5173. Stop the server with Ctrl+C. If that port is already used, choose 5174 instead.
+The repository is private. You must be signed in to a GitHub account that has access. If GitHub says “Repository not found,” check your account and repository access. Do not put a password or access token in the clone URL.
 
-## Publish with GitHub Pages
+Open the downloaded `CellBiologyWebsite` folder in VS Code, then choose **Terminal → New Terminal**. Run the remaining commands from this folder—the one containing `index.html` and `backend/`.
 
-1. Create an empty GitHub repository, then open this project folder in the VS Code terminal.
-2. Initialize and push it (replace the example remote URL):
+If you already have this project open locally, skip cloning and use its existing folder.
 
-   ```sh
-   git init -b main
-   git add .
-   git commit -m "Add interactive Cellscape explorer"
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-   git push -u origin main
-   ```
+## 3. Set your admin passphrase
 
-3. In the GitHub repository, open **Settings → Pages** and select **GitHub Actions** as the source.
-4. Open **Actions → Deploy Cellscape to GitHub Pages → Run workflow**, choosing `main`. Automatic publishing is currently paused. Run this workflow manually after enabling GitHub Pages; add a `push` trigger later if you want automatic deployments.
-5. Once the workflow succeeds, use the URL shown in its deployment summary or in Settings → Pages.
+This is only needed if you want to view saved answers and scores. Students do not need an account or passphrase to take a quiz.
 
-The workflow publishes only `index.html`, `about.html`, `NOTICE.md`, all JavaScript files, `style.css`, and the `assets/` and `vendor/` directories. Relative asset links work under a repository subpath. No secrets are needed. Repository visibility and GitHub plan determine Pages availability. See [GitHub’s Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+```sh
+python3 backend/server.py --setup-admin
+```
 
-## Files
+Enter a private passphrase of **at least 14 characters**, then enter it again to confirm. Nothing appears while you type; this is normal. There is no default passphrase.
 
-- `index.html`: page layout and metadata
-- `style.css`: responsive layout, diagram labels, and controls
-- `diagram.js`: original annotated animal and plant SVG schematics
-- `cell-models.js`: editable 3D mesh builders for all seven specimens
-- `viewer3d.js`: WebGL rendering, orbit controls, mesh picking, isolation, shell controls, and 3D labels
-- `vendor/three/`: locally served Three.js 0.180.0, orbit controls, and MIT license
-- `specimens.js`: seven-specimen catalog, rendered images, hotspot maps, thumbnails, and specialized biology content
-- `assets/specimens/`: generated PNG illustrations for plant, animal, white blood cell, neuron, epithelial cell, bacterium, and muscle fiber
-- `assets/organelles/nucleus.png`: original isolated nucleus cutaway
-- `app.js`: biology content, original SVG cell artwork, exploration state, and quiz
-- `learning.js`: organelle close-ups, zoom controls, the protein journey, and comparison activity
-- `about.html`: visitor-facing credits, sources, and privacy information
-- `NOTICE.md`: asset provenance and third-party notices
-- `.github/workflows/pages.yml`: manual deployment; automatic publishing is paused
+The command saves a salted password hash in `backend/data/admin.json`. It does not save the passphrase in the website or README. Keep this file private; Git ignores it.
 
-## Learning model and sources
+You can skip this step and still use the website and save quiz attempts. Configure admin access later when you want to read the results.
 
-These are simplified schematics, not to scale, and do not show every cellular structure. Organelle presence and appearance vary among cell types. Plant mode depicts a photosynthetic cell; chloroplasts are not present in every plant tissue. Cytosol is the fluid portion of the cytoplasm, not a membrane-bound organelle. Quiz questions cover the structures available in the selected model.
+## 4. Start the website
 
-Descriptions were reviewed against [OpenStax Biology 2e, section 4.3: Eukaryotic Cells](https://openstax.org/books/biology-2e/pages/4-3-eukaryotic-cells). The nucleus fact refers to a typical diploid human cell, rather than every human cell. The reference interaction was inspired by CELLS alive!; its artwork and code are not included.
+```sh
+python3 backend/server.py
+```
 
-## Learning activities
+Keep this terminal running. When it prints `Cellscape: http://127.0.0.1:8000`, open:
 
-- **Under the lens:** every selected structure has an enlarged schematic and three numbered features. Select a feature to read its explanation. These are educational illustrations, not microscopy images.
-- **Follow a protein:** a six-stage secretory pathway with play/pause, next/previous, direct stage selection, and restart. Playback advances every 4.5 seconds. Pausing stops playback and cargo motion. Reduced-motion preferences disable animated movement; the steps remain usable.
-- **Practice with feedback:** wrong answers explain the chosen structure’s function and allow retries. Hints describe the structure; Show answer reveals it. Results distinguish independent first-try answers, answers solved with practice, and revealed answers. Hints count once per question.
-- **Compare cells:** filter shared structures or differences, with corresponding emphasis in the cell diagram. Select a comparison item to open it in the appropriate model. These distinctions apply to the teaching models and are qualified in the notes.
-- **Zoom and pan:** use +/− for 100–300% magnification, then swipe or scroll inside the diagram to pan. Reset returns to the full cell. On small screens, selecting a structure brings its details directly into view, with a Back to cell link.
+| Page | Local address |
+| --- | --- |
+| Website and quizzes | [http://127.0.0.1:8000/](http://127.0.0.1:8000/) |
+| Private results dashboard | [http://127.0.0.1:8000/admin.html](http://127.0.0.1:8000/admin.html) |
 
-The secretory pathway lesson was reviewed against [OpenStax Biology 2e, section 4.4](https://openstax.org/books/biology-2e/pages/4-4-the-endomembrane-system-and-proteins). Not every protein follows this route.
+Use your admin passphrase to sign in to the dashboard. There is no username field.
 
-## Verified behavior
+To stop the server, press **Ctrl+C** in its terminal. To start it again, run the same command. Saved quiz records survive a restart; admin login sessions do not.
 
-- All 14 animal and 15 plant selections show matching explanations and close-ups. Each close-up has three selectable features with matching markers and descriptions.
-- Both five-question quizzes were completed with wrong-answer retries, hints, reveals, and correct answers. Results correctly separate first-try, assisted, and revealed answers.
-- Comparison filters and cross-model links work; journey controls cover all six steps. Automatic playback reaches step 6 and stops at Replay; pause holds the current step.
-- Zoom is bounded to 100–300%, enlarges the SVG within its scrollable area, and does not widen the page.
-- Layouts checked at 320, 390, 768, 1280, and 1440 pixels without horizontal page overflow. Mobile selections bring the detail panel into view; the mobile journey pans to its active stage.
+**Windows:** if `python3` is not recognized, use `py -3` instead, for example `py -3 backend/server.py`.
 
-## Repository and hosting
+**Port already in use?** Stop the previous server with Ctrl+C, or choose another port:
 
-The original version and deployment workflow have been committed to https://github.com/aaravcdesai-ui/CellBiologyWebsite. The current source includes the atlas redesign, detailed specimen artwork, learning activities, and seven rotatable 3D teaching models. GitHub Pages publishing remains paused: this repository is private and the current plan requires a public repository or an upgrade for Pages. The workflow includes all scripts and the complete `assets/` directory for the next deployment.
+```sh
+python3 backend/server.py --port 8002
+```
 
-Typography uses device-local system and serif fonts; there are no external font requests. The site code has no analytics, accounts, cookies, browser storage, or quiz uploads. Quiz results remain in page memory and reset on reload. Hosting providers can still log requests; the visitor-facing notice at `about.html#privacy` explains this distinction.
+Then use `http://127.0.0.1:8002/` and `http://127.0.0.1:8002/admin.html`.
 
-## Atlas interface
+Do not open `index.html` by double-clicking it. Serve the site through the Python command so that 3D modules and the quiz API work together. VS Code Live Server and a basic static server can preview the frontend, but **they do not save quiz answers or provide admin login**.
 
-The Cell atlas, Protein journey, and Compare cells tabs keep the study tasks in separate views. The atlas has a structure rail, a large specimen, and a scrollable detail panel on desktop. Phone layouts use a horizontal structure list and place details beneath the specimen. Selecting a structure returns its detail panel to the heading.
+## 5. How to use it
 
-The specimen drawings include layered cell boundaries, chromatin and nuclear pores, rough ER with attached ribosomes, smooth ER, mitochondrial cristae, Golgi cisternae, free ribosomes, peroxisomes, vesicles, and cytoskeletal fibers. Plant mode adds the cell wall, central vacuole and chloroplast grana. Animal mode includes lysosomes and a centrosome with paired centrioles. Diagram and Illustration are project-specific teaching artwork. The separate 3D mode uses editable meshes, as described below; none of these views is a measured anatomical reconstruction.
+### Explore a cell
 
-## Recording-inspired illustration assets
+1. Choose a specimen in the left panel.
+2. Drag the 3D cell to rotate it; scroll or use +/− to zoom. Right-drag to pan. On touch screens, use one finger to rotate and two fingers to pan or pinch.
+3. Click a structure, its label, or its name in the structure list.
+4. Read its explanation, construction, location, recognition tips, and internal anatomy. A **Cell fun fact** card in the side panel shares a different sourced fact for each specimen; it updates when you switch cells and is hidden during quizzes. Expand **How it fits into the cell** for more context.
+5. Use **Focus structure** or **Inspect in 3D** for an isolated close-up. **Reset view** returns to the whole cell.
 
-The supplied 50.97-second screen recording was reviewed at nine timestamps. It showed seven primary specimen images: plant, white blood cell, neuron, epithelial, bacterial, animal, and skeletal muscle. Eight PNG assets were generated with the built-in image-generation tool: seven specimens plus one isolated nucleus. The artwork is used directly in the live atlas, specimen thumbnails, and organelle close-ups. It is not a screenshot of an interface pasted into the website.
+**Illustration** shows generated cutaway artwork. **Diagram**, available for plant and animal cells, shows an annotated SVG schematic. **Protein journey** walks through a secreted protein's route; **Compare cells** explains shared structures and differences.
 
-The Illustration view uses fixed rendered images with interactive SVG hotspots. The separate 3D view uses procedural meshes that rotate in real depth; neither is a real micrograph. Some structures are shown schematically, and the illustrations should not be interpreted as measurements. Plant and animal specimens retain a separate Diagram view. Prokaryotic questions do not include eukaryotic organelles.
+### Take a quiz
 
-Exact prompts are saved in `design/specimen-generation-prompts.json`. Reference frames in `design/recording-review/` are local review artifacts, ignored by Git and excluded from deployment. Root preview screenshots, recordings, and UI concept images are also ignored. Keep reference media out of `assets/`. The generated images remain under `assets/` so that local preview and GitHub Pages both serve them without external image services.
+Select **Test your knowledge**. Each quiz contains five questions about the selected specimen. Choose an answer from the buttons or select the structure in the cell. Incorrect answers allow another attempt; hints and answer reveals are available.
 
-Verification: all 72 structure selections across the seven specimens were checked for matching details and three study-note controls. Five-question quiz flows completed for all seven models, and an all-correct bacterial run scored 5/5. Layouts were checked at 320, 390, 768, 1280, and 1440 pixels without page overflow.
+The saving message tells you whether responses are reaching the backend. If it says **Practice only** or **Saving stopped**, do not assume the answers were stored.
 
-## Rotatable 3D view
+### Review answers and scores
 
-All seven specimens have native Three.js geometry: plant, animal, neutrophil-like white blood cell, neuron, epithelial cell, bacterium, and skeletal muscle fiber. The default mode is 3D when served over HTTP. The detailed generated images remain available in Illustration; plant and animal models also retain the Diagram view.
+Sign in at `/admin.html`. You can:
 
-Controls:
-- Drag to orbit; scroll or use +/− to zoom.
-- Right-drag to pan. On touch screens, use one finger to orbit and two fingers to pan/pinch.
-- Select a labeled structure, click a visible mesh, or choose a structure in the list.
-- Isolate structure hides other structures and frames all instances of the selected type.
-- Outer shell switches between cutaway and outer-envelope views.
-- Auto rotate starts/stops orbiting; dragging stops automatic rotation.
-- Reset view restores the initial orientation, zoom, and cutaway.
-- With the canvas focused: arrows rotate, Shift+arrows pan, +/− zoom, and Home resets.
+- Filter sessions by specimen and move through pages of results.
+- See complete, in-progress, and not-started sessions.
+- Select **View answers** to see expected answers, chosen answers, correctness, timestamps, hints, and reveals.
 
-These are simplified editable teaching models, not image-to-3D reconstructions or scan-derived anatomy. Geometry includes nuclear envelope pores and chromatin, mitochondrial cristae, chloroplast thylakoid stacks, ER, Golgi sacs, ribosomes, specialized neuronal and epithelial structures, a bacterial nucleoid and appendages, and skeletal muscle bands. No generated image is used as a spinning billboard. The GPU viewer reuses one canvas and disposes old model resources on specimen changes. Rendering pauses when the atlas is not visible.
+**Score means first-try correct answers without hints, out of five.** Answers solved after a mistake or hint count as assisted. Showing an answer counts as revealed, not correct. An unfinished quiz has a provisional score. These are anonymous practice records, not verified exam grades or named student accounts.
 
-The 3D mode requires WebGL 2. If a browser cannot create a WebGL context, use the Illustration mode. All runtime libraries are vendored locally; the site does not need a third-party CDN at runtime. Three.js is distributed under its included MIT license.
+## 6. How saving and admin login work
 
-Geometry validation can be run with Node.js:
+The browser loads the website and calls the API on the **same Python server**. Starting a quiz creates an anonymous session. Each answer, hint, or reveal is saved as an event in SQLite. The server checks the question and calculates correctness; retried requests with the same event ID are not saved twice.
+
+| Local file | Purpose |
+| --- | --- |
+| `backend/data/quiz.sqlite3` | Persistent quiz sessions and response events |
+| `backend/data/admin.json` | Admin passphrase salt and hash |
+
+Both are excluded from Git and blocked from download by the backend. Do not copy them into `assets/` or any public hosting directory.
+
+No student names or emails are requested. The quiz database does not store IP addresses or user-agent strings. Admin login uses an HttpOnly, SameSite cookie, expires after one hour, and is revoked on sign-out. Login throttling temporarily holds connection addresses in server memory. Hosting infrastructure may keep separate logs.
+
+Records default to **30-day retention**. Expired records are removed at startup, on quiz submissions, and when admin results are requested. For scheduled cleanup and private CSV exports, see [backend instructions](backend/README.md). Exports must be managed separately. The visitor-facing [privacy notice and credits](about.html) describe the current behavior.
+
+## 7. Books used for the biology information
+
+The descriptions and study notes use project-specific wording, with these OpenStax textbooks as fact-checking references:
+
+| Book | Sections used |
+| --- | --- |
+| **Biology 2e**, Mary Ann Clark, Matthew Douglas, and Jung Choi; OpenStax, Rice University | [4.2 Prokaryotic Cells](https://openstax.org/books/biology-2e/pages/4-2-prokaryotic-cells), [4.3 Eukaryotic Cells](https://openstax.org/books/biology-2e/pages/4-3-eukaryotic-cells), [4.4 The Endomembrane System and Proteins](https://openstax.org/books/biology-2e/pages/4-4-the-endomembrane-system-and-proteins), [4.5 The Cytoskeleton](https://openstax.org/books/biology-2e/pages/4-5-the-cytoskeleton) |
+| **Anatomy and Physiology 2e**, OpenStax, Rice University | [4.2 Epithelial Tissue](https://openstax.org/books/anatomy-and-physiology-2e/pages/4-2-epithelial-tissue), [10.2 Skeletal Muscle](https://openstax.org/books/anatomy-and-physiology-2e/pages/10-2-skeletal-muscle), [12.2 Nervous Tissue](https://openstax.org/books/anatomy-and-physiology-2e/pages/12-2-nervous-tissue) |
+
+These are simplified teaching models, not measured reconstructions. Colors and proportions are illustrative. Organelle presence varies by cell type: for example, not every plant cell contains chloroplasts, and a basement membrane lies outside a cell.
+
+No OpenStax textbook figures are bundled. Source material retains its own licensing requirements; citations do not grant permission to copy it or apply its license to this whole project. See the [Biology 2e licensing information](https://openstax.org/books/biology-2e/pages/preface), [credits](about.html#credits), and [provenance notice](NOTICE.md).
+
+## 8. Images and 3D models
+
+**The eight PNG illustrations were created for this project with OpenAI image generation.** They are educational artwork, not photographs, microscope images, or downloaded textbook figures.
+
+| Asset | Used for |
+| --- | --- |
+| `assets/specimens/plant.png` | Plant cell illustration and thumbnail |
+| `assets/specimens/animal.png` | Animal cell illustration and thumbnail |
+| `assets/specimens/leukocyte.png` | Neutrophil-like white blood cell |
+| `assets/specimens/neuron.png` | Myelinated neuron |
+| `assets/specimens/epithelial.png` | Absorptive columnar epithelial cell |
+| `assets/specimens/bacteria.png` | Generalized rod-shaped bacterium |
+| `assets/specimens/muscle.png` | Skeletal muscle fiber |
+| `assets/organelles/nucleus.png` | Nucleus close-up |
+
+Other illustration close-ups crop the relevant specimen image. Exact generation prompts are recorded in [design/specimen-generation-prompts.json](design/specimen-generation-prompts.json). AI generation does not guarantee exclusive copyright or freedom from third-party claims.
+
+The **rotatable 3D cells are procedural meshes** built in `cell-models.js` and displayed by Three.js; they are not spinning flat images or downloaded third-party cell meshes. SVG diagrams and close-up schematics are drawn by project code. Artwork, code, and explanations were developed with AI assistance.
+
+CELLS alive! and a cell-explorer demo by Dilum Sanjaya supplied interaction and visual inspiration. Their screenshots, diagrams, recording frames, branding, and source code are not distributed with the website. Local reference media and review screenshots are ignored by Git. No affiliation or endorsement is implied.
+
+Three.js 0.180.0 and OrbitControls are included under their [MIT license](vendor/three/LICENSE); preserve that notice when redistributing them. Fonts come from the visitor's device, with no external font requests.
+
+## 9. Main project files
+
+| File or folder | What it does |
+| --- | --- |
+| `index.html`, `style.css` | Main website structure and appearance |
+| `specimens.js`, `app.js` | Specimens, biology descriptions, selection, and quiz flow |
+| `learning.js`, `diagram.js` | Study notes, close-ups, lessons, comparisons, and diagrams |
+| `cell-models.js`, `viewer3d.js` | 3D geometry, camera, selection, and labels |
+| `quiz-store.js` | Sends quiz responses to the backend and displays saving status |
+| `admin.html`, `admin.css`, `admin.js` | Admin login and results dashboard interface |
+| `backend/server.py`, `backend/admin.py` | Website/API server, storage, admin authentication, and score summaries |
+| `backend/quiz-bank.json` | Server-side question/answer catalog; keep it in sync with quiz content |
+| `assets/`, `vendor/three/` | Generated illustrations and local 3D library |
+| `about.html`, `NOTICE.md` | Credits, provenance, and privacy information |
+
+## 10. Tests and hosting
+
+Run the backend tests from the project root:
+
+```sh
+python3 -m unittest discover -s backend -p 'test_*.py'
+```
+
+If Node.js is installed, run the geometry checks (no npm installation needed):
 
 ```sh
 node tests/model-geometry.mjs
 ```
 
-The check validates finite mesh vertices and transforms, index ranges, expected selectable structures, and absence of membrane-bound organelles in the bacterial model. Browser verification covered drag rotation, zoom, keyboard panning, all seven model switches, shell controls, mesh selection, isolation, auto-rotation, labels, and illustration/quiz transitions.
+**Local setup does not deploy the website online.** GitHub Pages can serve the static cell explorer, but cannot run the Python backend, save answers, or provide the admin dashboard. The included Pages workflow is manual; publishing remains paused. Keep the repository private unless its owner explicitly chooses otherwise.
 
-## Credits and privacy maintenance
-
-Visitor-facing credits and privacy information are linked from the site footer at `about.html`. `NOTICE.md` documents the eight generated images, project-specific code and models, Three.js licensing, biology references, and excluded reference material. Preserve the Three.js license during redistribution. The credits do not grant permission to copy reference screenshots or textbook figures, or promise exclusive rights in AI-generated artwork.
-
-Update the privacy notice before adding analytics, forms, accounts, remote fonts, embeds, or server-side score storage. Keep repository visibility private and the Pages workflow manual unless publishing is explicitly authorized. A private repository does not automatically make a deployed Pages site private.
+For online answer saving, a separate backend deployment needs HTTPS, private persistent storage, secure cookies, backups, rate limiting, and scheduled cleanup. See [backend deployment notes](backend/README.md). A private GitHub repository does not automatically make a deployed Pages website private.

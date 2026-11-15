@@ -18,6 +18,57 @@ const anatomy = {
  vacuole: [['Tonoplast','The vacuole’s membrane controls exchange with the cytosol.'],['Cell sap','Water and dissolved substances fill the central vacuole.'],['Turgor pressure','Water in the vacuole helps press cell contents against the supportive wall.']],
  wall: [['Cellulose fibers','Strong cellulose microfibrils reinforce the plant cell wall.'],['Wall matrix','Other polysaccharides surround and connect the cellulose framework.'],['Plasmodesmata','Channels connect the cytoplasm of neighboring plant cells through their walls.']]
 };
+// Original study notes: architecture, location, recognition, and functional connections.
+const structureProfiles={
+ nucleus:['Double membrane','Within the cytoplasm','Look for pores in the cut envelope and fine chromatin threads inside.','Messenger RNA carries genetic instructions from the nucleus to ribosomes. Nuclear pores regulate this exchange.'],
+ nucleolus:['No surrounding membrane','Inside the nucleus','The dense, darker body sits among the chromatin.','Ribosomal RNA and ribosomal proteins assemble here into subunits that leave through nuclear pores.'],
+ mitochondrion:['Double membrane','Distributed in the cytoplasm','The open interior reveals cristae: folds of the inner membrane.','The inner membrane maintains a proton gradient that powers ATP synthase. ATP supports transport, synthesis, and movement.'],
+ chloroplast:['Double envelope + thylakoids','Photosynthetic plant cells','Find the stacks of green thylakoid discs, connected by lamellae.','Light reactions occur in thylakoid membranes; carbon fixation occurs in the surrounding stroma. Plant mitochondria still carry out respiration.'],
+ 'rough-er':['Connected membrane sacs','Around the nuclear envelope','Small attached ribosomes distinguish rough ER from smooth ER.','Proteins enter the ER while being translated, then fold and travel in vesicles toward the Golgi.'],
+ 'smooth-er':['Connected membrane tubules','Cytoplasm; continuous with rough ER','Follow branching tubes without the ribosome-studded surface.','Different cells use smooth ER for lipid synthesis, detoxification, or calcium handling. Its specialization reflects the cell’s job.'],
+ golgi:['Single-membrane cisternae','Cytoplasm, linked by vesicle traffic','Flattened curved sacs form a stack, with small carriers nearby.','The cis side receives cargo from the ER. The trans side sorts it toward membranes, digestive compartments, or secretion.'],
+ ribosomes:['RNA–protein complexes','Free in cytosol or bound to ER','Ribosomes are enlarged dots in this model; bound ones sit on the cytosolic face of ER.','Free and bound ribosomes share the same basic machinery. Signals in a growing protein determine where its ribosome works.'],
+ membrane:['Phospholipid bilayer','The cell’s outer boundary','In plant cells, the membrane lies just inside the thicker cell wall.','Transport proteins, receptors, and membrane lipids help the cell exchange material and respond to its surroundings.'],
+ cytosol:['Aqueous fluid; no membrane','Around cellular structures','The spaces around organelles are part of the cytosol, not empty gaps.','Many metabolic reactions occur here. Cytoplasm includes cytosol and the structures outside the nucleus suspended within it.'],
+ lysosome:['Single membrane','Cytoplasm of many animal cells','Small rounded compartments are shown separately from transport vesicles.','Acidic conditions support digestive enzymes. Lysosomes receive material from endocytosis and from recycling worn cellular components.'],
+ peroxisome:['Single membrane','Cytoplasm','Find a small compartment distinct from mitochondria and lysosomes.','Oxidation reactions can make hydrogen peroxide; catalase helps break it down. Peroxisomes also participate in lipid metabolism.'],
+ vesicle:['Single membrane','Between membrane compartments','Small round carriers cluster near the ER, Golgi, and cell surface.','Membrane recognition and fusion deliver cargo to the correct destination while keeping it separated from the cytosol.'],
+ vacuole:['Single membrane: tonoplast','Much of a mature plant cell’s interior','The large pale-blue compartment pushes much of the cytoplasm toward the edge.','Water movement across the tonoplast helps establish turgor pressure. The surrounding cell wall limits expansion.'],
+ wall:['Cellulose-rich extracellular layer','Outside the plant plasma membrane','The thick green cut edge shows the supportive wall around the specimen.','Cellulose microfibrils and a matrix of other polysaccharides give support. Plasmodesmata connect neighboring cells through the wall.'],
+ cytoskeleton:['Protein filament network','Throughout the cytoplasm','Fine fibers extend between the cell boundary and internal structures.','Actin and microtubules support shape and movement. Motor proteins use filaments as tracks; animal cells also have intermediate filaments.'],
+ centrosome:['Centrioles + surrounding matrix','Near the nucleus in many animal cells','Two short cylinders lie approximately at right angles.','The surrounding matrix organizes microtubules. A centriole contains nine microtubule triplets; flowering plants organize microtubules without these paired centrioles.'],
+ soma:['Cell body','Between dendrites and axon','The enlarged body contains the nucleus and much of the synthetic machinery.','The soma maintains the neuron. Signals from many inputs influence whether an action potential begins near the start of the axon.'],
+ dendrites:['Branched membrane extensions','Extending from the soma','Follow the short branches spreading away from the cell body.','Many synapses deliver inputs onto dendrites. Branching and, in many neurons, dendritic spines provide space for synaptic contacts.'],
+ axon:['Long membrane extension','From soma toward target cells','A single long fiber connects the soma to the terminal branches.','Action potentials propagate along the axonal membrane. The length is compressed here so both ends fit in one teaching view.'],
+ myelin:['Many layers of glial membrane','Around portions of the axon','Insulating segments are separated by nodes of Ranvier.','Glial cells form myelin. Current spreads beneath it while action potentials are regenerated at nodes, accelerating conduction.'],
+ terminals:['Specialized axon endings','At the far end of the axon','Small rounded endings finish the terminal branches.','At chemical synapses, calcium entry triggers vesicle fusion and neurotransmitter release toward a target cell.'],
+ microvilli:['Actin-supported projections','Apical surface of absorptive cells','The brush border consists of many short projections.','Microvilli enlarge absorptive surface area. Their actin core links to the cell’s internal cytoskeleton; they are not motile cilia.'],
+ junctions:['Membrane-associated complexes','Where neighboring cells meet','Small lateral complexes indicate contact with neighboring cells.','Tight junctions limit passage between cells; anchoring junctions resist mechanical stress. Gap junctions permit selected small molecules and ions to pass.'],
+ basement:['Specialized extracellular matrix','Beneath the epithelial basal surface','The layered platform is outside the cell, below its basal membrane.','Laminins, collagen IV, and other matrix molecules support adhesion and tissue organization. Basement membrane is not an organelle.'],
+ nucleoid:['DNA region; no nuclear envelope','Bacterial cytoplasm','The coiled chromosome is exposed directly to the cytoplasm.','DNA-binding proteins help organize the chromosome. Without a nuclear envelope, transcription and translation can be closely coupled.'],
+ plasmid:['Accessory DNA molecule','Bacterial cytoplasm','Small DNA loops are separate from the large nucleoid.','Plasmids replicate independently of the main chromosome. Some carry genes that affect survival and some can transfer between cells.'],
+ 'bacterial-ribosomes':['70S RNA–protein complexes','Bacterial cytoplasm','The many small dots surround the chromosome.','These ribosomes translate messenger RNA. Their differences from eukaryotic cytosolic ribosomes make them targets of some antibiotics.'],
+ 'bacterial-wall':['Peptidoglycan-containing layer','Outside the bacterial plasma membrane','Look at the distinct cut layers around the cell.','Peptidoglycan helps resist osmotic stress. Bacterial envelopes vary: this is a generalized model, not a complete Gram-positive or Gram-negative reconstruction.'],
+ capsule:['Organized outer coating','Beyond the bacterial cell wall','The outermost pale coating surrounds the envelope.','Capsules can aid attachment and protection. Many bacteria lack them, and capsule chemistry varies among species.'],
+ pili:['Protein appendages','Bacterial outer surface','Short surface projections differ from the long flagellar filaments.','Some appendages aid attachment, while specialized pili can participate in DNA transfer. Their form and function vary.'],
+ flagellum:['Filament, hook, and rotary motor','Anchored in the bacterial envelope','Long wavy filaments extend away from one end.','A motor drives rotation for locomotion. Bacterial flagella are distinct from the microtubule-based flagella of eukaryotes.'],
+ myofibril:['Bundles of contractile filaments','Along the muscle fiber','Parallel cylinders show repeating light and dark bands.','Each myofibril contains repeated sarcomeres. Aligned actin and myosin generate force across the length of the fiber.'],
+ sarcomere:['Z disc to Z disc','Repeating units in a myofibril','Repeating bands mark the organization of contractile proteins.','During contraction, thin and thick filaments slide past each other. Their overlap changes; the filaments do not themselves shorten.'],
+ 'sarcoplasmic-reticulum':['Specialized smooth ER','Around skeletal-muscle myofibrils','A fine membrane network surrounds the contractile bundles.','Calcium release enables contraction. Pumps return calcium to the SR so the fiber can relax; T tubules coordinate the signal inward.'],
+ 't-tubule':['Plasma-membrane invagination','Extending into the muscle fiber','Transverse tubes run inward between contractile regions.','Electrical excitation travels into the fiber and triggers calcium release from nearby sarcoplasmic reticulum. The lumen is continuous with the extracellular space.']
+};
+function renderStructureProfile(s){
+ const profile=structureProfiles[s.id];
+ const panel=document.querySelector('#structure-profile');panel.hidden=!profile;
+ if(!profile)return;
+ const [architecture,location,recognize,connection]=profile;
+ document.querySelector('#profile-architecture').textContent=architecture;
+ document.querySelector('#profile-location').textContent=location;
+ document.querySelector('#profile-recognize').textContent=recognize;
+ document.querySelector('#profile-connection').textContent=connection;
+ document.querySelector('#profile-connections').open=false;
+ document.querySelector('#detail-focus').hidden=artworkMode!=='3d';
+}
 const diagramAnatomyIds=new Set(Object.keys(anatomy));
 for(const [id,name,category,kicker,description,fn,fact] of specializedStructures){
  anatomy[id]=[['Structure',description],['Function',fn],['Field note',fact]];

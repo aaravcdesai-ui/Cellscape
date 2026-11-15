@@ -22,6 +22,8 @@ Fact-checking references: *Biology 2e*, Mary Ann Clark, Matthew Douglas, and Jun
 
 The website summarizes concepts in project-specific wording; no textbook figures are included. Any future reproduction or adaptation of source text or figures must follow that material's applicable license. A source citation alone does not grant permission or apply its license to the entire project.
 
+Additional fact-checking references for the field guide: Biology 2e sections 4.2 (Prokaryotic Cells) and 4.5 (The Cytoskeleton); OpenStax *Anatomy and Physiology 2e* sections 4.2 (Epithelial Tissue), 10.2 (Skeletal Muscle), and 12.2 (Nervous Tissue). Links are provided in `about.html`. The field-guide descriptions are project-specific summaries; no source figures were added.
+
 ## Design references and excluded material
 
 CELLS alive! and a cell-explorer demo by Dilum Sanjaya were supplied as interaction and visual references. Their artwork, screenshots, video frames, branding, source code, and third-party meshes are not included in the distributed site. Local reference frames, recordings, UI concepts, and preview screenshots are excluded from version control. Keep them outside `assets/`, which is a publishable directory.
