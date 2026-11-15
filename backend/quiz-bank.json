@@ -1,0 +1,236 @@
+{
+  "models": {
+    "plant": [
+      "nucleus",
+      "nucleolus",
+      "chloroplast",
+      "mitochondrion",
+      "rough-er",
+      "smooth-er",
+      "golgi",
+      "ribosomes",
+      "vacuole",
+      "membrane",
+      "wall",
+      "cytosol",
+      "peroxisome",
+      "cytoskeleton",
+      "vesicle"
+    ],
+    "leukocyte": [
+      "nucleus",
+      "mitochondrion",
+      "rough-er",
+      "golgi",
+      "ribosomes",
+      "lysosome",
+      "vesicle",
+      "membrane",
+      "cytosol"
+    ],
+    "neuron": [
+      "soma",
+      "nucleus",
+      "dendrites",
+      "axon",
+      "myelin",
+      "terminals",
+      "mitochondrion",
+      "rough-er",
+      "membrane"
+    ],
+    "epithelial": [
+      "microvilli",
+      "nucleus",
+      "junctions",
+      "basement",
+      "mitochondrion",
+      "rough-er",
+      "golgi",
+      "membrane",
+      "cytoskeleton"
+    ],
+    "bacteria": [
+      "nucleoid",
+      "plasmid",
+      "bacterial-ribosomes",
+      "membrane",
+      "bacterial-wall",
+      "capsule",
+      "pili",
+      "flagellum",
+      "cytosol"
+    ],
+    "animal": [
+      "nucleus",
+      "nucleolus",
+      "mitochondrion",
+      "rough-er",
+      "smooth-er",
+      "golgi",
+      "ribosomes",
+      "membrane",
+      "cytosol",
+      "lysosome",
+      "peroxisome",
+      "centrosome",
+      "cytoskeleton",
+      "vesicle"
+    ],
+    "muscle": [
+      "myofibril",
+      "sarcomere",
+      "sarcoplasmic-reticulum",
+      "t-tubule",
+      "mitochondrion",
+      "nucleus",
+      "membrane"
+    ]
+  },
+  "structures": {
+    "soma": {
+      "name": "Cell body / soma",
+      "prompt": "Maintains the neuron and integrates incoming signals."
+    },
+    "dendrites": {
+      "name": "Dendrites",
+      "prompt": "Receives many incoming signals from other neurons."
+    },
+    "axon": {
+      "name": "Axon",
+      "prompt": "Conducts action potentials toward target cells."
+    },
+    "myelin": {
+      "name": "Myelin sheath",
+      "prompt": "Insulates axons and supports rapid saltatory conduction."
+    },
+    "terminals": {
+      "name": "Axon terminals",
+      "prompt": "Releases neurotransmitter at many chemical synapses."
+    },
+    "microvilli": {
+      "name": "Microvilli",
+      "prompt": "Increases apical surface area for absorption."
+    },
+    "junctions": {
+      "name": "Cell junctions",
+      "prompt": "Connects neighboring cells and helps maintain epithelial organization."
+    },
+    "basement": {
+      "name": "Basement membrane",
+      "prompt": "Supports and anchors the basal surface of an epithelium."
+    },
+    "nucleoid": {
+      "name": "Nucleoid",
+      "prompt": "Contains the main bacterial chromosome without a nuclear envelope."
+    },
+    "plasmid": {
+      "name": "Plasmid",
+      "prompt": "Carries accessory genes on independently replicating DNA."
+    },
+    "bacterial-ribosomes": {
+      "name": "Bacterial ribosomes",
+      "prompt": "Translates bacterial messenger RNA into proteins."
+    },
+    "bacterial-wall": {
+      "name": "Bacterial cell wall",
+      "prompt": "Provides structural support through a peptidoglycan-containing wall in most bacteria."
+    },
+    "capsule": {
+      "name": "Capsule",
+      "prompt": "Forms an outer coating that can support protection and attachment."
+    },
+    "pili": {
+      "name": "Pili / fimbriae",
+      "prompt": "Supports surface attachment through short protein appendages."
+    },
+    "flagellum": {
+      "name": "Flagellum",
+      "prompt": "Propels many bacteria using a rotating filament."
+    },
+    "myofibril": {
+      "name": "Myofibrils",
+      "prompt": "Produces contraction through organized arrays of actin and myosin."
+    },
+    "sarcomere": {
+      "name": "Sarcomere",
+      "prompt": "Shortens as actin and myosin filaments slide during contraction."
+    },
+    "sarcoplasmic-reticulum": {
+      "name": "Sarcoplasmic reticulum",
+      "prompt": "Stores and releases calcium to regulate muscle contraction."
+    },
+    "t-tubule": {
+      "name": "T tubules",
+      "prompt": "Carries membrane excitation deep into a muscle fiber."
+    },
+    "nucleus": {
+      "name": "Nucleus",
+      "prompt": "Stores genetic information and regulates gene expression."
+    },
+    "nucleolus": {
+      "name": "Nucleolus",
+      "prompt": "Produces and assembles ribosomal subunits."
+    },
+    "mitochondrion": {
+      "name": "Mitochondrion",
+      "prompt": "Generates most ATP during aerobic cellular respiration."
+    },
+    "rough-er": {
+      "name": "Rough ER",
+      "prompt": "Makes and processes proteins destined for secretion, membranes, or certain organelles."
+    },
+    "smooth-er": {
+      "name": "Smooth ER",
+      "prompt": "Synthesizes lipids, stores calcium, and helps detoxify certain substances."
+    },
+    "golgi": {
+      "name": "Golgi apparatus",
+      "prompt": "Modifies, sorts, and packages proteins and lipids."
+    },
+    "ribosomes": {
+      "name": "Ribosomes",
+      "prompt": "Builds proteins by translating messenger RNA."
+    },
+    "membrane": {
+      "name": "Cell membrane",
+      "prompt": "Controls movement into and out of the cell and enables communication."
+    },
+    "cytosol": {
+      "name": "Cytosol",
+      "prompt": "Provides a medium for many metabolic reactions, including glycolysis."
+    },
+    "lysosome": {
+      "name": "Lysosome",
+      "prompt": "Digests and recycles cellular material."
+    },
+    "chloroplast": {
+      "name": "Chloroplast",
+      "prompt": "Converts light energy into chemical energy stored in sugars."
+    },
+    "vacuole": {
+      "name": "Central vacuole",
+      "prompt": "Maintains turgor pressure and stores water, ions, and other materials."
+    },
+    "wall": {
+      "name": "Cell wall",
+      "prompt": "Provides support, protection, and resistance to excessive expansion."
+    },
+    "peroxisome": {
+      "name": "Peroxisome",
+      "prompt": "Carries out oxidation reactions and breaks down hydrogen peroxide using catalase."
+    },
+    "centrosome": {
+      "name": "Centrosome",
+      "prompt": "Organizes microtubules and helps form the mitotic spindle."
+    },
+    "cytoskeleton": {
+      "name": "Cytoskeleton",
+      "prompt": "Supports cell shape and provides tracks for intracellular transport."
+    },
+    "vesicle": {
+      "name": "Transport vesicle",
+      "prompt": "Transports cargo between membrane-bound compartments."
+    }
+  }
+}
