@@ -1,3 +1,17 @@
 .DS_Store
 _site/
 node_modules/
+
+# Local references and review artifacts are not website assets.
+design/recording-review/
+design/*-ui-concept.png
+/*.png
+/*.jpg
+/*.jpeg
+*.mov
+*.mp4
+
+# Keep local credentials and machine-specific configuration out of Git.
+.env
+.env.*
+!.env.example

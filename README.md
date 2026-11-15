@@ -1,6 +1,6 @@
 # Cellscape — Cell Atlas
 
-Explore seven cell specimens through original generated cutaway artwork, interactive hotspots, close-ups, and a three-panel cell atlas. Select a structure to learn about its function, or try a five-question identification quiz.
+Explore seven cell specimens through AI-generated cutaway artwork, interactive hotspots, close-ups, and a three-panel cell atlas. Select a structure to learn about its function, or try a five-question identification quiz.
 
 ## Local preview
 
@@ -29,7 +29,7 @@ Visit http://127.0.0.1:5173. Stop the server with Ctrl+C. If that port is alread
 4. Open **Actions → Deploy Cellscape to GitHub Pages → Run workflow**, choosing `main`. Automatic publishing is currently paused. Run this workflow manually after enabling GitHub Pages; add a `push` trigger later if you want automatic deployments.
 5. Once the workflow succeeds, use the URL shown in its deployment summary or in Settings → Pages.
 
-The workflow publishes only `index.html`, all JavaScript files, `style.css`, and the `assets/` and `vendor/` directories. Relative asset links work under a repository subpath. No secrets are needed. Repository visibility and GitHub plan determine Pages availability. See [GitHub’s Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+The workflow publishes only `index.html`, `about.html`, `NOTICE.md`, all JavaScript files, `style.css`, and the `assets/` and `vendor/` directories. Relative asset links work under a repository subpath. No secrets are needed. Repository visibility and GitHub plan determine Pages availability. See [GitHub’s Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
 ## Files
 
@@ -44,7 +44,9 @@ The workflow publishes only `index.html`, all JavaScript files, `style.css`, and
 - `assets/organelles/nucleus.png`: original isolated nucleus cutaway
 - `app.js`: biology content, original SVG cell artwork, exploration state, and quiz
 - `learning.js`: organelle close-ups, zoom controls, the protein journey, and comparison activity
-- `.github/workflows/pages.yml`: automatic deployment
+- `about.html`: visitor-facing credits, sources, and privacy information
+- `NOTICE.md`: asset provenance and third-party notices
+- `.github/workflows/pages.yml`: manual deployment; automatic publishing is paused
 
 ## Learning model and sources
 
@@ -74,21 +76,21 @@ The secretory pathway lesson was reviewed against [OpenStax Biology 2e, section 
 
 The original version and deployment workflow have been committed to https://github.com/aaravcdesai-ui/CellBiologyWebsite. The current source includes the atlas redesign, detailed specimen artwork, learning activities, and seven rotatable 3D teaching models. GitHub Pages publishing remains paused: this repository is private and the current plan requires a public repository or an upgrade for Pages. The workflow includes all scripts and the complete `assets/` directory for the next deployment.
 
-Google Fonts is optional; local font fallbacks work offline. Quiz results are session-only; there are no accounts or server storage.
+Typography uses device-local system and serif fonts; there are no external font requests. The site code has no analytics, accounts, cookies, browser storage, or quiz uploads. Quiz results remain in page memory and reset on reload. Hosting providers can still log requests; the visitor-facing notice at `about.html#privacy` explains this distinction.
 
 ## Atlas interface
 
 The Cell atlas, Protein journey, and Compare cells tabs keep the study tasks in separate views. The atlas has a structure rail, a large specimen, and a scrollable detail panel on desktop. Phone layouts use a horizontal structure list and place details beneath the specimen. Selecting a structure returns its detail panel to the heading.
 
-The specimen drawings include layered cell boundaries, chromatin and nuclear pores, rough ER with attached ribosomes, smooth ER, mitochondrial cristae, Golgi cisternae, free ribosomes, peroxisomes, vesicles, and cytoskeletal fibers. Plant mode adds the cell wall, central vacuole and chloroplast grana. Animal mode includes lysosomes and a centrosome with paired centrioles. Diagram and Illustration are original teaching artwork. The separate 3D mode uses editable meshes, as described below; none of these views is a measured anatomical reconstruction.
+The specimen drawings include layered cell boundaries, chromatin and nuclear pores, rough ER with attached ribosomes, smooth ER, mitochondrial cristae, Golgi cisternae, free ribosomes, peroxisomes, vesicles, and cytoskeletal fibers. Plant mode adds the cell wall, central vacuole and chloroplast grana. Animal mode includes lysosomes and a centrosome with paired centrioles. Diagram and Illustration are project-specific teaching artwork. The separate 3D mode uses editable meshes, as described below; none of these views is a measured anatomical reconstruction.
 
 ## Recording-inspired illustration assets
 
-The supplied 50.97-second screen recording was reviewed at nine timestamps. It showed seven primary specimen images: plant, white blood cell, neuron, epithelial, bacterial, animal, and skeletal muscle. Eight original PNG assets were generated with the built-in image-generation tool: seven specimens plus one isolated nucleus. The artwork is used directly in the live atlas, specimen thumbnails, and organelle close-ups. It is not a screenshot of an interface pasted into the website.
+The supplied 50.97-second screen recording was reviewed at nine timestamps. It showed seven primary specimen images: plant, white blood cell, neuron, epithelial, bacterial, animal, and skeletal muscle. Eight PNG assets were generated with the built-in image-generation tool: seven specimens plus one isolated nucleus. The artwork is used directly in the live atlas, specimen thumbnails, and organelle close-ups. It is not a screenshot of an interface pasted into the website.
 
 The Illustration view uses fixed rendered images with interactive SVG hotspots. The separate 3D view uses procedural meshes that rotate in real depth; neither is a real micrograph. Some structures are shown schematically, and the illustrations should not be interpreted as measurements. Plant and animal specimens retain a separate Diagram view. Prokaryotic questions do not include eukaryotic organelles.
 
-Exact prompts are saved in `design/specimen-generation-prompts.json`. Reference frames in `design/recording-review/` are local review artifacts and are not deployed. The generated images remain under `assets/` so that local preview and GitHub Pages both serve them without external image services.
+Exact prompts are saved in `design/specimen-generation-prompts.json`. Reference frames in `design/recording-review/` are local review artifacts, ignored by Git and excluded from deployment. Root preview screenshots, recordings, and UI concept images are also ignored. Keep reference media out of `assets/`. The generated images remain under `assets/` so that local preview and GitHub Pages both serve them without external image services.
 
 Verification: all 72 structure selections across the seven specimens were checked for matching details and three study-note controls. Five-question quiz flows completed for all seven models, and an all-correct bacterial run scored 5/5. Layouts were checked at 320, 390, 768, 1280, and 1440 pixels without page overflow.
 
@@ -117,3 +119,9 @@ node tests/model-geometry.mjs
 ```
 
 The check validates finite mesh vertices and transforms, index ranges, expected selectable structures, and absence of membrane-bound organelles in the bacterial model. Browser verification covered drag rotation, zoom, keyboard panning, all seven model switches, shell controls, mesh selection, isolation, auto-rotation, labels, and illustration/quiz transitions.
+
+## Credits and privacy maintenance
+
+Visitor-facing credits and privacy information are linked from the site footer at `about.html`. `NOTICE.md` documents the eight generated images, project-specific code and models, Three.js licensing, biology references, and excluded reference material. Preserve the Three.js license during redistribution. The credits do not grant permission to copy reference screenshots or textbook figures, or promise exclusive rights in AI-generated artwork.
+
+Update the privacy notice before adding analytics, forms, accounts, remote fonts, embeds, or server-side score storage. Keep repository visibility private and the Pages workflow manual unless publishing is explicitly authorized. A private repository does not automatically make a deployed Pages site private.
