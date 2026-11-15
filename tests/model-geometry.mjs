@@ -20,6 +20,8 @@ for(const [kind,ids] of Object.entries(expected)){
   const positions=o.geometry.getAttribute('position');assert(positions&&positions.count>0,kind+' empty mesh');
   for(const value of positions.array)assert(Number.isFinite(value),kind+' non-finite vertex');
   vertices+=positions.count;
+  const normals=o.geometry.getAttribute('normal');if(normals)for(const value of normals.array)assert(Number.isFinite(value),kind+' non-finite normal');
+  if(o.isInstancedMesh){assert(o.count>0,kind+' empty instance batch');for(const value of o.instanceMatrix.array)assert(Number.isFinite(value),kind+' invalid instance transform');}
   const index=o.geometry.index;if(index)for(const i of index.array)assert(i<positions.count,kind+' invalid mesh index');
   for(const value of o.matrixWorld.elements)assert(Number.isFinite(value),kind+' invalid transform');
  });
