@@ -1,4 +1,5 @@
 const structures = [
+...specializedStructures,
 ['nucleus','Nucleus','Control center','The cell’s control center','A double membrane surrounds the nucleus, which contains most of the cell’s DNA. Instructions stored here guide growth, repair, and everyday cell activity.','Stores genetic information and regulates gene expression.','A typical diploid human cell contains about two meters of nuclear DNA, packed into a nucleus only a few micrometers across.'],
 ['nucleolus','Nucleolus','Assembly station','Where ribosomes begin','Inside the nucleus is a dense region called the nucleolus. It makes ribosomal RNA and assembles the subunits that become ribosomes.','Produces and assembles ribosomal subunits.','The nucleolus has no surrounding membrane. It forms around active regions of DNA.'],
 ['mitochondrion','Mitochondrion','Energy conversion','Powering cellular work','These double-membraned organelles convert energy from food into ATP through cellular respiration. Folds in the inner membrane, called cristae, provide space for energy-producing reactions.','Generates most ATP during aerobic cellular respiration.','Mitochondria have their own DNA. Plant cells have mitochondria too; chloroplasts do not replace them.'],
@@ -11,52 +12,105 @@ const structures = [
 ['lysosome','Lysosome','Recycling','Reuse. Recycle. Renew.','Lysosomes contain digestive enzymes that break down worn-out cell parts and material taken in by the cell. Their interior is acidic, helping the enzymes work.','Digests and recycles cellular material.','Plant cells usually carry out many similar digestive functions in a lytic vacuole.'],
 ['chloroplast','Chloroplast','Photosynthesis','Turning light into chemical energy','Chloroplasts, found in photosynthetic plant tissues, contain chlorophyll, which captures light. Photosynthesis uses this energy to build sugars from carbon dioxide and water.','Converts light energy into chemical energy stored in sugars.','Stacks of membrane discs called grana give photosynthesis a large working surface.'],
 ['vacuole','Central vacuole','Storage & support','Room to grow','A large membrane-bound compartment occupies much of a mature plant cell. It stores water and solutes and helps maintain pressure against the cell wall.','Maintains turgor pressure and stores water, ions, and other materials.','When cells lose water, turgor pressure falls and the plant may wilt.'],
-['wall','Cell wall','Structural support','A supportive outer layer','Outside the cell membrane, the plant cell wall is a strong, porous layer made largely of cellulose. It supports the cell while allowing water and many dissolved substances through.','Provides support, protection, and resistance to excessive expansion.','Tiny channels called plasmodesmata connect neighboring plant cells through their walls.']
+['wall','Cell wall','Structural support','A supportive outer layer','Outside the cell membrane, the plant cell wall is a strong, porous layer made largely of cellulose. It supports the cell while allowing water and many dissolved substances through.','Provides support, protection, and resistance to excessive expansion.','Tiny channels called plasmodesmata connect neighboring plant cells through their walls.'],
+['peroxisome','Peroxisome','Oxidation','Oxidative reactions','Peroxisomes are small, membrane-bound compartments containing enzymes for oxidation reactions. They participate in fatty acid metabolism and help process hydrogen peroxide.','Carries out oxidation reactions and breaks down hydrogen peroxide using catalase.','Hydrogen peroxide can damage cell components, so peroxisomes keep its production and breakdown in a controlled compartment.'],
+['centrosome','Centrosome','Microtubule organization','Organizing the cell’s scaffolding','In many animal cells, the centrosome is a microtubule-organizing region near the nucleus. It contains two centrioles embedded in a surrounding protein matrix.','Organizes microtubules and helps form the mitotic spindle.','Typical flowering plant cells organize microtubules without the paired centrioles shown in this animal model.'],
+['cytoskeleton','Cytoskeleton','Support and movement','An internal network','A network of protein filaments extends through the cytoplasm. Microtubules, actin filaments, and intermediate filaments contribute to cell shape, movement, and internal organization.','Supports cell shape and provides tracks for intracellular transport.','Motor proteins can move cargo along microtubules, connecting distant parts of the cell.'],
+['vesicle','Transport vesicle','Membrane transport','Moving cargo','Small membrane-bound carriers shuttle cargo between compartments. Different vesicles move proteins and lipids along different routes through the cell.','Transports cargo between membrane-bound compartments.','A carrier’s membrane can fuse with its destination membrane, delivering the contents without exposing them to the cytosol.']
 ].map(([id,name,category,kicker,description,fn,fact])=>({id,name,category,kicker,description,fn,fact}));
-let type='animal', selected='nucleus', quiz=false, question=0, answered=false, score=0;
+let type='plant', selected='nucleus', quiz=false, question=0, answered=false, score=0;
 const $=s=>document.querySelector(s);
-const available=()=>structures.filter(s=>type==='plant'?s.id!=='lysosome':!['chloroplast','vacuole','wall'].includes(s.id));
-const group=(id,art)=>`<g class="organelle ${selected===id?'selected':''}" data-id="${id}" role="button" tabindex="0" aria-label="${structures.find(s=>s.id===id).name}" aria-pressed="${selected===id}"><title>${structures.find(s=>s.id===id).name}</title>${art}</g>`;
-function mitochondrion(x,y,r=0){return `<g transform="translate(${x} ${y}) rotate(${r})"><ellipse rx="48" ry="25" fill="url(#mito)" stroke="#aa7050" stroke-width="2"/><path d="M-33 0 Q-29-20-20-10 T-8 10 T4-10 T16 10 T30-8" fill="none" stroke="#ab6849" stroke-width="4" stroke-linecap="round"/><ellipse class="selection" rx="54" ry="31" opacity="${selected==='mitochondrion'?1:0}"/></g>`}
+const available=()=>specimenCatalog[type].ids.map(id=>structures.find(s=>s.id===id)).filter(Boolean);
+const group=(id,art)=>`<g class="organelle ${['lysosome','centrosome','chloroplast','vacuole','wall'].includes(id)?'different-structure':'shared-structure'} ${selected===id?'selected':''}" data-id="${id}" role="button" tabindex="0" aria-label="${structures.find(s=>s.id===id).name}" aria-pressed="${selected===id}"><title>${structures.find(s=>s.id===id).name}</title>${art}</g>`;
 function render(){
 const focused = document.activeElement;
 const focusId = focused?.closest('[data-id]')?.dataset.id;
 const focusSelect = focused?.dataset.select;
-const plant=type==='plant';
-let svg=`<defs><radialGradient id="cyto"><stop stop-color="#f0eed2"/><stop offset="1" stop-color="#c9d6a5"/></radialGradient><radialGradient id="nuc"><stop stop-color="#e0c5a7"/><stop offset="1" stop-color="#ba9e84"/></radialGradient><linearGradient id="mito" x2="0" y2="1"><stop stop-color="#eccaa1"/><stop offset="1" stop-color="#d8a579"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#536b3b" flood-opacity=".13"/></filter></defs>`;
-if(plant) svg+=group('wall','<rect x="110" y="58" width="590" height="446" rx="86" fill="#b4c590" stroke="#758e54" stroke-width="10"/>');
-svg+=group('membrane',plant?'<rect x="125" y="73" width="560" height="416" rx="76" fill="url(#cyto)" stroke="#8caa67" stroke-width="7" filter="url(#shadow)"/>':'<path d="M140 155 C190 75 330 61 438 74 C550 83 663 134 693 232 C731 341 655 436 536 478 C430 519 289 488 204 447 C94 391 70 245 140 155Z" fill="url(#cyto)" stroke="#89a269" stroke-width="8" filter="url(#shadow)"/><path d="M148 162 C195 86 331 72 437 85 C548 95 653 140 682 235 C720 338 649 425 530 468 C426 506 294 478 210 437 C104 383 82 249 148 162Z" fill="none" stroke="#f1f2c9" stroke-width="3"/>');
-svg+=group('cytosol','<ellipse cx="495" cy="400" rx="48" ry="25" fill="#d5deb5" opacity=".65"/>');
-if(plant)svg+=group('vacuole','<path d="M389 142 Q573 94 612 211 Q661 345 550 412 Q446 455 419 366 Q393 303 432 260 Q449 219 389 142Z" fill="#bbd9d2" stroke="#88b3a5" stroke-width="3"/><path d="M453 154 Q560 127 588 213" fill="none" stroke="#e0eeea" stroke-width="6"/>');
-svg+=group('rough-er',`<g fill="none" stroke="#8ca28c" stroke-width="15" stroke-linecap="round">${[0,1,2,3].map(i=>`<path d="M${236-i*8} ${190+i*26} Q${173-i*4} ${246+i*21} ${242-i*3} ${310+i*21} Q310 ${376+i*10} 375 ${321+i*24}"/>`).join('')}</g><g fill="#607864">${Array.from({length:30},(_,i)=>`<circle cx="${207+(i%6)*25}" cy="${235+Math.floor(i/6)*27}" r="2.8"/>`).join('')}</g>`);
-svg+=group('smooth-er','<g stroke="#a5b681" stroke-width="10" fill="none" stroke-linecap="round"><path d="M375 192 Q405 154 433 181 T489 169 Q508 141 541 166"/><path d="M386 210 Q434 181 447 213 T510 204 Q532 181 560 200"/><path d="M432 180 L446 151 M476 210 L486 241 M518 183 L536 151"/></g>');
-svg+=group('nucleus',`<ellipse cx="311" cy="254" rx="94" ry="84" fill="url(#nuc)" stroke="#998673" stroke-width="5"/><ellipse cx="311" cy="254" rx="84" ry="74" fill="none" stroke="#ead6b8" stroke-width="2"/><g fill="none" stroke="#a78b79" stroke-width="2.5" opacity=".65"><path d="M263 219 q20-27 37 0 t34 1 t25 19 M252 256 q18-24 38-5 t29 16 t32-13 M269 294 q22-26 39-4 t35-10"/></g>${[0,1,2,3,4,5,6,7].map(i=>`<ellipse cx="${311+89*Math.cos(i*.8)}" cy="${254+79*Math.sin(i*.8)}" rx="5" ry="3" fill="#786f5e" transform="rotate(${i*46} ${311+89*Math.cos(i*.8)} ${254+79*Math.sin(i*.8)})"/>`).join('')}<ellipse class="selection" cx="311" cy="254" rx="104" ry="94" opacity="${selected==='nucleus'?1:0}"/>`);
-svg+=group('nucleolus','<circle cx="328" cy="263" r="25" fill="#92745f"/><circle cx="322" cy="256" r="15" fill="#aa876e" opacity=".7"/>');
-svg+=group('mitochondrion',mitochondrion(plant?206:497,plant?397:375,-28)+(plant?'':mitochondrion(533,168,25)+mitochondrion(192,183,-37)));
-svg+=group('golgi',`<g fill="none" stroke-linecap="round">${[0,1,2,3,4].map(i=>`<path d="M${plant?516+i*5:530+i*5} ${plant?285+i*18:259+i*18} q48 24 ${86-i*9} -12" stroke="${['#a39a65','#b3a971','#c2b780','#cfc38f','#d5cb9c'][i]}" stroke-width="12"/>`).join('')}</g><g fill="#c0b580" stroke="#a59e6d"><circle cx="638" cy="278" r="10"/><circle cx="631" cy="311" r="7"/><circle cx="608" cy="353" r="8"/></g>`);
-svg+=group('ribosomes',`<g fill="#6b8166">${Array.from({length:28},(_,i)=>`<circle cx="${155+(i*71)%480}" cy="${145+(i*83)%280}" r="3"/><circle cx="${155+(i*71)%480}" cy="${145+(i*83)%280}" r="9" fill="transparent"/>`).join('')}<circle cx="436" cy="339" r="12" fill="transparent"/></g>`);
-if(!plant)svg+=group('lysosome','<circle cx="404" cy="418" r="22" fill="#c5b87b" stroke="#a39c62" stroke-width="2"/><g fill="#a39955"><circle cx="396" cy="411" r="4"/><circle cx="411" cy="421" r="4"/><circle cx="398" cy="427" r="3"/></g>');
-if(plant)svg+=group('chloroplast', [ [205,133,-18],[606,417,-32],[603,116,20] ].map(([x,y,r])=>`<g transform="translate(${x} ${y}) rotate(${r})"><ellipse rx="42" ry="23" fill="#99b56a" stroke="#6d914e" stroke-width="2"/>${[-21,0,21].map(a=>`<g stroke="#537b41" stroke-width="3"><path d="M${a-6} -9 h12 m-12 5 h12 m-12 5 h12 m-12 5 h12"/></g>`).join('')}</g>`).join(''));
-const labels=plant?[['nucleus',158,234,233,244],['chloroplast',164,91,205,122],['vacuole',502,462,517,367],['wall',706,447,687,423],['mitochondrion',158,452,201,410],['golgi',696,270,603,289]]:[['nucleus',90,259,217,254],['rough-er',101,369,219,337],['mitochondrion',529,440,500,387],['membrane',643,416,669,370],['golgi',692,237,598,269],['smooth-er',490,105,483,169],['lysosome',346,490,398,432]];
-if($('#labels').checked&&!quiz)svg+=labels.map(([id,x,y,tx,ty])=>`<path class="label-line" d="M${x} ${y+5} L${tx} ${ty}"/><text class="cell-label" x="${x}" y="${y}" text-anchor="middle">${structures.find(s=>s.id===id).name}</text>`).join('');
-$('#cell').innerHTML=svg; $('#specimen').textContent=`SPECIMEN ${plant?'02 / PLANT':'01 / ANIMAL'} CELL`;
-$('#organelle-list').innerHTML=available().map(s=>`<button data-select="${s.id}" class="${selected===s.id?'active':''}" aria-pressed="${selected===s.id}">${s.name}</button>`).join('');
-const s=structures.find(s=>s.id===selected)||structures[0],index=available().findIndex(a=>a.id===selected);
+const spec=specimenCatalog[type];
+$('#cell').innerHTML=renderAtlasArtwork(type,selected,$('#labels').checked&&!quiz);
+$('#specimen').textContent=spec.classification.toUpperCase()+' / '+spec.subtitle.toUpperCase();
+$('#model-title').textContent=spec.name;
+$('#model-subtitle').textContent=spec.subtitle+' · '+spec.classification;
+$('.diagram-panel>.model-note:not(#comparison-highlight)').textContent=artworkMode==='3d'?'Interactive 3D teaching model · Structures and proportions are simplified.':artworkMode==='diagram'?'Annotated educational schematic · Not to scale.':['plant','animal'].includes(type)?'Generated teaching illustration · Switch to Diagram for the schematic.':'Generated teaching illustration · Colors and proportions are illustrative.';
+$('#plate-number').textContent='PLATE '+String(Object.keys(specimenCatalog).indexOf(type)+1).padStart(2,'0');
+$('#cell-classification').textContent=spec.classification==='Prokaryote'?'Prokaryotes':'Eukaryotes';
+$('#specimen-context').textContent=spec.note;
+$('#specimen-location').textContent=spec.where;
+$('#structure-count').textContent=String(available().length).padStart(2,'0');
+$('#organelle-list').innerHTML=available().map(s=>`<button data-select="${s.id}" class="${selected===s.id?'active':''}" aria-pressed="${selected===s.id}"><span class="organelle-swatch" style="--swatch:${structureColors[s.id]||'#a58eb4'}"></span><span>${s.name}</span><span class="row-arrow">↗</span></button>`).join('');
+const s=structures.find(s=>s.id===selected)||structures.find(s=>s.id===spec.default),index=available().findIndex(a=>a.id===selected);
 $('#detail-title').textContent=s.name;$('#detail-kicker').textContent=s.kicker;$('#description').textContent=s.description;$('#function').textContent=s.fn;$('#fact').textContent=s.fact;$('#category').textContent=s.category.toUpperCase();$('#detail-number').textContent=`${String(index+1).padStart(2,'0')} / CELL STRUCTURE`;$('#position').textContent=`${String(index+1).padStart(2,'0')} OF ${available().length}`;
-const icon=$(`#cell [data-id="${s.id}"]`);if(icon){const box=icon.getBBox();const art=icon.innerHTML.replaceAll('url(#nuc)', '#c8ac91').replaceAll('url(#mito)', '#e3b88d').replaceAll('url(#cyto)', '#d5deb5').replaceAll('filter="url(#shadow)"', '').replace(/<[^>]*class="selection"[^>]*\/>/g, '');$('#detail-icon').innerHTML=`<svg aria-hidden="true" viewBox="${box.x-8} ${box.y-8} ${box.width+16} ${box.height+16}">${art}</svg>`;}
+renderCloseup(s);
+setZoom(zoom);
 if(focusId)$(`#cell [data-id="${focusId}"]`)?.focus();
 if(focusSelect)$(`[data-select="${focusSelect}"]`)?.focus();
 }
-function select(id){selected=id;render()}
+function select(id){
+selected=id;render();$('#cell-details').scrollTop=0;
+if(matchMedia('(max-width:1050px)').matches)$('#cell-details').scrollIntoView({block:'start',behavior:'instant'});
+}
 $('#cell').addEventListener('click',e=>{const el=e.target.closest('[data-id]');if(el){if(quiz)check(el.dataset.id);else select(el.dataset.id)}});
 $('#cell').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const el=e.target.closest('[data-id]');if(el){e.preventDefault();if(quiz)check(el.dataset.id);else select(el.dataset.id)}}});
-$('#organelle-list').addEventListener('click',e=>{if(e.target.dataset.select){if(quiz)check(e.target.dataset.select);else select(e.target.dataset.select)}});
-document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{type=b.dataset.type;selected='nucleus';stopQuiz();document.querySelectorAll('[data-type]').forEach(t=>(t.classList.toggle('active',t===b),t.setAttribute('aria-pressed',String(t===b))));render()}));
+$('#organelle-list').addEventListener('click',e=>{const button=e.target.closest('[data-select]');if(button){if(quiz)check(button.dataset.select);else select(button.dataset.select)}});
+document.querySelector('.tabs').addEventListener('click',e=>{const button=e.target.closest('[data-type]');if(button)chooseSpecimen(button.dataset.type)});
+document.querySelectorAll('[data-art]').forEach(button=>button.onclick=()=>{artworkMode=button.dataset.art;resetZoom();render()});
 $('#labels').addEventListener('change',render);
 for(const [id,delta] of [['previous',-1],['next',1]])$('#'+id).onclick=()=>{const a=available();select(a[(a.findIndex(s=>s.id===selected)+delta+a.length)%a.length].id)};
-let questions=[];
-function stopQuiz(){quiz=false;$('#cell').classList.remove('quiz-mode');$('#quiz').textContent='↗ Test yourself';$('#quiz-area').hidden=true;$('#labels').disabled=false;document.querySelectorAll('aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, .detail-nav').forEach(e=>e.hidden=false)}
-$('#quiz').onclick=()=>{if(quiz){stopQuiz();selected=selected||'nucleus';render();return}quiz=true;question=0;score=0;questions=[...available()];for(let i=questions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]]}questions=questions.slice(0,5);$('#quiz').textContent='× Exit quiz';$('#labels').disabled=true;showQuestion()};
-function showQuestion(){answered=false;selected=null;$('#cell').classList.add('quiz-mode');render();document.querySelectorAll('aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, .detail-nav').forEach(e=>e.hidden=true);$('#detail-title').textContent='Find the organelle';$('#category').textContent='PRACTICE';$('#detail-number').textContent=`QUESTION ${question+1} / 5`;$('#quiz-area').hidden=false;$('#quiz-area').innerHTML=`<p>Which structure ${questions[question].fn.charAt(0).toLowerCase()+questions[question].fn.slice(1).replace(/\.$/,'')}?</p><p>Select it in the diagram or the list below.</p><p id="feedback" role="status"></p>`}
-function check(id){if(answered)return;answered=true;const correct=id===questions[question].id;if(correct)score++;$('#feedback').textContent=correct?'Correct! '+questions[question].name+'.':'That’s '+structures.find(s=>s.id===id).name+'. The answer is '+questions[question].name+'.';selected=questions[question].id;const btn=document.createElement('button');btn.className='quiz-choice';btn.textContent=question===4?'See results →':'Next question →';btn.onclick=()=>{question++;if(question<5)showQuestion();else{$('#detail-title').textContent='Nicely explored.';$('#quiz-area').innerHTML=`<p>You identified ${score} out of 5 structures correctly.</p><p>Keep exploring to build your understanding.</p><button class="quiz-choice" id="finish">Back to exploring →</button>`;$('#finish').onclick=()=>{stopQuiz();selected='nucleus';render()}}};$('#quiz-area').append(btn);document.querySelectorAll('#cell .organelle').forEach(g=>{g.classList.toggle('selected',g.dataset.id===selected);g.setAttribute('aria-pressed',String(g.dataset.id===selected))});document.querySelectorAll('[data-select]').forEach(b=>{b.classList.toggle('active',b.dataset.select===selected);b.setAttribute('aria-pressed',String(b.dataset.select===selected))});btn.focus()}
-render();
+let questions=[], attempts=0, hintsUsed=0, assisted=0, usedHelp=false;
+const explorationPanels = 'aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, #closeup, .specimen-context, .detail-nav';
+function stopQuiz(){
+ quiz=false;$('#cell').classList.remove('quiz-mode');$('#quiz').textContent='↗ Test yourself';$('#quiz-area').hidden=true;$('#labels').disabled=false;
+ document.querySelectorAll(explorationPanels).forEach(e=>e.hidden=false);
+}
+$('#quiz').onclick=()=>{
+ if(quiz){stopQuiz();selected=selected||specimenCatalog[type].default;render();return}
+ quiz=true;question=0;score=0;assisted=0;hintsUsed=0;resetZoom();
+ questions=[...available()];
+ for(let i=questions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]]}
+ questions=questions.slice(0,5);$('#quiz').textContent='× Exit quiz';$('#labels').disabled=true;showQuestion();
+ if(matchMedia('(max-width:1050px)').matches)$('#cell-details').scrollIntoView({block:'start'});
+};
+function showQuestion(){
+ answered=false;attempts=0;usedHelp=false;selected=null;$('#cell').classList.add('quiz-mode');render();
+ document.querySelectorAll(explorationPanels).forEach(e=>e.hidden=true);
+ $('#detail-title').textContent='Find the structure';$('#category').textContent='PRACTICE';$('#detail-number').textContent=`QUESTION ${question+1} / 5`;
+ $('#quiz-area').hidden=false;
+ const fn=questions[question].fn;
+ $('#quiz-area').innerHTML=`<p>Which structure ${fn.charAt(0).toLowerCase()+fn.slice(1).replace(/\.$/,'')}?</p><p>Choose below or select it in the diagram.</p><div id="quiz-options"></div><p id="feedback" role="status"></p><div class="quiz-actions"><button id="hint" class="quiz-choice">Give me a hint</button><button id="reveal" class="quiz-choice">Show answer</button></div><p id="hint-text" class="hint-text" hidden></p>`;
+ $('#quiz-options').innerHTML=available().map(s=>`<button class="quiz-option" data-answer="${s.id}">${s.name}</button>`).join('');
+ $('#quiz-options').onclick=e=>{if(e.target.dataset.answer)check(e.target.dataset.answer)};
+ $('#hint').onclick=()=>{if(!usedHelp)hintsUsed++;usedHelp=true;$('#hint-text').hidden=false;$('#hint-text').textContent=structureHints[questions[question].id];$('#hint').disabled=true};
+ $('#reveal').onclick=()=>{if(answered)return;usedHelp=true;finishAnswer(false,true)};
+}
+function check(id){
+ if(answered)return;
+ const target=questions[question],chosen=structures.find(s=>s.id===id);
+ if(!chosen)return;
+ if(id!==target.id){
+  attempts++;$('#feedback').textContent=`${chosen.name}: ${chosen.fn} That function differs from the one in the question. Try another structure, or use a hint.`;
+  const option=$(`[data-answer="${id}"]`);if(option)option.disabled=true;
+  return;
+ }
+ finishAnswer(attempts===0&&!usedHelp,false);
+}
+function finishAnswer(independent,revealed){
+ answered=true;const target=questions[question];
+ if(independent)score++;else if(!revealed)assisted++;
+ $('#feedback').textContent=`${revealed?'The answer is': 'Correct!'} ${target.name}. ${target.fn} ${revealed?'Explore it, then continue.':independent?'You identified it on your first try.':'You found it with practice.'}`;
+ selected=target.id;
+ if(artworkMode==='3d')window.Cell3D?.show(type,selected,false,true);
+ document.querySelectorAll('#cell [data-id], [data-select]').forEach(e=>{const active=(e.dataset.id||e.dataset.select)===selected;e.classList.toggle(e.dataset.id?'selected':'active',active);e.setAttribute('aria-pressed',String(active))});
+ document.querySelectorAll('#quiz-options button, #hint, #reveal').forEach(b=>b.disabled=true);
+ const btn=document.createElement('button');btn.className='quiz-choice quiz-next';btn.textContent=question===4?'See results →':'Next question →';
+ btn.onclick=()=>{question++;if(question<5){showQuestion();$('#detail-title').setAttribute('tabindex','-1');$('#detail-title').focus({preventScroll:true})}else{
+  $('#detail-title').textContent='Keep looking closer.';
+  $('#quiz-area').innerHTML=`<p><strong>${score} of 5</strong> correct on the first try without hints.</p><p>${assisted} solved with practice · ${5-score-assisted} revealed · ${hintsUsed} hints used.</p><p>Retries help you learn. Explore the structures and try again whenever you’re ready.</p><button class="quiz-choice" id="finish">Back to exploring →</button>`;
+  $('#finish').onclick=()=>{stopQuiz();selected=specimenCatalog[type].default;render();$('#quiz').focus({preventScroll:true})};$('#finish').focus({preventScroll:true});
+ }};
+ $('#quiz-area').append(btn);btn.focus({preventScroll:true});
+}
+
+window.CellAtlasBridge={nameFor:id=>structures.find(s=>s.id===id)?.name||id,hasStructure:id=>available().some(s=>s.id===id)};
+window.addEventListener('cell3d-ready',()=>{if(artworkMode==='3d')render()});
+window.addEventListener('cell3d-select',event=>{if(quiz)check(event.detail.id);else select(event.detail.id)});
+window.addEventListener('cell3d-zoom',event=>{if(artworkMode!=='3d')return;zoom=event.detail.factor;$('#zoom-level').textContent=Math.round(zoom*100)+'%';$('#zoom-out').disabled=zoom<=.401;$('#zoom-in').disabled=zoom>=3.99});
