@@ -4,6 +4,36 @@ An interactive cell-biology notebook with rotatable 3D cells, illustrated organe
 
 Explore seven specimens: **plant cell, animal cell, white blood cell, neuron, epithelial cell, bacterium, and skeletal muscle fiber**.
 
+The **Protein journey** now follows gold cargo through the rotatable animal model, with a pathway-map alternative and six learning checks. **Virtual lab** adds prediction → observation → explanation investigations for ER-to-Golgi transport and plant water balance. These simulations illustrate mechanisms; their geometry, timing, and water changes are not measurements.
+
+Mixed practice combines identification, function, comparison, and sequence questions. A five-question set includes all four types. Questions that needed a retry, hint, or reveal are prioritized when you choose **Review missed concepts**. Review priorities last only while the page is open. Mixed-practice responses are saved by the same anonymous backend as the atlas quiz; experiment predictions and journey checks are not saved.
+
+The admin dashboard now shows first-try, assisted, revealed, and incomplete results, plus concepts needing support across all sessions matching its filter. Counts describe attempts, not unique students or verified mastery. Focus a nucleus, mitochondrion, or chloroplast in 3D to see internal feature labels.
+
+The **study desk** beneath the atlas adds original tissue schematics, a browser-local image workspace, and side-by-side comparisons between any two specimens. Tissue previews are illustrations, not microscope photographs. Bacterial and eukaryotic ribosomes are recognized as shared structure types in comparisons.
+
+Use **Save structure** to collect a library and **Add note** to write a field notebook. Both last in the current page only; download the notebook as a text file before reloading. Image files added to the workspace are opened through browser object URLs and never sent to the backend. PNG, JPEG, and WebP files up to 12 MB are supported. Zoom is visual magnification; no physical scale or measurements are inferred.
+
+**Snapshot** downloads the current 3D view as a labeled PNG. **3D model** downloads a `.three.json` file containing the procedural model's geometry and materials, readable with Three.js `ObjectLoader`. It is not GLB or STL. The Gallery, Library, Notebook, and Settings buttons open working study tools. Generated reference illustrations remain separate from rotatable geometry.
+
+## Feature guide
+
+| Area | What you can do |
+| --- | --- |
+| Cell atlas | Rotate, pan, zoom, isolate, and focus structures in seven procedural 3D models; use generated illustrations or plant/animal SVG diagrams instead |
+| Structure details | Read function, construction, location, recognition tips, internal anatomy, and a sourced cell-specific fun fact |
+| Protein journey | Follow cargo inside the 3D animal cell or use the pathway map; pause, resume, change speed, and answer six lesson checks |
+| Virtual lab | Predict and observe blocked ER-to-Golgi transport or plant-cell water balance; compare with an explained outcome |
+| Practice | Take specimen quizzes or mixed identification, function, comparison, and sequence questions; review missed concepts |
+| Study desk | Open cell-pattern, stain, and membrane schematics; add a local image and visually zoom it |
+| Comparisons | Compare any two specimens and open shared or specialized structures in the atlas |
+| Gallery and library | Browse seven specimens and bookmark selected structures for the current page |
+| Notebook | Write notes per specimen/structure and download all notes as a text file |
+| Downloads | Save a labeled PNG snapshot or export the procedural model as Three.js Object JSON |
+| Local results dashboard | Sign in to inspect anonymous answers, first-try scores, assisted answers, reveals, incomplete sessions, and concept-support counts |
+
+**Public and local editions differ:** the [live public beta](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.site) has practice-only quizzes and no admin dashboard. Running the Python server locally enables anonymous answer saving and the protected dashboard. Notebook text, bookmarks, local images, and targeted-review priorities remain in browser memory in both editions; reload clears them. Download notes before leaving.
+
 ## 1. What you need
 
 - **Git**, to download the project.
@@ -81,7 +111,7 @@ Do not open `index.html` by double-clicking it. Serve the site through the Pytho
 4. Read its explanation, construction, location, recognition tips, and internal anatomy. A **Cell fun fact** card in the side panel shares a different sourced fact for each specimen; it updates when you switch cells and is hidden during quizzes. Expand **How it fits into the cell** for more context.
 5. Use **Focus structure** or **Inspect in 3D** for an isolated close-up. **Reset view** returns to the whole cell.
 
-**Illustration** shows generated cutaway artwork. **Diagram**, available for plant and animal cells, shows an annotated SVG schematic. **Protein journey** walks through a secreted protein's route; **Compare cells** explains shared structures and differences.
+**Illustration** shows generated cutaway artwork. **Diagram**, available for plant and animal cells, shows an annotated SVG schematic. **Protein journey** follows a gold cargo marker through six stages inside the 3D animal cell or the pathway map, with location/state notes, pause/resume, 1×/2× playback, and practice checks (not saved as quiz results); **Compare cells** explains shared structures and differences.
 
 ### Take a quiz
 
@@ -120,7 +150,7 @@ The descriptions and study notes use project-specific wording, with these OpenSt
 
 | Book | Sections used |
 | --- | --- |
-| **Biology 2e**, Mary Ann Clark, Matthew Douglas, and Jung Choi; OpenStax, Rice University | [4.2 Prokaryotic Cells](https://openstax.org/books/biology-2e/pages/4-2-prokaryotic-cells), [4.3 Eukaryotic Cells](https://openstax.org/books/biology-2e/pages/4-3-eukaryotic-cells), [4.4 The Endomembrane System and Proteins](https://openstax.org/books/biology-2e/pages/4-4-the-endomembrane-system-and-proteins), [4.5 The Cytoskeleton](https://openstax.org/books/biology-2e/pages/4-5-the-cytoskeleton) |
+| **Biology 2e**, Mary Ann Clark, Matthew Douglas, and Jung Choi; OpenStax, Rice University | [4.2 Prokaryotic Cells](https://openstax.org/books/biology-2e/pages/4-2-prokaryotic-cells), [4.3 Eukaryotic Cells](https://openstax.org/books/biology-2e/pages/4-3-eukaryotic-cells), [4.4 The Endomembrane System and Proteins](https://openstax.org/books/biology-2e/pages/4-4-the-endomembrane-system-and-proteins), [4.5 The Cytoskeleton](https://openstax.org/books/biology-2e/pages/4-5-the-cytoskeleton), [5.2 Passive Transport](https://openstax.org/books/biology-2e/pages/5-2-passive-transport) |
 | **Anatomy and Physiology 2e**, OpenStax, Rice University | [4.2 Epithelial Tissue](https://openstax.org/books/anatomy-and-physiology-2e/pages/4-2-epithelial-tissue), [10.2 Skeletal Muscle](https://openstax.org/books/anatomy-and-physiology-2e/pages/10-2-skeletal-muscle), [12.2 Nervous Tissue](https://openstax.org/books/anatomy-and-physiology-2e/pages/12-2-nervous-tissue) |
 
 These are simplified teaching models, not measured reconstructions. Colors and proportions are illustrative. Organelle presence varies by cell type: for example, not every plant cell contains chloroplasts, and a basement membrane lies outside a cell.
@@ -158,6 +188,8 @@ Three.js 0.180.0 and OrbitControls are included under their [MIT license](vendor
 | `specimens.js`, `app.js` | Specimens, biology descriptions, selection, and quiz flow |
 | `learning.js`, `diagram.js` | Study notes, close-ups, lessons, comparisons, and diagrams |
 | `cell-models.js`, `viewer3d.js` | 3D geometry, camera, selection, and labels |
+| `studio.js` | Gallery, library, notebook, tissue workspace, specimen comparisons, and downloads |
+| `lab.js`, `lab-data.js` | Virtual investigations, guided progress, and mixed practice |
 | `quiz-store.js` | Sends quiz responses to the backend and displays saving status |
 | `admin.html`, `admin.css`, `admin.js` | Admin login and results dashboard interface |
 | `backend/server.py`, `backend/admin.py` | Website/API server, storage, admin authentication, and score summaries |
@@ -179,6 +211,16 @@ If Node.js is installed, run the geometry checks (no npm installation needed):
 node tests/model-geometry.mjs
 ```
 
-**Local setup does not deploy the website online.** GitHub Pages can serve the static cell explorer, but cannot run the Python backend, save answers, or provide the admin dashboard. The included Pages workflow is manual; publishing remains paused. Keep the repository private unless its owner explicitly chooses otherwise.
+**Local setup does not deploy the website online.** GitHub Pages can serve the static cell explorer, but cannot run the Python backend, save answers, or provide the admin dashboard. The included Pages workflow is manual; GitHub Pages is not the host of the live public beta. Keep the repository private unless its owner explicitly chooses otherwise.
 
 For online answer saving, a separate backend deployment needs HTTPS, private persistent storage, secure cookies, backups, rate limiting, and scheduled cleanup. See [backend deployment notes](backend/README.md). A private GitHub repository does not automatically make a deployed Pages website private.
+
+## Public practice-only release
+
+Live beta: [Cellscape](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.site). The GitHub source repository remains private.
+
+`python3 scripts/build_public.py` creates `_site/` using an explicit allowlist. The public quiz adapter never sends answer-saving requests. The generated package excludes the backend, admin dashboard, databases, credentials, private exports, and reference recordings. It includes a public-beta banner and a privacy notice for browser-only practice.
+
+Local development still uses the normal Python backend; the public build does not alter local answer saving or admin access. To preview the public release, run `python3 -m http.server 8003 --directory _site` and open `http://127.0.0.1:8003/`.
+
+The Pages workflow uses this builder, but GitHub currently requires an account upgrade to publish Pages from this private repository. Keep the repository private. The separate Sites hosting checkout is excluded from the main repository by `.gitignore`. Deployment identifiers and the public URL are recorded in `design/public-release.json`. Updating GitHub does not automatically update the live Site; regenerate and deploy the sanitized package separately.

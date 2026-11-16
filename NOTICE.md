@@ -29,3 +29,7 @@ Additional fact-checking references for the field guide: Biology 2e sections 4.2
 CELLS alive! and a cell-explorer demo by Dilum Sanjaya were supplied as interaction and visual references. Their artwork, screenshots, video frames, branding, source code, and third-party meshes are not included in the distributed site. Local reference frames, recordings, UI concepts, and preview screenshots are excluded from version control. Keep them outside `assets/`, which is a publishable directory.
 
 See `about.html` for the visitor-facing credits and privacy notice. The notebook is a simplified educational aid, not microscopy data or medical guidance.
+
+Virtual investigations and mixed practice use original explanatory wording, checked against OpenStax Biology 2e sections 4.4 (endomembrane traffic) and 5.2 (passive transport). The 3D experiments are qualitative, simplified teaching models; they do not supply measured kinetics or osmotic predictions.
+
+The study-desk layout and tool concepts were informed by the supplied reference recording. Gallery and comparison panels reuse this project’s generated assets. Tissue-pattern, stain-study, and membrane-study previews are original SVG schematics, not microscopy photographs or extracted video frames. Added user images are not uploaded or redistributed. Model exports use Three.js Object JSON; preserve applicable third-party library notices.

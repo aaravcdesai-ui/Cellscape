@@ -25,3 +25,6 @@ __pycache__/
 
 # Admin credential hashes must never be committed.
 admin.json
+
+# Separate public hosting checkout (contains only the sanitized frontend).
+sites/cellscape-public/

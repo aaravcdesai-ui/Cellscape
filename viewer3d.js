@@ -1,8 +1,9 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/three/OrbitControls.js';
-import {buildCellModel} from './cell-models.js';
+import {buildCellModel} from './cell-models.js?v=2';
 const host=document.querySelector('#viewer3d');
 const status=document.querySelector('#viewer3d-status');
+const homeViewport=host.parentElement;let lessonMode=false,lessonStage=-1,cargo=null,carrier=null,lessonTrail=null;const waterBases=new Map();
 let renderer,scene,camera,controls,model=null,currentKind=null,activeId=null,isolated=false,cutaway=true,showLabels=true,quizMode=false;
 let dirty=true,enabled=false,baseDistance=10,pointerStart=null,hovered=null,lastZoom=null,flight=null,focusedView=false;
 const selectable=[],labelNodes=new Map(),labelAnchors=new Map();
@@ -83,7 +84,7 @@ function build(kind){
  model.traverse(o=>{if(o.isMesh){selectable.push(o);const id=idFor(o);if(id&&!labelAnchors.has(id))labelAnchors.set(id,o);if(o.material){for(const mat of Array.isArray(o.material)?o.material:[o.material]){mat.userData.baseColor=mat.color.clone();mat.userData.baseOpacity=mat.opacity}}}});
  // Prefer a structure's group origin over the first pore or ribbon vertex.
  model.traverse(o=>{if(o.isGroup&&o.userData.structureId)labelAnchors.set(o.userData.structureId,o)});
- document.querySelector('#viewer3d canvas').setAttribute('aria-label',kind+' cell 3D model. Drag to rotate; scroll to zoom. Arrow keys rotate, Shift plus arrows pan, plus and minus zoom, Home resets.');
+ host.querySelector('canvas').setAttribute('aria-label',kind+' cell 3D model. Drag to rotate; scroll to zoom. Arrow keys rotate, Shift plus arrows pan, plus and minus zoom, Home resets.');
  fit(true);dirty=true;
 }
 function applySelection(){
@@ -98,15 +99,34 @@ function applySelection(){
  const ground=scene.getObjectByName('specimen-ground');if(ground)ground.visible=!isolated;
  host.dataset.isolated=String(isolated);host.dataset.selection=activeId||'';dirty=true;syncButtons();updateLabels();
 }
+const internalFeatures={
+ nucleus:[['Nuclear envelope',[.8,.25,.1],0],['Nuclear pores',[.45,.7,.25],1],['Chromatin',[-.25,.05,.2],2]],
+ mitochondrion:[['Outer membrane',[.66,0,.08],0],['Cristae',[-.12,.15,0],1],['Matrix',[.18,-.1,.1],2]],
+ chloroplast:[['Double envelope',[.73,0,.1],0],['Thylakoid stacks',[-.15,.18,0],1],['Stroma',[.3,-.02,.24],2]]
+};
+function showInternalLabels(width,height){
+ const anchor=labelAnchors.get(activeId);if(!anchor)return;
+ internalFeatures[activeId].forEach(([name,position,part],i)=>{
+  const id='internal-'+i;let node=labelNodes.get(id),path=leaderNodes.get(id);
+  if(!node){node=document.createElement('button');node.type='button';node.className='three-label selected';labels.append(node);labelNodes.set(id,node)}
+  if(!path){path=document.createElementNS('http://www.w3.org/2000/svg','path');leaderLayer.append(path);leaderNodes.set(id,path)}
+  node.textContent=name;node.setAttribute('aria-label','Inspect '+name);node.onclick=()=>window.dispatchEvent(new CustomEvent('cell3d-feature',{detail:{part}}));node.hidden=false;
+  const point=anchor.localToWorld(new T.Vector3(...position)).project(camera),x=(point.x*.5+.5)*width,y=(-point.y*.5+.5)*height;
+  const left=i!==1,labelX=left?12:width-node.offsetWidth-12,labelY=height*(.2+i*.26);
+  node.style.left=labelX+'px';node.style.top=labelY+'px';const end=left?labelX+node.offsetWidth:labelX;
+  path.setAttribute('d',`M${x},${y}L${end+(left?12:-12)},${labelY+14}H${end}`);path.setAttribute('class','selected');path.style.display='';
+ });host.dataset.visibleLabels='3';
+}
 function updateLabels(){
  if(!model||!camera)return;
  const width=host.clientWidth,height=host.clientHeight,narrow=width<440;
- const priority=[activeId,'nucleus','vacuole','mitochondrion','chloroplast','nucleoid','axon','myofibril','microvilli'];
+ const priority=lessonMode?[activeId]:[activeId,'nucleus','vacuole','mitochondrion','chloroplast','nucleoid','axon','myofibril','microvilli'];
  const limit=narrow?1:width<620?2:3,chosen=[];
  leaderLayer.setAttribute('viewBox',`0 0 ${width} ${height}`);
  for(const node of labelNodes.values())node.hidden=true;
  for(const path of leaderNodes.values())path.style.display='none';
  if(!showLabels||quizMode)return;
+ if(focusedView&&!lessonMode&&internalFeatures[activeId]){showInternalLabels(width,height);return;}
  for(const id of [...new Set(priority)]){
   if(!id||!labelAnchors.has(id)||chosen.length>=limit||((isolated||focusedView)&&id!==activeId))continue;
   const anchor=labelAnchors.get(id);let p=anchor.getWorldPosition(new T.Vector3());
@@ -149,7 +169,7 @@ function pick(event){
   const id=idFor(hit.object);if(id&&window.CellAtlasBridge?.hasStructure(id))return id;
  }return null;
 }
-function dispatchSelection(id){window.dispatchEvent(new CustomEvent('cell3d-select',{detail:{id}}))}
+function dispatchSelection(id){if(lessonMode)return;window.dispatchEvent(new CustomEvent('cell3d-select',{detail:{id}}))}
 function init(){
  try{
   renderer=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance',preserveDrawingBuffer:true});
@@ -184,7 +204,7 @@ function init(){
   document.querySelector('#spin-3d').onclick=()=>{controls.autoRotate=!controls.autoRotate;syncButtons();dirty=true};
   document.querySelector('#reset-3d').onclick=reset;
   renderer.setAnimationLoop(()=>{
-   if(!enabled||document.hidden||document.body.dataset.page!=='atlas')return;
+   if(!enabled||document.hidden||(!lessonMode&&document.body.dataset.page!=='atlas'))return;
    if(flight){const t=Math.min(1,(performance.now()-flight.start)/650),e=t*t*(3-2*t);camera.position.lerpVectors(flight.fromPosition,flight.toPosition,e);controls.target.lerpVectors(flight.fromTarget,flight.toTarget,e);dirty=true;if(t===1)flight=null}
    const changed=controls.update();if(dirty||changed||controls.autoRotate){updateLabels();renderer.render(scene,camera);dirty=false}
   });
@@ -193,17 +213,70 @@ function init(){
   status.hidden=false;status.textContent='3D requires WebGL 2. Try a current Chrome or Safari browser, or use Illustration.';document.querySelector('#viewer3d').dataset.error='webgl';console.error('Cellscape 3D initialization failed:',error);return false;
  }
 }
+// Reuse the same real 3D geometry and GPU canvas for lessons and experiments.
+const processPoints=[new T.Vector3(.7,.32,-.6),new T.Vector3(.5,.08,-.4),new T.Vector3(.85,-.05,.6),new T.Vector3(.45,-.2,1.38),new T.Vector3(1.85,-.1,1.7),new T.Vector3(3.8,.08,1.0)];
+const processIds=['ribosomes','rough-er','vesicle','golgi','vesicle','membrane'];
+function endLesson(){
+ if(!lessonMode)return;lessonMode=false;lessonStage=-1;host.removeAttribute('data-lesson');homeViewport.append(host);
+ if(cargo)cargo.visible=false;if(carrier)carrier.visible=false;if(lessonTrail)lessonTrail.visible=false;
+ for(const [object,scale] of waterBases)object.scale.copy(scale);waterBases.clear();
+}
+function setLesson({hostId,kind='animal',stage=0,progress=1,blocked=false,water=null}){
+ if(!initialized)return false;const target=document.getElementById(hostId);if(!target)return false;
+ const moved=host.parentElement!==target,changed=kind!==currentKind;
+ if(moved)target.append(host);flight=null;if(controls)controls.autoRotate=false;lessonMode=true;host.dataset.lesson='true';host.dataset.model=kind;enabled=true;
+ if(changed){waterBases.clear();build(kind);lessonStage=-1}
+ isolated=false;focusedView=false;cutaway=true;quizMode=false;showLabels=true;
+ const effectiveStage=blocked?Math.min(stage,1):stage;
+ const nextId=water!==null?'vacuole':processIds[effectiveStage];
+ if(activeId!==nextId||changed||lessonStage!==effectiveStage){activeId=nextId;applySelection();lessonStage=effectiveStage}
+ if(!cargo){cargo=new T.Mesh(new T.IcosahedronGeometry(.13,2),new T.MeshStandardMaterial({color:0xeac063,emissive:0x9f641a,emissiveIntensity:.3,roughness:.35}));cargo.name='lesson-protein';scene.add(cargo);carrier=new T.Mesh(new T.SphereGeometry(.28,24,16),new T.MeshStandardMaterial({color:0xe7cf92,transparent:true,opacity:.28,depthWrite:false}));scene.add(carrier);
+  const points=processPoints.map(p=>p.clone()),path=new T.CatmullRomCurve3(points);lessonTrail=new T.Mesh(new T.TubeGeometry(path,70,.012,5,false),new T.MeshBasicMaterial({color:0xb99b59,transparent:true,opacity:.5}));scene.add(lessonTrail);
+ }
+ cargo.visible=carrier.visible=lessonTrail.visible=water===null;
+ if(water===null){
+  const from=processPoints[Math.max(0,effectiveStage-1)],to=processPoints[effectiveStage],t=blocked&&stage>1?1:T.MathUtils.clamp(progress,0,1);
+  cargo.position.lerpVectors(from,to,t);cargo.position.y+=Math.sin(t*Math.PI)*.12;carrier.position.copy(cargo.position);carrier.visible=effectiveStage===2||effectiveStage===4;
+  host.dataset.cargoStage=String(effectiveStage);host.dataset.transport=blocked?'blocked':'normal';
+ }else{
+  model.traverse(o=>{if(o.isMesh&&['vacuole','cytosol'].includes(idFor(o))){if(!waterBases.has(o))waterBases.set(o,o.scale.clone());const factor=idFor(o)==='vacuole'?(.58+water*.42):(.90+water*.10);o.scale.copy(waterBases.get(o)).multiplyScalar(factor)}});
+  host.dataset.water=water.toFixed(2);
+ }
+ if(changed||moved){camera.aspect=host.clientWidth/Math.max(1,host.clientHeight);fit(true);resize()}
+ dirty=true;return true;
+}
+async function snapshot(){
+ if(!renderer||!enabled||lessonMode||document.body.dataset.page!=='atlas')return null;
+ renderer.render(scene,camera);const source=renderer.domElement,output=document.createElement('canvas'),scale=source.width/host.clientWidth;
+ output.width=source.width;output.height=source.height+Math.round(72*scale);const ctx=output.getContext('2d');
+ ctx.fillStyle='#f6f4e9';ctx.fillRect(0,0,output.width,output.height);ctx.drawImage(source,0,0);
+ const bounds=host.getBoundingClientRect();ctx.save();ctx.scale(scale,scale);
+ ctx.strokeStyle='#a18ba8';ctx.lineWidth=1;for(const path of leaderNodes.values()){const d=path.getAttribute('d');if(d&&getComputedStyle(path).display!=='none')ctx.stroke(new Path2D(d))}
+ for(const node of labelNodes.values()){
+  if(node.hidden||!node.getClientRects().length)continue;const r=node.getBoundingClientRect(),x=r.left-bounds.left,y=r.top-bounds.top;
+  if(x<0||y<0||x+r.width>host.clientWidth||y+r.height>host.clientHeight)continue;
+  ctx.fillStyle='#f7eef9';ctx.fillRect(x,y,r.width,r.height);ctx.strokeStyle='#b9a5c3';ctx.strokeRect(x,y,r.width,r.height);ctx.fillStyle='#574361';ctx.font='11px sans-serif';ctx.fillText(node.textContent,x+8,y+r.height/2+4);
+ }
+ ctx.fillStyle='#46523e';ctx.font='18px Georgia';ctx.fillText('Cellscape / '+(window.CellAtlasBridge?.specimenName?.()||currentKind+' cell'),18,host.clientHeight+28);
+ ctx.fillStyle='#737d65';ctx.font='10px sans-serif';ctx.fillText('Procedural teaching model · Simplified anatomy · Not to scale',18,host.clientHeight+49);ctx.restore();
+ return new Promise(resolve=>output.toBlob(resolve,'image/png'));
+}
+function exportModel(){
+ if(!model||!enabled||lessonMode||document.body.dataset.page!=='atlas')return null;
+ const data=model.toJSON();data.metadata.cellscape={specimen:currentKind,description:'Procedural educational model; simplified anatomy and proportions.',format:'Three.js Object JSON',licenseNotice:'Preserve vendor/three/LICENSE when redistributing Three.js.'};return data;
+}
 const initialized=init();
 window.Cell3D={
  show(kind,id,withLabels=true,isQuiz=false){
+  endLesson();
   enabled=true;host.dataset.model=kind;if(!initialized)return;
   const changed=kind!==currentKind;if(changed)build(kind);
   const selectionChanged=activeId!==id;activeId=id;showLabels=withLabels;quizMode=isQuiz;if(quizMode)isolated=false;
   applySelection();if(changed)resize();else if(focusedView){if(selectionChanged&&!quizMode)focusStructure()}else if(isolated)fit(false);dirty=true;
  },
  hide(){flight=null;enabled=false;if(controls){controls.autoRotate=false;syncButtons()}},
- zoomTo,reset,focus:focusStructure,
- ready:initialized,
+ zoomTo,reset,focus:focusStructure,lesson:setLesson,endLesson,
+ ready:initialized,snapshot,exportModel,
  // Read-only diagnostics are kept on the DOM for QA and troubleshooting.
 };
 if(initialized){controls.addEventListener('change',()=>{host.dataset.camera=camera.position.toArray().map(v=>v.toFixed(3)).join(',');host.dataset.target=controls.target.toArray().map(v=>v.toFixed(3)).join(',')});}

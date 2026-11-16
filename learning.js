@@ -172,60 +172,92 @@ window.addEventListener('resize',()=>requestAnimationFrame(()=>setZoom(zoom)));
 resetZoom();
 
 const journey = [
- ['Ribosome','Build the chain','A ribosome begins reading mRNA in the cytosol. For this secreted protein, a targeting signal brings the ribosome to the rough ER as translation continues.',100,109],
- ['Rough ER','Fold and check','The growing protein enters the ER lumen. It folds into a working shape and undergoes quality control before export.',234,109],
- ['Transport vesicle','Make the connection','A small membrane carrier buds from the ER and delivers its cargo to the receiving side of the Golgi.',366,109],
- ['Golgi','Modify and sort','The cargo passes through Golgi compartments for further processing and sorting toward its destination.',499,109],
- ['Secretory vesicle','Pack for delivery','A carrier leaving the Golgi brings the secreted protein toward the cell surface.',632,109],
- ['Cell membrane','Release outside','The vesicle membrane fuses with the cell membrane. Its soluble cargo leaves the cell by exocytosis.',765,109]
+ ['Ribosome','Read the instructions','Translation begins on a ribosome in the cytosol. An mRNA supplies the amino-acid sequence; a signal in this growing secreted protein directs the ribosome to the rough ER.',105,190,'Cytosol → rough ER','An amino-acid chain is being built','A signal sequence is an address label, not a separate delivery vesicle.'],
+ ['Rough ER','Fold into a working shape','As translation continues, the chain enters the ER lumen. Folding, quality control, and some chemical modifications prepare it for transport. Misfolded proteins are not simply sent onward.',275,202,'Inside the ER lumen','Folded protein; early processing','The ribosome stays on the cytosolic face. The growing protein passes through a channel in the ER membrane.'],
+ ['Transport vesicle','Travel inside a carrier','A vesicle buds from the ER with the protein enclosed in its lumen. Targeting and fusion machinery guide delivery to the receiving, or cis, side of the Golgi.',408,210,'Vesicle lumen','Enclosed cargo','The protein stays separated from the cytosol while its carrier travels between compartments.'],
+ ['Golgi','Modify, sort, and address','The protein moves through the Golgi’s compartments, where further processing can alter attached carbohydrate groups. The trans side sorts cargo toward its destination.',562,193,'Golgi compartments: cis → trans','Processed and sorted protein','The Golgi sorts cargo; it does not read mRNA or build the original amino-acid chain.'],
+ ['Secretory vesicle','Carry it to the surface','A carrier leaves the Golgi and brings this soluble secreted protein toward the plasma membrane. Some cargo is released continuously; other cargo waits for a signal.',723,202,'Secretory vesicle lumen','Ready for secretion','A secretory vesicle carries both a membrane and cargo inside it. These have different destinations during fusion.'],
+ ['Cell membrane','Deliver beyond the cell','The vesicle fuses with the plasma membrane. Its membrane joins the cell surface, while the soluble protein is released outside by exocytosis.',880,190,'Outside the cell','Released protein','Membrane proteins can remain in a membrane. This particular journey follows a soluble protein destined for secretion.']
 ];
-let journeyStep=0,playing=false,journeyTimer=null,cargoAnimation=null;
+const journeyChecks=[
+ ['What does the ribosome read?',['Messenger RNA','A transport vesicle','A Golgi stack'],0,'The mRNA sequence guides the order of amino acids in the new protein.'],
+ ['Which side of rough ER holds the ribosome?',['Inside the ER lumen','The cytosolic surface','Inside the nucleus'],1,'The ribosome is on the cytosolic face; the growing chain passes into the ER lumen.'],
+ ['Where is this protein during transport?',['Loose in the cytosol','Inside the vesicle','Inside a ribosome'],1,'The carrier’s lumen keeps the cargo separated from the cytosol.'],
+ ['What is a key Golgi task?',['Copying DNA','Reading mRNA','Processing and sorting cargo'],2,'Golgi compartments process cargo and sort it toward different destinations.'],
+ ['Where did this carrier come from?',['The Golgi','A chloroplast','The nucleolus'],0,'This secretory carrier leaves the trans side of the Golgi.'],
+ ['What happens to the vesicle membrane?',['It becomes part of the cell membrane','It is released as the protein','It turns into mRNA'],0,'During fusion, the membranes join. The soluble cargo is released outside.']
+];
+let journeyStep=0,playing=false,journeyFrame=null,journeyElapsed=0,journeyLast=null,journeySpeed=1;
+const journeyDuration=6500;
 $('#journey-stages').innerHTML=journey.map(([name],i)=>`<button data-stage="${i}" aria-pressed="${i===0}"><span>${String(i+1).padStart(2,'0')}</span>${name}</button>`).join('');
-$('#journey-art').innerHTML=`<path d="M100 109H765" stroke="#bdc9b0" stroke-width="3" stroke-dasharray="5 7"/>
-<g stroke="#76906f" stroke-width="3"><path d="M69 103q30-54 61 0z" fill="#a3b68e"/><path d="M72 121q29 27 56 0z" fill="#c5d2ad"/><path d="M53 115h94"/>
-<path d="M191 79q43-28 86 0v24q-43 28-86 0zm0 48q43-28 86 0v24q-43 28-86 0z" fill="#c3d0af"/>
-<circle cx="366" cy="109" r="28" fill="#d5dfba"/>
-<g fill="none" stroke="#b2a274" stroke-width="12" stroke-linecap="round"><path d="M459 71q40 22 80 0m-74 24q35 22 68 0m-61 24q30 22 55 0m-46 24q19 16 38 0"/></g>
-<circle cx="632" cy="109" r="28" fill="#d5dfba"/><path d="M748 46v125m15-125v125" stroke-width="7"/>
-<path d="M778 109h40l-10-8m10 8-10 8" fill="none"/></g>
-<circle id="protein-dot" cx="100" cy="109" r="9" fill="#bf8139" stroke="#fff8dc" stroke-width="3"/>
-${journey.map(([name],i)=>`<text x="${journey[i][3]}" y="204" text-anchor="middle">${name}</text>`).join('')}`;
-function pauseJourney(freeze=true){if(freeze&&cargoAnimation?.playState==='running')cargoAnimation.pause();playing=false;clearInterval(journeyTimer);journeyTimer=null;$('#journey-play').textContent=journeyStep===5?'Replay journey':'Play journey';$('#journey-play').setAttribute('aria-pressed','false')}
+$('#journey-art').setAttribute('viewBox','0 0 960 350');
+$('#journey-art').setAttribute('aria-label','Secreted protein route: ribosome, rough ER, transport vesicle, Golgi, secretory vesicle, then exocytosis at the plasma membrane.');
+$('#journey-art').innerHTML=`<defs><linearGradient id="er-shade" x2="0" y2="1"><stop stop-color="#d5dfea"/><stop offset="1" stop-color="#91aac1"/></linearGradient><linearGradient id="golgi-shade" x2="0" y2="1"><stop stop-color="#f0c3ab"/><stop offset="1" stop-color="#cb8d7c"/></linearGradient><marker id="journey-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#a6ac94"/></marker></defs>
+<text x="34" y="34" class="journey-zone">INSIDE THE CELL / CYTOSOL</text><text x="849" y="34" class="journey-zone">OUTSIDE</text>
+<path d="M100 190C175 125 210 148 275 202S360 240 408 210S498 158 562 193S670 236 723 202S827 150 880 190" class="journey-route" marker-end="url(#journey-arrow)"/>
+<g class="journey-station" data-journey-node="0"><circle class="station-halo" cx="105" cy="190" r="62"/><path d="M48 184Q43 117 105 120Q169 120 164 184Z" fill="#af9cc2" stroke="#857197" stroke-width="2"/><path d="M54 201Q106 250 156 201L151 191H61Z" fill="#cbbbd7" stroke="#857197" stroke-width="2"/><path d="M27 188H178" stroke="#819875" stroke-width="5"/><path d="M84 143L91 129L101 139L112 123" stroke="#d7ad5b" fill="none" stroke-width="5"/><text x="105" y="282">Ribosome</text><text x="105" y="303" class="journey-sub-label">Read mRNA</text></g>
+<g class="journey-station" data-journey-node="1"><circle class="station-halo" cx="275" cy="190" r="70"/><g fill="url(#er-shade)" stroke="#7b96af" stroke-width="2"><path d="M211 123Q269 94 337 124L334 151Q278 126 212 155Z"/><path d="M211 169Q269 140 337 170L334 197Q278 172 212 201Z"/><path d="M211 215Q269 186 337 216L334 243Q278 218 212 247Z"/></g>${Array.from({length:9},(_,i)=>`<circle cx="${220+i*13}" cy="${119+Math.sin(i*.6)*-12}" r="4" fill="#a08bae"/><circle cx="${220+i*13}" cy="${165+Math.sin(i*.6)*-12}" r="4" fill="#a08bae"/>`).join('')}<text x="275" y="282">Rough ER</text><text x="275" y="303" class="journey-sub-label">Fold & check</text></g>
+<g class="journey-station" data-journey-node="2"><circle class="station-halo" cx="408" cy="210" r="54"/><circle cx="408" cy="210" r="32" fill="#e7ddbb" stroke="#b8a77a" stroke-width="4"/><circle cx="408" cy="210" r="25" fill="none" stroke="#f6efd8" stroke-width="2"/><text x="408" y="282">Transport vesicle</text><text x="408" y="303" class="journey-sub-label">ER → Golgi</text></g>
+<g class="journey-station" data-journey-node="3"><circle class="station-halo" cx="562" cy="190" r="72"/>${Array.from({length:5},(_,i)=>`<path d="M${505+i*4} ${126+i*24}Q563 ${153+i*24} ${620-i*4} ${126+i*24}" fill="none" stroke="url(#golgi-shade)" stroke-width="16" stroke-linecap="round"/>`).join('')}<text x="509" y="100" class="journey-sub-label">cis</text><text x="613" y="255" class="journey-sub-label">trans</text><text x="562" y="282">Golgi apparatus</text><text x="562" y="303" class="journey-sub-label">Modify & sort</text></g>
+<g class="journey-station" data-journey-node="4"><circle class="station-halo" cx="723" cy="202" r="54"/><circle cx="723" cy="202" r="32" fill="#e7ddbb" stroke="#b8a77a" stroke-width="4"/><circle cx="723" cy="202" r="25" fill="none" stroke="#f6efd8" stroke-width="2"/><text x="723" y="282">Secretory vesicle</text><text x="723" y="303" class="journey-sub-label">To the surface</text></g>
+<g class="journey-station" data-journey-node="5"><circle class="station-halo" cx="858" cy="190" r="58"/><path d="M818 64V150Q775 190 818 231V315M832 64V151Q790 190 832 230V315" fill="none" stroke="#9bad80" stroke-width="6"/>${Array.from({length:15},(_,i)=>`<circle cx="818" cy="${67+i*17}" r="3.5" fill="#718b64"/><circle cx="832" cy="${67+i*17}" r="3.5" fill="#718b64"/>`).join('')}<path d="M846 192H916" stroke="#9bad80" stroke-width="2" marker-end="url(#journey-arrow)"/><text x="880" y="282">Exocytosis</text><text x="880" y="303" class="journey-sub-label">Release cargo</text></g>
+<g id="protein-cargo" transform="translate(105 190)"><circle class="cargo-glow" r="18"/><path id="protein-shape" d="M-10 0Q-8-12 0-7T10 0T0 8T-10 0" fill="#d5a44b" stroke="#8d6625" stroke-width="2"/><circle cx="-3" cy="-1" r="2" fill="#fff1b5"/></g>`;
+const journeyExtra=document.createElement('div');journeyExtra.className='journey-study';journeyExtra.innerHTML=`<div class="cargo-state"><p class="eyebrow">FOLLOW THE GOLD PROTEIN</p><dl><div><dt>Location</dt><dd id="journey-location"></dd></div><div><dt>Protein state</dt><dd id="journey-state"></dd></div></dl><p id="journey-insight"></p></div><div class="journey-check"><p class="eyebrow">PAUSE & THINK</p><h4 id="journey-check-question"></h4><div id="journey-check-options"></div><p id="journey-check-feedback" role="status"></p></div>`;
+$('.journey-bottom').after(journeyExtra);
+const speedLabel=document.createElement('label');speedLabel.className='journey-speed';speedLabel.innerHTML='Playback <select id="journey-speed" aria-label="Journey playback speed"><option value="1">1×</option><option value="2">2×</option></select>';$('.journey-controls').append(speedLabel);
+const progress=document.createElement('div');progress.className='journey-progress';progress.innerHTML='<div id="journey-progress-fill"></div>';$('.journey-viewport').before(progress);
+function pauseJourney(){playing=false;cancelAnimationFrame(journeyFrame);journeyFrame=null;journeyLast=null;$('#journey-play').textContent=journeyStep===5&&journeyElapsed>=journeyDuration?'Replay journey':journeyElapsed>0?'Resume journey':'Play journey';$('#journey-play').setAttribute('aria-pressed','false')}
+function paintCargo(){
+ const end=journey[journeyStep],start=journey[Math.max(0,journeyStep-1)],reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ window.CellLab?.journey(journeyStep,playing?Math.min(1,journeyElapsed/1600):1);
+ const t=reduced||!playing?1:Math.min(1,journeyElapsed/1600),ease=t*t*(3-2*t);
+ $('#protein-cargo').setAttribute('transform',`translate(${start[3]+(end[3]-start[3])*ease} ${start[4]+(end[4]-start[4])*ease})`);
+ $('#journey-progress-fill').style.width=((journeyStep+Math.min(1,journeyElapsed/journeyDuration))/6*100)+'%';
+}
 function showJourney(){
- const [name,title,description,x,y]=journey[journeyStep];
+ const [name,title,description,x,y,location,state,insight]=journey[journeyStep];
  $('#journey-step-title').textContent=title;$('#journey-description').textContent=description;$('#journey-position').textContent=`STEP ${journeyStep+1} OF 6 · ${name.toUpperCase()}`;
- const dot=$('#protein-dot'),from=Number(dot.getAttribute('cx'));
- cargoAnimation?.cancel();dot.setAttribute('cx',x);dot.setAttribute('cy',y);
- if(playing&&from!==x&&!matchMedia('(prefers-reduced-motion:reduce)').matches){cargoAnimation=dot.animate([{transform:`translateX(${from-x}px)`},{transform:'translateX(0px)'}],{duration:1200,easing:'ease-in-out'})}
- document.querySelectorAll('[data-stage]').forEach(b=>{b.setAttribute('aria-pressed',String(Number(b.dataset.stage)===journeyStep));b.classList.toggle('completed',Number(b.dataset.stage)<journeyStep)});
- const windowEl=$('.journey-viewport');windowEl.scrollTo({left:x/860*$('#journey-art').getBoundingClientRect().width-windowEl.clientWidth/2,behavior:'instant'});
+ $('#journey-location').textContent=location;$('#journey-state').textContent=state;$('#journey-insight').textContent=insight;
+ document.querySelectorAll('[data-stage]').forEach(b=>{const active=Number(b.dataset.stage)===journeyStep;b.setAttribute('aria-pressed',String(active));b.classList.toggle('completed',Number(b.dataset.stage)<journeyStep)});
+ document.querySelectorAll('[data-journey-node]').forEach(e=>e.classList.toggle('active',Number(e.dataset.journeyNode)===journeyStep));
  $('#journey-prev').disabled=journeyStep===0;$('#journey-next').disabled=journeyStep===5;
- if(journeyStep===5)pauseJourney(false);
+ const [question,options,answer,explanation]=journeyChecks[journeyStep];$('#journey-check-question').textContent=question;$('#journey-check-feedback').textContent='';$('#journey-check-options').replaceChildren();
+ options.forEach((option,i)=>{const button=document.createElement('button');button.textContent=option;button.onclick=()=>{pauseJourney();if(i===answer){$('#journey-check-feedback').textContent='That’s right. '+explanation;window.CellLab?.completeStep(journeyStep);$('#journey-check-options').querySelectorAll('button').forEach(b=>b.disabled=true)}else{button.disabled=true;$('#journey-check-feedback').textContent='Try another answer. Think about what this compartment does.'}};$('#journey-check-options').append(button)});
+ paintCargo();
+ panJourney();
+}
+function panJourney(){const frame=$('.journey-viewport'),x=journey[journeyStep][3];frame.scrollTo({left:x/960*$('#journey-art').getBoundingClientRect().width-frame.clientWidth/2,behavior:'instant'})}
+window.addEventListener('resize',()=>{if(document.body.dataset.page==='journey')requestAnimationFrame(panJourney)});
+function tickJourney(now){
+ if(!playing)return;if(journeyLast!==null)journeyElapsed+=(now-journeyLast)*journeySpeed;journeyLast=now;
+ if(journeyElapsed>=journeyDuration){if(journeyStep===5){journeyElapsed=journeyDuration;paintCargo();pauseJourney();return}journeyStep++;journeyElapsed=0;showJourney()}
+ paintCargo();journeyFrame=requestAnimationFrame(tickJourney);
 }
 $('#journey-play').onclick=()=>{
  if(playing){pauseJourney();return}
- const replay=journeyStep===5;
- if(replay){journeyStep=0;cargoAnimation?.cancel();$('#protein-dot').setAttribute('cx',100);}
- playing=true;$('#journey-play').textContent='Pause journey';$('#journey-play').setAttribute('aria-pressed','true');
- if(replay)showJourney();else if(cargoAnimation?.playState==='paused')cargoAnimation.play();
- journeyTimer=setInterval(()=>{if(journeyStep<5){journeyStep++;showJourney()}else pauseJourney()},4500);
+ if(journeyStep===5&&journeyElapsed>=journeyDuration){journeyStep=0;journeyElapsed=0;showJourney()}
+ playing=true;journeyLast=null;$('#journey-play').textContent='Pause journey';$('#journey-play').setAttribute('aria-pressed','true');journeyFrame=requestAnimationFrame(tickJourney);
 };
-$('#journey-prev').onclick=()=>{pauseJourney();journeyStep=Math.max(0,journeyStep-1);showJourney()};
-$('#journey-next').onclick=()=>{pauseJourney();journeyStep=Math.min(5,journeyStep+1);showJourney()};
-$('#journey-reset').onclick=()=>{pauseJourney();journeyStep=0;showJourney()};
-$('#journey-stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b){pauseJourney();journeyStep=Number(b.dataset.stage);showJourney()}};
+function goToJourney(step){pauseJourney();journeyStep=step;journeyElapsed=step===5?journeyDuration:step===0?0:1600;showJourney()}
+$('#journey-prev').onclick=()=>goToJourney(Math.max(0,journeyStep-1));$('#journey-next').onclick=()=>goToJourney(Math.min(5,journeyStep+1));$('#journey-reset').onclick=()=>goToJourney(0);
+$('#journey-stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b)goToJourney(Number(b.dataset.stage))};
+$('#journey-speed').onchange=e=>{journeySpeed=Number(e.target.value)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseJourney()});
 showJourney();
 
 function setView(view){
  document.body.dataset.page=view;
- history.replaceState(null,'',view==='atlas'?'#atlas':view==='journey'?'#protein-journey':'#comparison');
+ window.Cell3D?.endLesson();
+ history.replaceState(null,'',view==='atlas'?'#atlas':view==='journey'?'#protein-journey':view==='lab'?'#virtual-lab':'#comparison');
  document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));
  pauseJourney();
- if(view!=='atlas')window.Cell3D?.hide();else if(artworkMode==='3d')window.Cell3D?.show(type,selected,$('#labels').checked,quiz);
+ window.CellLab?.onView(view);
+ if(view==='journey')requestAnimationFrame(panJourney);
+ window.dispatchEvent(new CustomEvent('cellscape-view',{detail:{view}}));
+ if(view==='atlas'&&artworkMode==='3d')window.Cell3D?.show(type,selected,$('#labels').checked,quiz);
 }
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{setView(b.dataset.view);window.scrollTo({top:0,behavior:'instant'})});
-setView(location.hash==='#protein-journey'?'journey':location.hash==='#comparison'?'compare':'atlas');
+setView(location.hash==='#protein-journey'?'journey':location.hash==='#virtual-lab'?'lab':location.hash==='#comparison'?'compare':'atlas');
 let comparisonFilter='all';
 function renderComparison(){
  const shared=structures.filter(s=>specimenCatalog.animal.ids.includes(s.id)&&specimenCatalog.plant.ids.includes(s.id));
@@ -241,3 +273,5 @@ $('#comparison-cards').onclick=e=>{
 };
 renderComparison();
 render();
+
+window.addEventListener('cell3d-feature',e=>{const details=document.querySelector('.anatomy-schematic');if(details)details.open=true;document.querySelector(`[data-part="${e.detail.part}"]`)?.click();document.querySelector('#closeup').scrollIntoView({block:'nearest'})});

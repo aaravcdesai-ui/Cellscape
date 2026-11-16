@@ -5,7 +5,7 @@ const PI=Math.PI;
 let seed=1;
 function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 const palette={nucleus:0x9160ae,nucleolus:0x5c2775,'rough-er':0x718bb9,'smooth-er':0xb3a0c6,golgi:0xdb9781,mitochondrion:0xd99d49,chloroplast:0x82a447,lysosome:0xc488ac,peroxisome:0x8caf8c,vesicle:0xd5b37a,ribosomes:0xc5a2be};
-function material(color,options={}){return new T.MeshStandardMaterial({color,roughness:.48,metalness:.025,...options})}
+function material(color,options={}){return new T.MeshStandardMaterial({color,roughness:.43,metalness:.035,...options})}
 function tag(object,id){object.userData.structureId=id;return object}
 function mesh(parent,geometry,mat,id,position,scale){const m=new T.Mesh(geometry,mat);m.castShadow=true;m.receiveShadow=true;if(id)tag(m,id);if(position)m.position.copy(position);if(scale)m.scale.copy(scale);parent.add(m);return m}
 function sphere(parent,id,p,scale,color,options={}){const result=mesh(parent,new T.SphereGeometry(1,28,20),material(color,options),id,p,scale);if(Math.max(scale.x,scale.y,scale.z)<.1)result.castShadow=false;return result}
@@ -138,6 +138,9 @@ function animal(root,tex,leukocyte=false){
  const closed=sphere(root,'membrane',V(0,-.05,0),radius,leukocyte?0xcbd0dc:0x9fc1d1,{transparent:true,opacity:.24,depthWrite:false,bumpMap:tex,bumpScale:.04});closed.userData.closedOnly=true;
  sphere(root,'cytosol',V(0,-.92,0),V(radius.x*.91,.32,radius.z*.91),leukocyte?0xd3cadc:0xb7cfda,{roughness:.8});
  const rim=[];for(let i=0;i<=96;i++){const a=i/96*PI*2;const f=1+(leukocyte?.04:.018)*(Math.sin(Math.cos(a)*7+Math.sin(a)*3)+.45*Math.sin(Math.sin(a)*11));rim.push(V(Math.cos(a)*radius.x*f,-.04,Math.sin(a)*radius.z*f))}const edge=curve(root,'membrane',rim,.055,leukocyte?0xdce0e6:0xb3d1dc);edge.userData.openOnly=true;
+ // Two exposed leaflet edges and embedded proteins make the membrane cutaway readable.
+ const innerRim=rim.map(p=>V(p.x*.985,p.y-.075,p.z*.985));const innerEdge=curve(root,'membrane',innerRim,.028,leukocyte?0xaab7cb:0x7ba5b5);innerEdge.userData.openOnly=true;
+ for(let i=0;i<12;i++){const a=.2+i/12*PI*2,p=V(Math.cos(a)*radius.x,-.075,Math.sin(a)*radius.z);const protein=sphere(root,'membrane',p,V(.065,.105,.065),leukocyte?0x8997ad:0x7798a6);protein.userData.openOnly=true}
  if(leukocyte){
   const centers=[V(-1.2,.4,-.75),V(.9,.45,-1.1),V(.5,.3,1)];
   for(const p of centers)sphere(root,'nucleus',p,V(.95,.6,.82),0x9060a9,{bumpMap:tex,bumpScale:.09});

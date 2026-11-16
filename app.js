@@ -47,6 +47,7 @@ const s=structures.find(s=>s.id===selected)||structures.find(s=>s.id===spec.defa
 $('#detail-title').textContent=s.name;$('#detail-kicker').textContent=s.kicker;$('#description').textContent=s.description;$('#function').textContent=s.fn;$('#fact').textContent=s.fact;$('#category').textContent=s.category.toUpperCase();$('#detail-number').textContent=`${String(index+1).padStart(2,'0')} / CELL STRUCTURE`;$('#position').textContent=`${String(index+1).padStart(2,'0')} OF ${available().length}`;
 renderCloseup(s);renderStructureProfile(s);
 setZoom(zoom);
+window.CellStudio?.refresh();
 if(focusId)$(`#cell [data-id="${focusId}"]`)?.focus();
 if(focusSelect)$(`[data-select="${focusSelect}"]`)?.focus();
 }
@@ -116,7 +117,7 @@ function finishAnswer(independent,revealed){
  $('#quiz-area').append(btn);btn.focus({preventScroll:true});
 }
 
-window.CellAtlasBridge={nameFor:id=>structures.find(s=>s.id===id)?.name||id,hasStructure:id=>available().some(s=>s.id===id)};
+window.CellAtlasBridge={specimenName:()=>specimenCatalog[type].name,nameFor:id=>structures.find(s=>s.id===id)?.name||id,hasStructure:id=>available().some(s=>s.id===id)};
 window.addEventListener('cell3d-ready',()=>{if(artworkMode==='3d')render()});
 window.addEventListener('cell3d-select',event=>{if(quiz)check(event.detail.id);else select(event.detail.id)});
 window.addEventListener('cell3d-zoom',event=>{if(artworkMode!=='3d')return;zoom=event.detail.factor;$('#zoom-level').textContent=Math.round(zoom*100)+'%';$('#zoom-out').disabled=zoom<=.401;$('#zoom-in').disabled=zoom>=3.99});
