@@ -11,7 +11,7 @@ SCHEMA = '''
 CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, token_hash TEXT NOT NULL, model TEXT NOT NULL, questions TEXT NOT NULL, created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS events(session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE, event_id TEXT NOT NULL, question INTEGER NOT NULL, kind TEXT NOT NULL, answer TEXT, correct INTEGER, created INTEGER NOT NULL, PRIMARY KEY(session_id,event_id));
 '''
-PUBLIC = {'index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','viewer3d.js','cell-models.js','quiz-store.js','admin.html','admin.js','admin.css'}
+PUBLIC = {'index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','viewer3d.js','cell-models.js','quiz-store.js','admin.html','admin.js','admin.css','lab.js','lab-data.js','studio.js'}
 @contextmanager
 def connect(path):
     db = sqlite3.connect(path, timeout=10)
@@ -91,8 +91,8 @@ def handler(database, retention_days, admin_file=None, secure_cookies=False):
                         if not row or not hmac.compare_digest(row['token_hash'],hashlib.sha256(token.encode()).hexdigest()): return self.reply(404, {'error':'Session not found'})
                         eid, number, kind, answer = body.get('eventId'),body.get('question'),body.get('kind'),body.get('answer')
                         if not isinstance(eid,str) or not 8 <= len(eid) <= 80 or type(number)!=int or not 1<=number<=5 or kind not in ('answer','hint','reveal'): raise ValueError()
-                        questions = json.loads(row['questions']); correct_id = questions[number-1]
-                        if kind=='answer' and (not isinstance(answer,str) or answer not in BANK['models'][row['model']]): raise ValueError()
+                        questions = json.loads(row['questions']); definition=BANK['structures'][questions[number-1]];correct_id=definition.get('answer',questions[number-1]);allowed_answers=[o['id'] for o in definition['options']] if 'options' in definition else BANK['models'][row['model']]
+                        if kind=='answer' and (not isinstance(answer,str) or answer not in allowed_answers): raise ValueError()
                         if kind!='answer' and answer is not None: raise ValueError()
                         old = db.execute('SELECT * FROM events WHERE session_id=? AND event_id=?',(sid,eid)).fetchone()
                         if old:
@@ -135,7 +135,7 @@ def main():
             with args.export.open('w',newline='') as out:
                 writer=csv.writer(out); writer.writerow(['session','model','question','correct_answer','prompt','event','chosen_answer','correct','timestamp'])
                 for row in db.execute('SELECT s.id,s.model,s.questions,e.question,e.kind,e.answer,e.correct,e.created FROM events e JOIN sessions s ON s.id=e.session_id ORDER BY e.created,e.rowid'):
-                    q=json.loads(row['questions'])[row['question']-1]; writer.writerow([row['id'],row['model'],row['question'],q,BANK['structures'][q]['prompt'],row['kind'],row['answer'],row['correct'],row['created']])
+                    q=json.loads(row['questions'])[row['question']-1]; writer.writerow([row['id'],row['model'],row['question'],BANK['structures'][q].get('answer',q),BANK['structures'][q]['prompt'],row['kind'],row['answer'],row['correct'],row['created']])
             return
     if args.purge: return
     server=ThreadingHTTPServer((args.host,args.port),handler(args.database,args.retention_days,secure_cookies=args.secure_cookies)); print(f'Cellscape: http://{args.host}:{server.server_port}',flush=True)

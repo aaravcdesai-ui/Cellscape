@@ -50,7 +50,8 @@ def summarize(row,events,bank,detail=False):
         history=[e for e in events if e['question']==n];correct=any(e['correct']==1 for e in history);shown=any(e['kind']=='reveal' for e in history)
         first=bool(history and history[0]['kind']=='answer' and history[0]['correct']==1)
         independent+=first;assisted+=correct and not first;revealed+=shown
-        if detail:questions.append(dict(number=n,expected=qid,name=bank['structures'][qid]['name'],prompt=bank['structures'][qid]['prompt'],outcome='independent' if first else 'assisted' if correct else 'revealed' if shown else 'unanswered',history=[dict(kind=e['kind'],answer=e['answer'],answerName=bank['structures'].get(e['answer'],{}).get('name'),correct=bool(e['correct']) if e['correct'] is not None else None,created=e['created']) for e in history]))
+        definition=bank['structures'][qid];option_names={o['id']:o['text'] for o in definition.get('options',[])};expected=definition.get('answer',qid);expected_name=option_names.get(expected,definition['name'])
+        if detail:questions.append(dict(number=n,expected=expected,name=expected_name,concept=definition.get('concept',definition['name']),prompt=definition['prompt'],outcome='independent' if first else 'assisted' if correct else 'revealed' if shown else 'unanswered',history=[dict(kind=e['kind'],answer=e['answer'],answerName=option_names.get(e['answer'],bank['structures'].get(e['answer'],{}).get('name')),correct=bool(e['correct']) if e['correct'] is not None else None,created=e['created']) for e in history]))
     resolved=independent+assisted+revealed
     return dict(id=row['id'],model=row['model'],created=row['created'],score=independent,assisted=assisted,revealed=revealed,resolved=resolved,status='complete' if resolved==5 else 'in progress' if events else 'not started',responses=len(events),**({'questions':questions} if detail else {}))
 
@@ -70,4 +71,16 @@ def results(db,bank,query,sid=None):
     sessions=[summarize(row,db.execute('SELECT * FROM events WHERE session_id=? ORDER BY rowid',(row['id'],)).fetchall(),bank) for row in rows]
     completed=db.execute("SELECT count(*) FROM (SELECT e.session_id FROM events e JOIN sessions s ON s.id=e.session_id WHERE (e.correct=1 OR e.kind='reveal')"+(' AND s.model=?' if model else '')+' GROUP BY e.session_id HAVING count(DISTINCT e.question)=5)',args).fetchone()[0]
     responses=db.execute('SELECT count(*) FROM events e JOIN sessions s ON s.id=e.session_id'+(' WHERE s.model=?' if model else ''),args).fetchone()[0]
-    return 200,dict(sessions=sessions,total=total,completed=completed,responses=responses,page=page,pages=max(1,(total+24)//25))
+    # Aggregate all filtered records, rather than only the visible page.
+    concepts={};question_states={}
+    sql='SELECT e.*,s.questions FROM events e JOIN sessions s ON s.id=e.session_id'+(' WHERE s.model=?' if model else '')+' ORDER BY e.rowid'
+    for event in db.execute(sql,args):
+        qid=json.loads(event['questions'])[event['question']-1];definition=bank['structures'][qid];name=definition.get('concept',definition['name']);key=(event['session_id'],event['question'])
+        state=question_states.setdefault(key,dict(name=name,first=(event['kind']=='answer' and event['correct']==1),correct=False,revealed=False))
+        state['correct'] |= event['correct']==1;state['revealed'] |= event['kind']=='reveal'
+    independent=assisted=revealed=0
+    for state in question_states.values():
+        group=concepts.setdefault(state['name'],dict(name=state['name'],seen=0,support=0));group['seen']+=1;group['support']+=not state['first']
+        independent+=state['first'];assisted+=state['correct'] and not state['first'];revealed+=state['revealed']
+    ranked=sorted(concepts.values(),key=lambda c:(-c['support'],-c['seen'],c['name']))[:8]
+    return 200,dict(sessions=sessions,total=total,completed=completed,responses=responses,page=page,pages=max(1,(total+24)//25),insights=dict(firstTry=independent,assisted=assisted,revealed=revealed,incomplete=total-completed,concepts=ranked))

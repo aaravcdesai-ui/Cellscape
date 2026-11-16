@@ -115,3 +115,9 @@ python3 -m unittest discover -s backend -p 'test_*.py'
 ```
 
 Tests use temporary databases and local HTTP servers. They cover saved attempts, retries, hints, reveals, question validation, retention, private-file blocking, login, logout, throttling, protected results, and score calculations.
+
+## Mixed practice and insights
+
+The `practice` model stores canonical question IDs from `lab-data.js`; the matching definitions and allowed answer IDs live in `quiz-bank.json`. Update both when editing questions. Correctness is checked on the server. Atlas and mixed-practice saving queues are separate, so switching views does not attach answers to another quiz.
+
+Admin insights aggregate all sessions matching the selected filter, including sessions outside the displayed page. First try means the first event for that question was a correct answer; hints or retries make later correctness assisted. Revealed answers are separate. A session is incomplete until all five questions are answered correctly or revealed. Concept support counts attempted questions that were not correct independently on the first try. These are practice events, not distinct students or validated assessment grades. Experiment predictions and journey checks are not submitted.

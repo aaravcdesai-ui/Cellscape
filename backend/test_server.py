@@ -44,6 +44,15 @@ class QuizAPI(unittest.TestCase):
   self.assertEqual(self.request(p,{**body,'answer':'not-real'},s['token'])[0],400)
   self.assertEqual(self.request('/api/sessions',{'model':'animal','questions':['nucleus']*5})[0],400)
   self.assertEqual(self.request('/api/sessions',{'model':[], 'questions':[]})[0],400)
+ def test_mixed_practice_server_grading(self):
+  from server import BANK
+  ids=BANK['models']['practice'][:5]
+  code,session=self.request('/api/sessions',{'model':'practice','questions':ids});self.assertEqual(code,201)
+  definition=BANK['structures'][ids[0]];path='/api/sessions/'+session['id']+'/events'
+  body=dict(eventId='practice-answer-1',question=1,kind='answer',answer='forged')
+  self.assertEqual(self.request(path,body,session['token'])[0],400)
+  body['answer']=definition['answer']
+  self.assertTrue(self.request(path,body,session['token'])[1]['correct'])
  def test_database_and_source_not_public(self):
   for p in ['/backend/data/quiz.sqlite3','/backend/server.py','/.git/config','/assets/../backend/server.py','/api/sessions']:
    self.assertEqual(self.request(p)[0],404)
@@ -82,6 +91,22 @@ class AdminAPI(QuizAPI):
   data=self.request('/api/admin/results/'+s['id'],cookie=self.login())[1]
   self.assertEqual((data['score'],data['assisted'],data['revealed'],data['resolved']),(3,1,1,5))
   self.assertEqual(data['questions'][0]['outcome'],'assisted')
+ def test_concept_insights_and_mixed_detail(self):
+  from server import BANK
+  ids=BANK['models']['practice'][:5]
+  _,session=self.request('/api/sessions',{'model':'practice','questions':ids})
+  path='/api/sessions/'+session['id']+'/events'
+  for index,(number,kind,answer) in enumerate([(1,'hint',None),(1,'answer',BANK['structures'][ids[0]]['answer']),(2,'reveal',None),(3,'answer',BANK['structures'][ids[2]]['answer'])]):
+   body=dict(eventId='insight-event-'+str(index),question=number,kind=kind)
+   if answer:body['answer']=answer
+   self.assertEqual(self.request(path,body,session['token'])[0],201)
+  cookie=self.login();data=self.request('/api/admin/results?model=practice',cookie=cookie)[1]
+  self.assertEqual([data['insights'][k] for k in ['firstTry','assisted','revealed','incomplete']],[1,1,1,1])
+  self.assertEqual(sum(c['seen'] for c in data['insights']['concepts']),3)
+  detail=self.request('/api/admin/results/'+session['id'],cookie=cookie)[1]
+  expected=BANK['structures'][ids[0]]['answer']
+  self.assertEqual(detail['questions'][0]['expected'],expected)
+  self.assertEqual(detail['questions'][0]['outcome'],'assisted')
  def test_credentials_and_admin_source_not_downloadable(self):
   for p in ['/backend/data/admin.json','/backend/admin.py']:
    self.assertEqual(self.request(p)[0],404)
