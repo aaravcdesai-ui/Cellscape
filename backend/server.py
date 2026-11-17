@@ -11,7 +11,7 @@ SCHEMA = '''
 CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, token_hash TEXT NOT NULL, model TEXT NOT NULL, questions TEXT NOT NULL, created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS events(session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE, event_id TEXT NOT NULL, question INTEGER NOT NULL, kind TEXT NOT NULL, answer TEXT, correct INTEGER, created INTEGER NOT NULL, PRIMARY KEY(session_id,event_id));
 '''
-PUBLIC = {'index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','viewer3d.js','cell-models.js','quiz-store.js','admin.html','admin.js','admin.css','lab.js','lab-data.js','studio.js'}
+PUBLIC = {'index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','viewer3d.js','cell-models.js','anatomy-motion.js','experiment-model.js','investigations.js','discovery.js','quiz-store.js','admin.html','admin.js','admin.css','lab.js','lab-data.js','studio.js'}
 @contextmanager
 def connect(path):
     db = sqlite3.connect(path, timeout=10)
