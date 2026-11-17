@@ -1,6 +1,6 @@
 // Virtual investigations are qualitative teaching models, not measured predictions.
 (()=>{
-const by=id=>document.getElementById(id);let mode='3d',experiment='transport',running=false,frame=null,start=null,progress=0,prediction=null,observed=false;
+const by=id=>document.getElementById(id);let mode='3d',experiment='transport',running=false,frame=null,start=null,progress=0,prediction=null,observed=false,experimentPaused=false;
 const checks=new Set(),missed=new Set();let pack=[],number=0,solved=false,firstScore=0,helped=false,attempts=0,reviewOnly=false;
 const toolbar=document.createElement('div');toolbar.className='lesson-mode';toolbar.innerHTML='<div><strong>Trace a secreted protein</strong><small>Goal: explain the route, its compartments, and membrane fusion.</small></div><div class="lesson-mode-buttons"><button id="journey-mode-3d" aria-pressed="true">Inside the 3D cell</button><button id="journey-mode-map" aria-pressed="false">Pathway map</button></div><span id="lesson-goal">0 / 6 checks completed</span>';
 by('journey-stages').before(toolbar);
@@ -19,7 +19,7 @@ function updateMode(){
 by('journey-mode-3d').onclick=()=>{mode='3d';pauseJourney();updateMode()};by('journey-mode-map').onclick=()=>{mode='map';pauseJourney();updateMode();panJourney()};
 function stopExperiment(){running=false;cancelAnimationFrame(frame);frame=null;start=null;by('lab-run').disabled=false}
 function configure(){
- stopExperiment();progress=0;prediction=null;observed=false;by('lab-predictions').replaceChildren();by('lab-result').textContent='Choose a prediction, then run the experiment.';by('lab-explain').hidden=true;by('lab-progress').value=0;
+ experimentPaused=false;stopExperiment();progress=0;prediction=null;observed=false;by('lab-predictions').replaceChildren();by('lab-result').textContent='Choose a prediction, then run the experiment.';by('lab-explain').hidden=true;by('lab-progress').value=0;
  by('lab-water-control').hidden=experiment!=='water';by('lab-block-control').hidden=experiment!=='transport';
  const water=experiment==='water',control=!water&&!by('lab-block').checked;by('lab-goal').textContent=water?'Explain how external solute concentration changes net water movement and turgor.':'Explain why blocking ER-to-Golgi traffic reduces protein delivery downstream.';
  by('lab-question').textContent=water?'With the selected outside solution, what will happen to the plant cell?':control?'With transport functioning normally, where will this new secreted protein go?':'If ER-to-Golgi delivery is blocked, what happens to newly made secreted proteins?';
@@ -30,21 +30,22 @@ function configure(){
 function paintExperiment(t){
  if(document.body.dataset.page!=='lab')return;
  const water=experiment==='water',condition=by('lab-water').value,target=condition==='hypertonic'?0:condition==='hypotonic'?1:.65;
- const waterLevel=water?(.65+(target-.65)*t):null;const stage=Math.min(5,Math.floor(t*6)),fraction=Math.min(1,t*6-stage);
+ const waterLevel=water?(.65+(target-.65)*t):null;const stage=Math.min(5,Math.floor(t*6)),fraction=t===1?1:Math.min(1,t*6-stage);
  const ready=window.Cell3D?.lesson({hostId:'lab-3d-stage',kind:water?'plant':'animal',stage,progress:fraction,blocked:!water&&by('lab-block').checked,water:waterLevel});
  by('lab-3d-status').textContent=ready===false?'3D is unavailable. Read the explained outcome below.':'Drag to rotate · Sizes and timing are illustrative';
+ window.CellInvestigations?.paint({experiment,t,blocked:by('lab-block').checked,condition:by('lab-water').value,running});
  by('lab-progress').value=t*100;
 }
 function finishExperiment(){
- observed=true;stopExperiment();progress=1;paintExperiment(1);
+ observed=true;experimentPaused=false;stopExperiment();progress=1;paintExperiment(1);
  const water=experiment==='water',blocked=by('lab-block').checked,condition=by('lab-water').value;
  const correct=water?(condition==='hypertonic'?0:condition==='hypotonic'?1:2):0;
- const outcome=water?(condition==='hypertonic'?'Water leaves the cell; the vacuole shrinks and turgor falls. With sufficient water loss, the protoplast may pull away from the wall (plasmolysis). This model simplifies that change.':condition==='hypotonic'?'Water enters; the vacuole expands and turgor rises. The cell wall resists expansion, so a walled plant cell becomes turgid rather than behaving like an unprotected animal cell.':'At osmotic equilibrium there is no net water flow. Water molecules still move in both directions; this is not a frozen state.'):blocked?'New cargo remains upstream of the block. Less of this newly synthesized protein reaches the Golgi and cell surface. Existing cargo may still be released; this model follows one new protein.':'Cargo passes through the ER and Golgi, then reaches the surface for secretion.';
+ const outcome=water?(condition==='hypertonic'?'Water leaves the cell; the vacuole shrinks and turgor falls. With sufficient water loss, the protoplast may pull away from the wall (plasmolysis). This model simplifies that change.':condition==='hypotonic'?'Water enters; the vacuole expands and turgor rises. The cell wall resists expansion, so a walled plant cell becomes turgid rather than behaving like an unprotected animal cell.':'At osmotic equilibrium there is no net water flow. Water molecules still move in both directions; this is not a frozen state.'):blocked?'New cargo remains upstream of the block. Less of this newly synthesized protein reaches the Golgi and cell surface. Existing cargo may still be released; this model follows only a newly made batch.':'Cargo passes through the ER and Golgi, then reaches the surface for secretion.';
  by('lab-result').textContent=(prediction===correct?'Your prediction matches. ':'Compare with your prediction: ')+outcome;
  by('lab-explain').hidden=false;by('lab-explanation').textContent='';
 }
 function animateExperiment(now){if(!running)return;if(start===null)start=now;progress=Math.min(1,(now-start)/8500);paintExperiment(progress);if(progress===1)finishExperiment();else frame=requestAnimationFrame(animateExperiment)}
-by('lab-run').onclick=()=>{if(prediction===null){by('lab-result').textContent='Make a prediction first.';return}stopExperiment();running=true;by('lab-run').disabled=true;start=null;by('lab-explain').hidden=true;by('lab-result').textContent='Observe the gold cargo or the size of the vacuole.';if(matchMedia('(prefers-reduced-motion:reduce)').matches)finishExperiment();else frame=requestAnimationFrame(animateExperiment)};
+by('lab-run').onclick=()=>{if(prediction===null){by('lab-result').textContent='Make a prediction first.';return}experimentPaused=false;stopExperiment();progress=0;running=true;by('lab-run').disabled=true;start=null;by('lab-explain').hidden=true;by('lab-result').textContent='Observe the gold cargo or the size of the vacuole.';if(matchMedia('(prefers-reduced-motion:reduce)').matches)finishExperiment();else frame=requestAnimationFrame(animateExperiment)};
 by('lab-finish').onclick=()=>{if(prediction!==null)finishExperiment();else by('lab-result').textContent='Choose a prediction before showing the outcome.'};
 by('lab-reset').onclick=configure;by('lab-experiment').onchange=e=>{experiment=e.target.value;configure()};by('lab-water').onchange=configure;by('lab-block').onchange=configure;
 by('lab-explain-answer').onclick=()=>{by('lab-explanation').textContent=experiment==='water'?'Investigation complete: explain the direction of net water movement using the outside solution, then connect vacuole volume to turgor. The wall does not disappear.':'Investigation complete: the ER, Golgi, and surface communicate through membrane traffic. Blocking delivery affects downstream cargo; it does not turn the Golgi into a ribosome.'};
@@ -64,8 +65,8 @@ by('practice-start').onclick=()=>startPractice(false);by('practice-review').oncl
 by('practice-hint').onclick=()=>{if(solved)return;helped=true;missed.add(pack[number].id);window.QuizStore?.record('hint',number+1,undefined,'practice-save-status');by('practice-feedback').textContent=pack[number].hint;by('practice-hint').disabled=true};
 by('practice-reveal').onclick=()=>{if(solved)return;helped=true;window.QuizStore?.record('reveal',number+1,undefined,'practice-save-status');finishPracticeQuestion(true)};
 by('practice-next').onclick=()=>{if(number<4){number++;showPractice()}else{by('practice-position').textContent='PRACTICE COMPLETE';by('practice-prompt').textContent=`${firstScore} / 5 correct on the first try without help.`;by('practice-options').replaceChildren();by('practice-figure').replaceChildren();by('practice-feedback').textContent=missed.size?'Review missed concepts to revisit the questions that needed support. Reviews stay within this open page; no student identity is tracked.':'You solved these concepts independently. Try another mixed set.';by('practice-next').hidden=true;by('practice-hint').disabled=true;by('practice-reveal').disabled=true;by('practice-review').disabled=!missed.size}};
-function onView(view){if(view!=='lab')stopExperiment();if(view==='journey')updateMode();else if(view==='lab'){paintExperiment(observed?1:0)}else stopExperiment()}
-window.CellLab={journey,completeStep(step){checks.add(step);by('lesson-goal').textContent=`${checks.size} / 6 checks completed${checks.size===6?' · Route explained!':''}`},onView};
+function onView(view){if(view!=='lab'){experimentPaused=false;stopExperiment()}if(view==='journey')updateMode();else if(view==='lab'){paintExperiment(observed?1:0)}else stopExperiment()}
+window.CellLab={journey,paused:()=>experimentPaused,refreshExperiment:()=>paintExperiment(progress),toggleExperiment(){if(running){experimentPaused=true;stopExperiment();paintExperiment(progress)}else if(experimentPaused){experimentPaused=false;running=true;start=performance.now()-progress*8500;by('lab-run').disabled=true;frame=requestAnimationFrame(animateExperiment)}},completeStep(step){checks.add(step);by('lesson-goal').textContent=`${checks.size} / 6 checks completed${checks.size===6?' · Route explained!':''}`},onView};
 window.addEventListener('cell3d-ready',()=>onView(document.body.dataset.page));
 configure();updateMode();onView(document.body.dataset.page);
 })();

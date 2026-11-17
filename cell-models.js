@@ -29,17 +29,17 @@ function nucleus(parent,p,r=1,tex){
  const shell=organic(new T.SphereGeometry(r,64,40,PI*.95,PI*1.5),.013);
  mesh(g,shell,textured(palette.nucleus,tex,{side:T.DoubleSide}),'nucleus');
  mesh(g,new T.SphereGeometry(r*.94,40,28,PI*.95,PI*1.5),material(0xb28bc6,{side:T.DoubleSide}),'nucleus');
- const pores=new T.InstancedMesh(new T.TorusGeometry(r*.052,r*.014,7,14),material(0xdab4e8),58);tag(pores,'nucleus');const poreTransform=new T.Object3D();
+ const pores=new T.InstancedMesh(new T.TorusGeometry(r*.052,r*.014,7,14),material(0xdab4e8),58);tag(pores,'nucleus');pores.name='nuclear-pores';const poreTransform=new T.Object3D();
  for(let i=0;i<58;i++){
   const phi=PI*.95+random()*PI*1.5,theta=.2+random()*(PI-.4),normal=V(-Math.sin(theta)*Math.cos(phi),Math.cos(theta),Math.sin(theta)*Math.sin(phi));
   poreTransform.position.copy(normal).multiplyScalar(r*1.01);poreTransform.quaternion.setFromUnitVectors(V(0,0,1),normal);poreTransform.updateMatrix();pores.setMatrixAt(i,poreTransform.matrix);
- }g.add(pores);
- for(let j=0;j<27;j++){
+ }g.add(pores);const poreMatrix=new T.Matrix4();pores.getMatrixAt(8,poreMatrix);g.userData.exportPore=new T.Vector3().setFromMatrixPosition(poreMatrix).toArray();
+ for(let j=0;j<17;j++){
   const points=[],phase=random()*PI*2,freq=1.2+random();
   for(let i=0;i<23;i++){const a=i*.43;points.push(V(Math.cos(a*freq+phase)*r*.61,Math.sin(a*1.63+phase*2)*r*.49,Math.sin(a*.87+phase)*r*.55))}
   curve(g,'nucleus',points,r*.008,j%3?0x703d86:0xb18ac2);
  }
- sphere(g,'nucleolus',V(.1,-.05,.16).multiplyScalar(r),V(.28,.28,.28).multiplyScalar(r),palette.nucleolus,{bumpMap:tex,bumpScale:.06,roughness:.44});
+ sphere(g,'nucleolus',V(.08,-.08,.43).multiplyScalar(r),V(.28,.28,.28).multiplyScalar(r),palette.nucleolus,{bumpMap:tex,bumpScale:.06,roughness:.44});
  for(const phi of [PI*.95,PI*2.45]){const points=[];for(let i=0;i<=32;i++){const theta=i/32*PI;points.push(V(-r*Math.sin(theta)*Math.cos(phi),r*Math.cos(theta),r*Math.sin(theta)*Math.sin(phi)))}curve(g,'nucleus',points,r*.018,0xd6b0e2)}
  return g;
 }
@@ -62,17 +62,22 @@ function mito(parent,p,angle=0,scale=1){
   const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();
   mesh(g,geo,material(fold%2?0xcf8d39:0xe5ae57,{side:T.DoubleSide}),'mitochondrion');curve(g,'mitochondrion',points,.016,0xf9d386);
  }
+ // ATP synthase complexes sit in the inner membrane with heads toward the matrix.
+ for(let i=0;i<6;i++){const x=-.45+i*.17;curve(g,'mitochondrion',[V(x,.08,.1),V(x,-.015,.1)],.012,0xf4e4a5);const head=sphere(g,'mitochondrion',V(x,-.04,.1),V(.032,.026,.032),0xf5e5ab);head.name='ATP-synthase'}
+ curve(g,'mitochondrion',[V(-.25,-.08,-.08),V(-.32,-.08,-.15),V(-.17,-.08,-.18),V(-.1,-.08,-.08),V(-.25,-.08,-.08)],.008,0xb78046);
  dots(g,'mitochondrion',16,V(0,-.065,0),V(.5,.04,.19),0xad7738,.018);return g;
 }
 function chloroplast(parent,p,angle=0,scale=1){
  const g=group(parent,'chloroplast',p);g.rotation.y=angle;g.scale.setScalar(scale);
- mesh(g,new T.SphereGeometry(1,28,16,0,PI*2,PI/2,PI/2),material(0x6f923f,{side:T.DoubleSide}),'chloroplast',V(),V(.78,.34,.43));
+ mesh(g,organic(new T.SphereGeometry(1,40,24,0,PI*2,PI/2,PI/2),.018),material(0x6f923f,{side:T.DoubleSide}),'chloroplast',V(),V(.78,.34,.43));
+ mesh(g,new T.SphereGeometry(1,36,20,0,PI*2,PI/2,PI/2),material(0xa0b969,{side:T.DoubleSide}),'chloroplast',V(0,.01,0),V(.735,.30,.385));
  sphere(g,'chloroplast',V(0,-.055,0),V(.7,.065,.35),0xb1c879);
  for(let col=0;col<4;col++){
   const x=-.46+col*.3;
   for(let k=0;k<7;k++)mesh(g,new T.CylinderGeometry(.135,.135,.026,24),material(k%2?0x52802e:0x79a33c),'chloroplast',V(x,.02+k*.031,0));
   if(col<3)curve(g,'chloroplast',[V(x+.1,.065,0),V(x+.2,.075,.03)],.018,0x83a450);
  }
+ sphere(g,'chloroplast',V(.3,-.005,.24),V(.11,.055,.06),0xe3dcb5,{roughness:.8});
  const ring=[];for(let i=0;i<=48;i++){const a=i/48*PI*2;ring.push(V(.76*Math.cos(a),0,.41*Math.sin(a)))}curve(g,'chloroplast',ring,.028,0xa4bd69);dots(g,'chloroplast',24,V(0,-.01,.19),V(.51,.03,.1),0x668a3c,.018);
  return g;
 }
@@ -98,7 +103,7 @@ function er(parent,p,r=1,rough=true){
     if(i<n){const v=i*2;indices.push(v,v+1,v+2,v+1,v+3,v+2)}
    }
    const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();mesh(g,geo,material(layer%2?0x7e9bc2:0x91acd0,{side:T.DoubleSide}),id);
-   const points=[];for(let i=0;i<=44;i++){const a=.05*PI+i/44*1.72*PI;points.push(V(Math.cos(a)*(r+.18+layer*.14),.13*Math.sin(a*4+layer)+layer*.14,Math.sin(a)*(r+.18+layer*.14)))}curve(g,id,points,.024,0x6584ae);
+   const points=[];for(let i=0;i<=44;i++){const a=.05*PI+i/44*1.72*PI;points.push(V(Math.cos(a)*(r+.18+layer*.14),.13*Math.sin(a*4+layer)+layer*.14,Math.sin(a)*(r+.18+layer*.14)))}curve(g,id,points,.024,0x6584ae);curve(g,id,points.map(p=>V(p.x,p.y-.06,p.z)),.018,0xb2c9e4);
    for(let i=0;i<28;i++){const a=.05*PI+i/28*1.72*PI,rad=r+.23+layer*.15;ribosomePoints.push(V(Math.cos(a)*rad,layer*.14+.04+.13*Math.sin(a*4+layer),Math.sin(a)*rad))}
   }
   const beads=new T.InstancedMesh(new T.SphereGeometry(.035,10,7),material(0xc8adc9),ribosomePoints.length);tag(beads,id);const bead=new T.Object3D();for(let i=0;i<ribosomePoints.length;i++){bead.position.copy(ribosomePoints[i]);bead.updateMatrix();beads.setMatrixAt(i,bead.matrix)}g.add(beads);

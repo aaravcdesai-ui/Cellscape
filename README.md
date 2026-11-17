@@ -224,3 +224,21 @@ Live beta: [Cellscape](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.si
 Local development still uses the normal Python backend; the public build does not alter local answer saving or admin access. To preview the public release, run `python3 -m http.server 8003 --directory _site` and open `http://127.0.0.1:8003/`.
 
 The Pages workflow uses this builder, but GitHub currently requires an account upgrade to publish Pages from this private repository. Keep the repository private. The separate Sites hosting checkout is excluded from the main repository by `.gitignore`. Deployment identifiers and the public URL are recorded in `design/public-release.json`. Updating GitHub does not automatically update the live Site; regenerate and deploy the sanitized package separately.
+
+## Exploded anatomy and animated close-ups
+
+Choose **Exploded view** to separate structures, then **Reassemble cell** to restore them. Shell boundaries stay in place, labels follow moved structures, and all positions are illustrative. Reset, quiz entry, and lesson entry restore the assembled model.
+
+Select a **nucleus**, **mitochondrion**, or **chloroplast**, then choose **Animate organelle**. The viewer isolates and focuses it. Use Play/Pause, Restart, or the three stage buttons to study RNA export, proton-driven ATP formation, or light reactions and carbon fixation. These are conceptual sequences, not molecular simulations. The animation starts paused; reduced-motion users can step through stages. Close returns to the whole cell.
+
+Additional geometry includes a clearer nucleolus, nuclear pore anchors, layered ER edges, chloroplast envelope layers and a starch granule, and mitochondrial ATP-synthase complexes. Run `node tests/anatomy-motion.mjs` to verify that all seven models separate and return to their exact original positions without drift.
+
+## Controlled experiments, guided discovery, and access
+
+The Virtual lab now follows a fixed illustrative batch of 12 new cargo particles in 3D. A synchronized control panel compares normal transport with an ER-to-Golgi block. Counts describe the animation, not measured rates. Water-balance investigations compare the selected solution with an isotonic control. Predict first, then Run, Pause/Resume, Show outcome, or Reset. Leaving the lab stops playback.
+
+Guided discovery on the atlas offers three activities: protein secretion, plant wilting, and neuron signaling. Start an activity, find structures in any order, and answer the final explanation question. Wrong choices provide context, repeated selections do not advance progress, and progress is kept only in the open page. On small screens, links connect the model and activity panel.
+
+Keyboard users can use the skip link to reach the main learning content, Tab between controls, and operate activities using Enter/Space. Study-tool buttons have explicit accessible names, focus indicators are stronger, and feedback uses status regions. Small-screen controls have larger targets, and **Touch mode: scroll page** lets a swipe over the model scroll the page instead of rotating the cell. Switch it back to rotate. Layouts were checked at 390 px and 768 px widths; physical-device and assistive-technology testing are still valuable. This is not a claim of full WCAG conformance.
+
+Run `node tests/experiment-model.mjs` to check that normal cargo reaches the surface, blocked cargo stays upstream, and counts remain bounded and consistent. `experiment-model.js` holds the illustrative model; `investigations.js` renders comparison panels; `discovery.js` manages guided activities.

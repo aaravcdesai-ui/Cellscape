@@ -52,8 +52,8 @@ if(focusId)$(`#cell [data-id="${focusId}"]`)?.focus();
 if(focusSelect)$(`[data-select="${focusSelect}"]`)?.focus();
 }
 function select(id){
-selected=id;render();$('#cell-details').scrollTop=0;
-if(matchMedia('(max-width:1050px)').matches)$('#cell-details').scrollIntoView({block:'start',behavior:'instant'});
+selected=id;render();$('#cell-details').scrollTop=0;window.dispatchEvent(new CustomEvent('cellscape-inspect',{detail:{id,specimen:type}}));
+if(matchMedia('(max-width:1050px)').matches&&!window.CellDiscovery?.active())$('#cell-details').scrollIntoView({block:'start',behavior:'instant'});
 }
 $('#cell').addEventListener('click',e=>{const el=e.target.closest('[data-id]');if(el){if(quiz)check(el.dataset.id);else select(el.dataset.id)}});
 $('#cell').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const el=e.target.closest('[data-id]');if(el){e.preventDefault();if(quiz)check(el.dataset.id);else select(el.dataset.id)}}});
@@ -74,7 +74,7 @@ $('#quiz').onclick=()=>{
  questions=[...available()];
  for(let i=questions.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]]}
  questions=questions.slice(0,5);$('#quiz-save-status').hidden=false;window.QuizStore?.begin(type,questions.map(q=>q.id));$('#quiz').textContent='× Exit quiz';$('#labels').disabled=true;showQuestion();
- if(matchMedia('(max-width:1050px)').matches)$('#cell-details').scrollIntoView({block:'start'});
+ if(matchMedia('(max-width:1050px)').matches&&!window.CellDiscovery?.active())$('#cell-details').scrollIntoView({block:'start'});
 };
 function showQuestion(){
  answered=false;attempts=0;usedHelp=false;selected=null;$('#cell').classList.add('quiz-mode');render();

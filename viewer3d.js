@@ -1,24 +1,38 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/three/OrbitControls.js';
-import {buildCellModel} from './cell-models.js?v=2';
+import {buildCellModel} from './cell-models.js?v=3';
+import {explodedRig,closeupLessons} from './anatomy-motion.js';
 const host=document.querySelector('#viewer3d');
 const status=document.querySelector('#viewer3d-status');
 const homeViewport=host.parentElement;let lessonMode=false,lessonStage=-1,cargo=null,carrier=null,lessonTrail=null;const waterBases=new Map();
 let renderer,scene,camera,controls,model=null,currentKind=null,activeId=null,isolated=false,cutaway=true,showLabels=true,quizMode=false;
 let dirty=true,enabled=false,baseDistance=10,pointerStart=null,hovered=null,lastZoom=null,flight=null,focusedView=false;
+let rig=null,spread=0,spreadTarget=0,spreadFlight=null,closeupPlaying=false,closeupTime=0,closeupLast=null,closeupPhase=-1,marker=null;
+let populationCloud=null,populationCarriers=null;
 const selectable=[],labelNodes=new Map(),labelAnchors=new Map();
 const raycaster=new T.Raycaster(),pointer=new T.Vector2();
 const labels=document.createElement('div');labels.className='three-labels';
 const leaderLayer=document.createElementNS('http://www.w3.org/2000/svg','svg');leaderLayer.classList.add('three-leaders');leaderLayer.setAttribute('aria-hidden','true');labels.append(leaderLayer);
 const leaderNodes=new Map();
 
+const explodeButton=document.createElement('button');explodeButton.id='explode-3d';explodeButton.textContent='Exploded view';explodeButton.setAttribute('aria-pressed','false');document.querySelector('.three-tools').append(explodeButton);
+const animateButton=document.createElement('button');animateButton.id='animate-organelle';animateButton.textContent='Animate organelle';animateButton.title='Select a nucleus, mitochondrion, or chloroplast';document.querySelector('.three-tools').append(animateButton);
+const study=document.createElement('section');study.id='anatomy-player';study.hidden=true;study.setAttribute('aria-label','Animated organelle close-up');study.innerHTML='<div class="anatomy-player-heading"><strong id="anatomy-animation-title"></strong><button id="anatomy-animation-close" aria-label="Close organelle animation">×</button></div><div id="anatomy-animation-steps" aria-label="Animation stages"></div><p id="anatomy-animation-caption" role="status"></p><div class="anatomy-playback"><button id="anatomy-play">Play</button><button id="anatomy-restart">Restart</button><span>Illustrative sequence · Not to scale</span></div>';host.append(study);
+function stopCloseup(){closeupPlaying=false;closeupLast=null;study.hidden=true;if(marker)marker.visible=false;host.dataset.anatomyPlaying='false'}
+function clearStudy(){stopCloseup();spread=spreadTarget=0;spreadFlight=null;rig?.set(0);explodeButton.setAttribute('aria-pressed','false');explodeButton.textContent='Exploded view';host.dataset.exploded='0'}
+function syncStudy(){explodeButton.disabled=quizMode||lessonMode;animateButton.disabled=quizMode||lessonMode||!closeupLessons[activeId];}
+function beginCloseup(){if(!closeupLessons[activeId]||quizMode||lessonMode)return;focusStructure();closeupTime=0;closeupPhase=-1;study.hidden=false;const previousFlight=flight;fit(false,true);if(previousFlight){flight={...previousFlight,toPosition:camera.position.clone(),toTarget:controls.target.clone()};camera.position.copy(previousFlight.fromPosition);controls.target.copy(previousFlight.fromTarget)}document.getElementById('anatomy-animation-title').textContent=closeupLessons[activeId].title;const steps=document.getElementById('anatomy-animation-steps');steps.replaceChildren();closeupLessons[activeId].steps.forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+s[0];b.onclick=()=>{closeupPlaying=false;closeupTime=i*2600;paintCloseup();};steps.append(b)});if(!marker){marker=new T.Mesh(new T.SphereGeometry(.055,16,12),new T.MeshStandardMaterial({color:0xf2cb66,emissive:0xa87819,emissiveIntensity:.5}));marker.name='illustrative-process-marker';scene.add(marker)}marker.visible=true;paintCloseup();}
+function paintCloseup(){const lesson=closeupLessons[activeId],anchor=labelAnchors.get(activeId);if(study.hidden||!lesson||!anchor)return;const phase=Math.min(2,Math.floor(closeupTime/2600)),fraction=Math.min(1,(closeupTime%2600)/1800);let points=lesson.points.map(p=>new T.Vector3(...p));if(activeId==='nucleus'&&anchor.userData.exportPore){const pore=new T.Vector3(...anchor.userData.exportPore);points=[pore.clone().multiplyScalar(.45),pore,pore.clone().multiplyScalar(1.4)]}const local=points[Math.max(0,phase-1)].clone().lerp(points[phase],fraction);model.updateMatrixWorld(true);marker.position.copy(anchor.localToWorld(local));marker.scale.setScalar(activeId==='nucleus'?1.7:1);if(phase!==closeupPhase){closeupPhase=phase;document.getElementById('anatomy-animation-caption').textContent=lesson.steps[phase][1];[...document.getElementById('anatomy-animation-steps').children].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===phase)))}document.getElementById('anatomy-play').textContent=closeupPlaying?'Pause':closeupTime>=7799?'Replay':'Play';host.dataset.anatomyPlaying=String(closeupPlaying);host.dataset.anatomyPhase=String(phase);dirty=true;}
+function tickStudy(now){if(spreadFlight){const t=Math.min(1,(now-spreadFlight.start)/900),e=t*t*(3-2*t);spread=spreadFlight.from+(spreadTarget-spreadFlight.from)*e;rig.set(spread);host.dataset.exploded=spread.toFixed(3);dirty=true;if(t===1){spreadFlight=null;if(!spreadTarget){const fromPosition=camera.position.clone(),fromTarget=controls.target.clone();fit(false);flight={fromPosition,fromTarget,toPosition:camera.position.clone(),toTarget:controls.target.clone(),start:performance.now()};camera.position.copy(fromPosition);controls.target.copy(fromTarget)}}}if(closeupPlaying){if(closeupLast!==null)closeupTime=Math.min(7799,closeupTime+Math.min(100,now-closeupLast));closeupLast=now;if(closeupTime>=7799)closeupPlaying=false;paintCloseup()}}
+explodeButton.onclick=()=>{if(!model||quizMode||lessonMode)return;stopCloseup();focusedView=false;isolated=false;cutaway=true;flight=null;controls.autoRotate=false;spreadTarget=spreadTarget?0:1;applySelection();if(spreadTarget){rig.set(1);fit(false);rig.set(spread)}explodeButton.setAttribute('aria-pressed',String(!!spreadTarget));explodeButton.textContent=spreadTarget?'Reassemble cell':'Exploded view';announce(spreadTarget?'Structures separated for study. Positions and distances are illustrative.':'Returning structures to their assembled positions.');if(matchMedia('(prefers-reduced-motion:reduce)').matches){spread=spreadTarget;rig.set(spread);host.dataset.exploded=String(spread);fit(false)}else spreadFlight={from:spread,start:performance.now()};dirty=true;};
+animateButton.onclick=beginCloseup;document.getElementById('anatomy-animation-close').onclick=()=>{stopCloseup();reset()};document.getElementById('anatomy-play').onclick=()=>{if(closeupTime>=7799)closeupTime=0;closeupPlaying=!closeupPlaying;closeupLast=null;paintCloseup()};document.getElementById('anatomy-restart').onclick=()=>{closeupPlaying=false;closeupTime=0;closeupPhase=-1;paintCloseup()};
 function idFor(object){for(let node=object;node;node=node.parent)if(node.userData.structureId)return node.userData.structureId;return null}
 function announce(message){document.querySelector('#viewer3d-live').textContent=message}
 function syncButtons(){
  for(const [id,on] of [['isolate-3d',isolated],['shell-3d',!cutaway],['spin-3d',controls?.autoRotate]])document.getElementById(id)?.setAttribute('aria-pressed',String(Boolean(on)));
  document.querySelector('#isolate-3d').disabled=!activeId||quizMode;document.querySelector('#focus-3d').disabled=!activeId||quizMode;
 }
-function reset(){if(!model||!camera)return;flight=null;focusedView=false;controls.autoRotate=false;isolated=false;cutaway=true;applySelection();fit(true);syncButtons();announce('View reset.');dirty=true}
+function reset(){if(!model||!camera)return;clearStudy();flight=null;focusedView=false;controls.autoRotate=false;isolated=false;cutaway=true;applySelection();fit(true);syncButtons();announce('View reset.');dirty=true}
 function fit(defaultDirection=false,selectionOnly=false){
  if(!model)return;
  const focusAnchor=selectionOnly?labelAnchors.get(activeId):null;
@@ -50,6 +64,7 @@ function fit(defaultDirection=false,selectionOnly=false){
   const occupancy=Math.max((maxX-minX)/2,(maxY-minY)/2);
   distance*=T.MathUtils.clamp(occupancy/(selectionOnly?.66:.91),.7,1.35);
  }
+ if(selectionOnly&&!study.hidden){const available=Math.max(.35,1-(study.offsetHeight+24)/host.clientHeight);distance*=Math.max(1,.72/available);center.addScaledVector(up,-distance*tanY*(1-available));}
  baseDistance=distance;
  controls.target.copy(center);camera.position.copy(center).addScaledVector(direction,baseDistance);
  camera.near=Math.max(.01,baseDistance/1000);camera.far=baseDistance*20;camera.updateProjectionMatrix();
@@ -58,7 +73,7 @@ function fit(defaultDirection=false,selectionOnly=false){
 }
 function focusStructure(){
  if(!model||!activeId||quizMode)return;
- controls.autoRotate=false;flight=null;focusedView=true;isolated=true;applySelection();
+ clearStudy();controls.autoRotate=false;flight=null;focusedView=true;isolated=true;applySelection();
  const fromPosition=camera.position.clone(),fromTarget=controls.target.clone(),oldMax=controls.maxDistance;
  fit(false,true);controls.maxDistance=Math.max(oldMax,controls.maxDistance);
  const toPosition=camera.position.clone(),toTarget=controls.target.clone();
@@ -75,12 +90,12 @@ function resize(){
 function emitZoom(){if(!camera)return;const factor=baseDistance/camera.position.distanceTo(controls.target);if(lastZoom!==null&&Math.abs(lastZoom-factor)<.002)return;lastZoom=factor;window.dispatchEvent(new CustomEvent('cell3d-zoom',{detail:{factor}}))}
 function zoomTo(factor){if(!camera||!model)return;flight=null;const direction=camera.position.clone().sub(controls.target).normalize();camera.position.copy(controls.target).addScaledVector(direction,baseDistance/T.MathUtils.clamp(factor,.4,4));controls.update();dirty=true}
 function disposeModel(){
- flight=null;if(!model)return;scene.remove(model);const geometries=new Set(),materials=new Set();model.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m)}});
+ clearStudy();flight=null;if(!model)return;scene.remove(model);const geometries=new Set(),materials=new Set();model.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m)}});
  geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());model.userData.texture?.dispose();
  model=null;selectable.length=0;labelAnchors.clear();for(const node of labelNodes.values())node.remove();labelNodes.clear();for(const node of leaderNodes.values())node.remove();leaderNodes.clear();
 }
 function build(kind){
- disposeModel();model=buildCellModel(kind);scene.add(model);currentKind=kind;focusedView=false;isolated=false;cutaway=true;
+ disposeModel();model=buildCellModel(kind);scene.add(model);rig=explodedRig(model);currentKind=kind;focusedView=false;isolated=false;cutaway=true;
  model.traverse(o=>{if(o.isMesh){selectable.push(o);const id=idFor(o);if(id&&!labelAnchors.has(id))labelAnchors.set(id,o);if(o.material){for(const mat of Array.isArray(o.material)?o.material:[o.material]){mat.userData.baseColor=mat.color.clone();mat.userData.baseOpacity=mat.opacity}}}});
  // Prefer a structure's group origin over the first pore or ribbon vertex.
  model.traverse(o=>{if(o.isGroup&&o.userData.structureId)labelAnchors.set(o.userData.structureId,o)});
@@ -112,7 +127,7 @@ function showInternalLabels(width,height){
   if(!path){path=document.createElementNS('http://www.w3.org/2000/svg','path');leaderLayer.append(path);leaderNodes.set(id,path)}
   node.textContent=name;node.setAttribute('aria-label','Inspect '+name);node.onclick=()=>window.dispatchEvent(new CustomEvent('cell3d-feature',{detail:{part}}));node.hidden=false;
   const point=anchor.localToWorld(new T.Vector3(...position)).project(camera),x=(point.x*.5+.5)*width,y=(-point.y*.5+.5)*height;
-  const left=i!==1,labelX=left?12:width-node.offsetWidth-12,labelY=height*(.2+i*.26);
+  const left=i!==1,labelX=left?12:width-node.offsetWidth-12,labelY=study.hidden?height*(.2+i*.26):height*(.14+i*.18);
   node.style.left=labelX+'px';node.style.top=labelY+'px';const end=left?labelX+node.offsetWidth:labelX;
   path.setAttribute('d',`M${x},${y}L${end+(left?12:-12)},${labelY+14}H${end}`);path.setAttribute('class','selected');path.style.display='';
  });host.dataset.visibleLabels='3';
@@ -120,8 +135,8 @@ function showInternalLabels(width,height){
 function updateLabels(){
  if(!model||!camera)return;
  const width=host.clientWidth,height=host.clientHeight,narrow=width<440;
- const priority=lessonMode?[activeId]:[activeId,'nucleus','vacuole','mitochondrion','chloroplast','nucleoid','axon','myofibril','microvilli'];
- const limit=narrow?1:width<620?2:3,chosen=[];
+ const priority=lessonMode?[activeId]:spread>.01?[activeId,...labelAnchors.keys()]:[activeId,'nucleus','vacuole','mitochondrion','chloroplast','nucleoid','axon','myofibril','microvilli'];
+ const limit=spread>.01?(narrow?3:6):narrow?1:width<620?2:3,chosen=[];
  leaderLayer.setAttribute('viewBox',`0 0 ${width} ${height}`);
  for(const node of labelNodes.values())node.hidden=true;
  for(const path of leaderNodes.values())path.style.display='none';
@@ -133,7 +148,7 @@ function updateLabels(){
   if(anchor.isInstancedMesh){const matrix=new T.Matrix4();anchor.getMatrixAt(0,matrix);p.setFromMatrixPosition(matrix).applyMatrix4(anchor.matrixWorld)}
   p.project(camera);const x=(p.x*.5+.5)*width,y=(-p.y*.5+.5)*height;
   if(p.z>1||p.z< -1||x<6||x>width-6||y<6||y>height-6)continue;
-  if(id!==activeId){
+  if(id!==activeId&&spread<.01){
    raycaster.setFromCamera(new T.Vector2(p.x,p.y),camera);
    const front=raycaster.intersectObjects(selectable,false).find(hit=>hit.object.visible&&!(hit.object.userData.closedOnly&&hit.object.material.opacity<.3)&&!(cutaway&&currentKind==='bacteria'&&hit.object.userData.openOnly&&hit.point.y>.12));
    if(front&&idFor(front.object)!==id&&!(id==='nucleus'&&idFor(front.object)==='nucleolus'))continue;
@@ -181,7 +196,7 @@ function init(){
   const fill=new T.DirectionalLight(0xdad9ff,.8);fill.position.set(7,5,-8);scene.add(fill);
   const ground=new T.Mesh(new T.PlaneGeometry(40,40),new T.ShadowMaterial({opacity:.12,depthWrite:false}));ground.name='specimen-ground';ground.rotation.x=-Math.PI/2;ground.position.y=-1.85;ground.receiveShadow=true;scene.add(ground);
   const canvas=renderer.domElement;canvas.tabIndex=0;canvas.setAttribute('role','img');canvas.className='cell3d-canvas';host.append(canvas,labels);
-  controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.dampingFactor=.09;controls.rotateSpeed=.65;controls.panSpeed=.7;controls.zoomSpeed=.8;controls.autoRotateSpeed=.75;controls.maxPolarAngle=Math.PI-.08;controls.minPolarAngle=.08;controls.screenSpacePanning=true;
+  controls=new OrbitControls(camera,canvas);const touchMode=document.createElement('button');touchMode.id='touch-3d';touchMode.textContent='Touch mode: rotate';touchMode.setAttribute('aria-pressed','true');document.querySelector('.three-tools').append(touchMode);touchMode.onclick=()=>{controls.enabled=!controls.enabled;canvas.style.touchAction=controls.enabled?'none':'pan-y';touchMode.textContent=controls.enabled?'Touch mode: rotate':'Touch mode: scroll page';touchMode.setAttribute('aria-pressed',String(controls.enabled));announce(controls.enabled?'Drag to rotate the cell.':'Drag over the cell to scroll the page. Use buttons or the structure list to explore.');};controls.enableDamping=true;controls.dampingFactor=.09;controls.rotateSpeed=.65;controls.panSpeed=.7;controls.zoomSpeed=.8;controls.autoRotateSpeed=.75;controls.maxPolarAngle=Math.PI-.08;controls.minPolarAngle=.08;controls.screenSpacePanning=true;
   controls.addEventListener('change',()=>{dirty=true;emitZoom()});controls.addEventListener('start',()=>{flight=null});
   canvas.addEventListener('pointerdown',e=>{if(e.button===0){pointerStart={x:e.clientX,y:e.clientY};controls.autoRotate=false;syncButtons()}});
   canvas.addEventListener('pointerup',e=>{if(pointerStart&&e.button===0&&Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)<5){const id=pick(e);if(id)dispatchSelection(id)}pointerStart=null});
@@ -204,7 +219,8 @@ function init(){
   document.querySelector('#spin-3d').onclick=()=>{controls.autoRotate=!controls.autoRotate;syncButtons();dirty=true};
   document.querySelector('#reset-3d').onclick=reset;
   renderer.setAnimationLoop(()=>{
-   if(!enabled||document.hidden||(!lessonMode&&document.body.dataset.page!=='atlas'))return;
+   if(!enabled||document.hidden||(!lessonMode&&document.body.dataset.page!=='atlas')){closeupLast=null;return;}
+   tickStudy(performance.now());
    if(flight){const t=Math.min(1,(performance.now()-flight.start)/650),e=t*t*(3-2*t);camera.position.lerpVectors(flight.fromPosition,flight.toPosition,e);controls.target.lerpVectors(flight.fromTarget,flight.toTarget,e);dirty=true;if(t===1)flight=null}
    const changed=controls.update();if(dirty||changed||controls.autoRotate){updateLabels();renderer.render(scene,camera);dirty=false}
   });
@@ -218,15 +234,16 @@ const processPoints=[new T.Vector3(.7,.32,-.6),new T.Vector3(.5,.08,-.4),new T.V
 const processIds=['ribosomes','rough-er','vesicle','golgi','vesicle','membrane'];
 function endLesson(){
  if(!lessonMode)return;lessonMode=false;lessonStage=-1;host.removeAttribute('data-lesson');homeViewport.append(host);
- if(cargo)cargo.visible=false;if(carrier)carrier.visible=false;if(lessonTrail)lessonTrail.visible=false;
+ if(populationCloud)populationCloud.visible=false;if(populationCarriers)populationCarriers.visible=false;if(cargo)cargo.visible=false;if(carrier)carrier.visible=false;if(lessonTrail)lessonTrail.visible=false;
  for(const [object,scale] of waterBases)object.scale.copy(scale);waterBases.clear();
 }
 function setLesson({hostId,kind='animal',stage=0,progress=1,blocked=false,water=null}){
  if(!initialized)return false;const target=document.getElementById(hostId);if(!target)return false;
+ if(!lessonMode)clearStudy();
  const moved=host.parentElement!==target,changed=kind!==currentKind;
  if(moved)target.append(host);flight=null;if(controls)controls.autoRotate=false;lessonMode=true;host.dataset.lesson='true';host.dataset.model=kind;enabled=true;
  if(changed){waterBases.clear();build(kind);lessonStage=-1}
- isolated=false;focusedView=false;cutaway=true;quizMode=false;showLabels=true;
+ if(populationCloud)populationCloud.visible=false;if(populationCarriers)populationCarriers.visible=false;isolated=false;focusedView=false;cutaway=true;quizMode=false;showLabels=true;
  const effectiveStage=blocked?Math.min(stage,1):stage;
  const nextId=water!==null?'vacuole':processIds[effectiveStage];
  if(activeId!==nextId||changed||lessonStage!==effectiveStage){activeId=nextId;applySelection();lessonStage=effectiveStage}
@@ -244,6 +261,13 @@ function setLesson({hostId,kind='animal',stage=0,progress=1,blocked=false,water=
  }
  if(changed||moved){camera.aspect=host.clientWidth/Math.max(1,host.clientHeight);fit(true);resize()}
  dirty=true;return true;
+}
+function showBatch(batch){
+ if(populationCloud)populationCloud.visible=false;if(populationCarriers)populationCarriers.visible=false;
+ if(!batch||!lessonMode||currentKind!=='animal')return;
+ if(!populationCloud){populationCloud=new T.InstancedMesh(new T.SphereGeometry(.075,12,8),new T.MeshStandardMaterial({color:0xe0ac43,emissive:0x7c4c08,emissiveIntensity:.25}),12);populationCloud.frustumCulled=false;scene.add(populationCloud);populationCarriers=new T.InstancedMesh(new T.SphereGeometry(.17,12,8),new T.MeshStandardMaterial({color:0xdac894,transparent:true,opacity:.24,depthWrite:false}),12);populationCarriers.frustumCulled=false;scene.add(populationCarriers)}
+ populationCloud.visible=populationCarriers.visible=true;if(cargo)cargo.visible=false;if(carrier)carrier.visible=false;
+ const dummy=new T.Object3D();batch.forEach((p,i)=>{dummy.position.copy(processPoints[p.stage]).lerp(processPoints[Math.min(5,p.stage+1)],p.progress);dummy.position.x+=(i%3-1)*.13;dummy.position.y+=(Math.floor(i/3)-1.5)*.10;dummy.scale.setScalar(1);dummy.updateMatrix();populationCloud.setMatrixAt(i,dummy.matrix);dummy.scale.setScalar(p.stage===2||p.stage===4?1:0);dummy.updateMatrix();populationCarriers.setMatrixAt(i,dummy.matrix)});populationCloud.instanceMatrix.needsUpdate=true;populationCarriers.instanceMatrix.needsUpdate=true;host.dataset.cargoWaiting=String(batch.filter(p=>p.waiting).length);host.dataset.cargoDelivered=String(batch.filter(p=>p.delivered).length);dirty=true;
 }
 async function snapshot(){
  if(!renderer||!enabled||lessonMode||document.body.dataset.page!=='atlas')return null;
@@ -271,12 +295,12 @@ window.Cell3D={
   endLesson();
   enabled=true;host.dataset.model=kind;if(!initialized)return;
   const changed=kind!==currentKind;if(changed)build(kind);
-  const selectionChanged=activeId!==id;activeId=id;showLabels=withLabels;quizMode=isQuiz;if(quizMode)isolated=false;
-  applySelection();if(changed)resize();else if(focusedView){if(selectionChanged&&!quizMode)focusStructure()}else if(isolated)fit(false);dirty=true;
+  const selectionChanged=activeId!==id;if(selectionChanged||isQuiz)stopCloseup();if(isQuiz&&spread)clearStudy();activeId=id;showLabels=withLabels;quizMode=isQuiz;if(quizMode)isolated=false;
+  applySelection();syncStudy();if(changed)resize();else if(focusedView){if(selectionChanged&&!quizMode)focusStructure()}else if(isolated)fit(false);dirty=true;
  },
- hide(){flight=null;enabled=false;if(controls){controls.autoRotate=false;syncButtons()}},
+ hide(){stopCloseup();flight=null;enabled=false;if(controls){controls.autoRotate=false;syncButtons()}},
  zoomTo,reset,focus:focusStructure,lesson:setLesson,endLesson,
- ready:initialized,snapshot,exportModel,
+ ready:initialized,snapshot,exportModel,batch:showBatch,
  // Read-only diagnostics are kept on the DOM for QA and troubleshooting.
 };
 if(initialized){controls.addEventListener('change',()=>{host.dataset.camera=camera.position.toArray().map(v=>v.toFixed(3)).join(',');host.dataset.target=controls.target.toArray().map(v=>v.toFixed(3)).join(',')});}
