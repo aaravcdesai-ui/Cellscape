@@ -52,7 +52,7 @@ git clone https://github.com/aaravcdesai-ui/CellBiologyWebsite.git
 cd CellBiologyWebsite
 ```
 
-The repository is private. You must be signed in to a GitHub account that has access. If GitHub says “Repository not found,” check your account and repository access. Do not put a password or access token in the clone URL.
+The source repository is public, so anyone can clone it without a GitHub account. You need write access to push changes. Do not put a password or access token in the clone URL.
 
 Open the downloaded `CellBiologyWebsite` folder in VS Code, then choose **Terminal → New Terminal**. Run the remaining commands from this folder—the one containing `index.html` and `backend/`.
 
@@ -211,19 +211,19 @@ If Node.js is installed, run the geometry checks (no npm installation needed):
 node tests/model-geometry.mjs
 ```
 
-**Local setup does not deploy the website online.** GitHub Pages can serve the static cell explorer, but cannot run the Python backend, save answers, or provide the admin dashboard. The included Pages workflow is manual; GitHub Pages is not the host of the live public beta. Keep the repository private unless its owner explicitly chooses otherwise.
+**Local setup does not deploy the website online.** GitHub Pages can serve the static cell explorer, but cannot run the Python backend, save answers, or provide the admin dashboard. The included Pages workflow is manual; GitHub Pages is not the host of the live public beta. The repository contains source code; private runtime data and admin credentials must remain excluded from Git.
 
 For online answer saving, a separate backend deployment needs HTTPS, private persistent storage, secure cookies, backups, rate limiting, and scheduled cleanup. See [backend deployment notes](backend/README.md). A private GitHub repository does not automatically make a deployed Pages website private.
 
 ## Public practice-only release
 
-Live beta: [Cellscape](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.site). The GitHub source repository remains private.
+Live beta: [Cellscape](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.site). The GitHub source repository is public. Quiz databases, admin credentials, exports, and reference recordings are excluded from version control.
 
 `python3 scripts/build_public.py` creates `_site/` using an explicit allowlist. The public quiz adapter never sends answer-saving requests. The generated package excludes the backend, admin dashboard, databases, credentials, private exports, and reference recordings. It includes a public-beta banner and a privacy notice for browser-only practice.
 
 Local development still uses the normal Python backend; the public build does not alter local answer saving or admin access. To preview the public release, run `python3 -m http.server 8003 --directory _site` and open `http://127.0.0.1:8003/`.
 
-The Pages workflow uses this builder, but GitHub currently requires an account upgrade to publish Pages from this private repository. Keep the repository private. The separate Sites hosting checkout is excluded from the main repository by `.gitignore`. Deployment identifiers and the public URL are recorded in `design/public-release.json`. Updating GitHub does not automatically update the live Site; regenerate and deploy the sanitized package separately.
+The manual Pages workflow uses this builder to publish only the practice-only frontend. The existing live beta is hosted separately through Sites; making the repository public does not itself run the Pages workflow. The separate Sites hosting checkout is excluded from the main repository by `.gitignore`. Deployment identifiers and the public URL are recorded in `design/public-release.json`. Updating GitHub does not automatically update the live Site; regenerate and deploy the sanitized package separately.
 
 ## Exploded anatomy and animated close-ups
 
