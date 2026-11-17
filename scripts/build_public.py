@@ -2,7 +2,7 @@
 from pathlib import Path
 import argparse, json, re, shutil
 ROOT=Path(__file__).resolve().parent.parent
-FILES=['index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','lab.js','lab-data.js','studio.js','viewer3d.js','cell-models.js']
+FILES=['index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','lab.js','lab-data.js','studio.js','viewer3d.js','cell-models.js','anatomy-motion.js','experiment-model.js','investigations.js','discovery.js']
 ASSETS=['assets/organelles/nucleus.png']+[f'assets/specimens/{n}.png' for n in ['plant','animal','leukocyte','neuron','epithelial','bacteria','muscle']]
 VENDOR=[f'vendor/three/{n}' for n in ['LICENSE','three.module.js','three.core.js','OrbitControls.js']]
 PRACTICE_JS="""// Public release: no network calls, accounts, or answer persistence.
@@ -19,6 +19,7 @@ PRIVACY="""<section id="privacy"><p class="eyebrow">PUBLIC LEARNING EDITION</p><
 <p>Notebook text, saved structures, and review priorities stay in browser memory and reset when you reload or close the page. Download your notebook before leaving if you want to keep it. Images you add are opened locally in your browser and are never uploaded. Snapshot and model downloads are generated in your browser.</p>
 <p>The application does not use analytics, advertising, tracking pixels, browser local storage, or application login cookies. Artwork, scripts, and styles are served from the same host. Image generation happened during development; visiting this site does not send prompts or answers to an AI service.</p>
 <p>The hosting provider receives ordinary requests needed to deliver the website and may maintain security or access logs under its own policies. External reference sites receive a request only when you follow their links. Outgoing links request that browsers omit referrer information.</p>
+<p><strong>Optional feedback:</strong> “Give feedback” opens a separate Google Form in a new tab. The form asks about your experience using Cellscape and does not request your name or email address. Your feedback is sent to the site operator through Google Forms only when you submit it. Please avoid personal information in your comments. Google processes visits and submissions under its <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
 <p>The cell models, illustrations, and experiments are simplified teaching aids, not measured reconstructions or clinical tools. Tissue previews are original schematics, not microscope photographs.</p></section>"""
 def build(destination):
  destination=destination.resolve()
@@ -36,7 +37,7 @@ def build(destination):
   target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
  (destination/'quiz-store.js').write_text(PRACTICE_JS)
  html=(destination/'index.html').read_text()
- html=html.replace('</header><main>','</header><p class="public-edition" role="note"><strong>Public beta</strong><span>Practice only · Quiz answers stay in this page.</span></p><main>')
+ html=html.replace('</header><main id="main-content" tabindex="-1">','</header><p class="public-edition" role="note"><strong>Public beta</strong><span>Practice only · Quiz answers stay in this page.</span></p><main id="main-content" tabindex="-1">')
  html=html.replace('quiz-store.js?v=1','quiz-store.js?v=public-1')
  (destination/'index.html').write_text(html)
  about=(destination/'about.html').read_text();start=about.rfind('<section',0,about.index('id="privacy"'))
