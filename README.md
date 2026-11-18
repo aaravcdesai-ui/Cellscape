@@ -40,7 +40,7 @@ Sign in at **[http://127.0.0.1:8000/admin.html](http://127.0.0.1:8000/admin.html
 
 Local quiz answers are stored in SQLite; scores count first-try correct answers without hints. The dashboard distinguishes assisted, revealed, and incomplete work. Records default to 30-day retention. Databases, admin credentials, and exports are excluded from Git.
 
-Notebook text, bookmarks, and lesson progress reset on reload; download notes before leaving. Added images stay in the browser. Optional feedback is submitted separately through Google Forms. Read the [privacy notice](about.html#privacy).
+Notebook text, saved structures, and protein-journey lesson checks are kept in the browser’s local storage on that device (never sent to the server); the notebook’s “Clear saved work” button deletes notes and saved structures. Added images stay in the browser. Optional feedback is submitted separately through Google Forms. Read the [privacy notice](about.html#privacy).
 
 ## Biology and artwork
 
@@ -56,7 +56,7 @@ Three.js and OrbitControls use the bundled [MIT license](vendor/three/LICENSE). 
 python3 -m unittest discover -s backend -p 'test_*.py'
 ```
 
-With Node.js installed, you can also run:
+GitHub Actions runs all of these on every push to `main` and on pull requests. With Node.js installed, you can also run:
 
 ```sh
 node tests/model-geometry.mjs
@@ -64,4 +64,4 @@ node tests/anatomy-motion.mjs
 node tests/experiment-model.mjs
 ```
 
-`python3 scripts/build_public.py` creates a practice-only `_site/` folder, excluding the backend, admin dashboard, and private data. The manual GitHub Pages workflow uses this build; the live beta is hosted separately through Sites. GitHub pushes do not automatically redeploy it. Online answer saving requires a separate backend deployment; see the [hosting notes](backend/README.md#online-hosting-is-separate).
+`python3 scripts/build_public.py` creates a practice-only `_site/` folder, excluding the backend, admin dashboard, and private data. It also adds a content hash (`?v=…`) to every script and stylesheet URL, so browsers pick up changes automatically; don't add version numbers by hand. The manual GitHub Pages workflow uses this build; the live beta is hosted separately through Sites. GitHub pushes do not automatically redeploy it. Online answer saving requires a separate backend deployment; see the [hosting notes](backend/README.md#online-hosting-is-separate).

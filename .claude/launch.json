@@ -4,8 +4,22 @@
     {
       "name": "cellscape",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["backend/server.py"],
+      "runtimeArgs": [
+        "backend/server.py"
+      ],
       "port": 8000
+    },
+    {
+      "name": "cellscape-public-build",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8001",
+        "--directory",
+        "_site"
+      ],
+      "port": 8001
     }
   ]
 }

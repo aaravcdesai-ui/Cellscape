@@ -1,23 +1,117 @@
-import {cargoBatch,cargoSummary} from './experiment-model.js';
-const panel=document.createElement('section');panel.id='experiment-comparison';panel.setAttribute('aria-label','Control and intervention comparison');panel.innerHTML='<div class="experiment-compare-head"><div><p class="eyebrow">SAME START / ONE CHANGE</p><h3>Compare the control</h3></div><button id="lab-pause" disabled>Pause experiment</button></div><p id="batch-note">Each dot is one particle in an illustrative batch of 12. Counts describe this animation, not measured secretion rates.</p><div class="experiment-pair"><article><h4>Normal transport</h4><svg id="control-cargo" viewBox="0 0 420 120" role="img" aria-label="Normal protein delivery"></svg><p id="control-count"></p></article><article><h4 id="intervention-title">ER → Golgi blocked</h4><svg id="changed-cargo" viewBox="0 0 420 120" role="img" aria-label="Changed protein delivery"></svg><p id="changed-count"></p></article></div><p id="control-explanation"></p>';
+import {
+  cargoBatch,
+  cargoSummary
+} from './experiment-model.js';
+const panel = document.createElement('section');
+panel.id = 'experiment-comparison';
+panel.setAttribute('aria-label', 'Control and intervention comparison');
+panel.innerHTML = '<div class="experiment-compare-head"><div><p class="eyebrow">SAME START / ONE CHANGE</p><h3>Compare the control</h3></div><button id="lab-pause" disabled>Pause experiment</button></div><p id="batch-note">Each dot is one particle in an illustrative batch of 12. Counts describe this animation, not measured secretion rates.</p><div class="experiment-pair"><article><h4>Normal transport</h4><svg id="control-cargo" viewBox="0 0 420 120" role="img" aria-label="Normal protein delivery"></svg><p id="control-count"></p></article><article><h4 id="intervention-title">ER → Golgi blocked</h4><svg id="changed-cargo" viewBox="0 0 420 120" role="img" aria-label="Changed protein delivery"></svg><p id="changed-count"></p></article></div><p id="control-explanation"></p>';
 document.getElementById('lab-result').after(panel);
-function drawCargo(svg,batch,blocked){
- svg.replaceChildren();const ns='http://www.w3.org/2000/svg';const shape=(tag,attrs,text)=>{const n=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text)n.textContent=text;svg.append(n)};
- shape('path',{d:'M35 50H385',stroke:'#bbc5a7','stroke-width':3,fill:'none'});
- for(const [i,label]of ['Ribosome','ER','Carrier','Golgi','Vesicle','Surface'].entries()){const x=35+i*70;shape('circle',{cx:x,cy:50,r:9,fill:['#a993b4','#839dc0','#dabd7a','#d6977f','#dabd7a','#819d62'][i]});shape('text',{x,y:106,'text-anchor':'middle',fill:'#526143','font-size':11},label)}
- if(blocked){shape('path',{d:'M124 23V76',stroke:'#995542','stroke-width':4});shape('text',{x:134,y:20,fill:'#874a39','font-size':10},'BLOCK')}
- batch.forEach((p,i)=>{const fraction=p.stage===5?5:p.stage+p.progress,x=p.waiting?96+(i%3)*7:35+fraction*70,y=p.waiting?28+Math.floor(i/3)*13:48+(i%3-1)*12;shape('circle',{cx:x,cy:y,r:4.5,fill:p.delivered?'#4c7343':'#bc812d',stroke:'#fff8df','stroke-width':1})});
+
+function drawCargo(svg, batch, blocked) {
+  svg.replaceChildren();
+  const ns = 'http://www.w3.org/2000/svg';
+  const shape = (tag, attrs, text) => {
+    const n = document.createElementNS(ns, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    if (text) n.textContent = text;
+    svg.append(n)
+  };
+  shape('path', {
+    d: 'M35 50H385',
+    stroke: '#bbc5a7',
+    'stroke-width': 3,
+    fill: 'none'
+  });
+  for (const [i, label] of ['Ribosome', 'ER', 'Carrier', 'Golgi', 'Vesicle', 'Surface'].entries()) {
+    const x = 35 + i * 70;
+    shape('circle', {
+      cx: x,
+      cy: 50,
+      r: 9,
+      fill: ['#a993b4', '#839dc0', '#dabd7a', '#d6977f', '#dabd7a', '#819d62'][i]
+    });
+    shape('text', {
+      x,
+      y: 106,
+      'text-anchor': 'middle',
+      fill: '#526143',
+      'font-size': 11
+    }, label)
+  }
+  if (blocked) {
+    shape('path', {
+      d: 'M124 23V76',
+      stroke: '#995542',
+      'stroke-width': 4
+    });
+    shape('text', {
+      x: 134,
+      y: 20,
+      fill: '#874a39',
+      'font-size': 10
+    }, 'BLOCK')
+  }
+  batch.forEach((p, i) => {
+    const fraction = p.stage === 5 ? 5 : p.stage + p.progress,
+      x = p.waiting ? 96 + (i % 3) * 7 : 35 + fraction * 70,
+      y = p.waiting ? 28 + Math.floor(i / 3) * 13 : 48 + (i % 3 - 1) * 12;
+    shape('circle', {
+      cx: x,
+      cy: y,
+      r: 4.5,
+      fill: p.delivered ? '#4c7343' : '#bc812d',
+      stroke: '#fff8df',
+      'stroke-width': 1
+    })
+  });
 }
-function waterDiagram(svg,level){svg.innerHTML=`<rect x="140" y="10" width="140" height="80" rx="7" fill="#eff0d4" stroke="#667f43" stroke-width="6"/><rect x="${155+(1-level)*20}" y="${22+(1-level)*15}" width="${110-(1-level)*40}" height="${56-(1-level)*30}" rx="18" fill="#a7cdd4" stroke="#598c98" stroke-width="2"/><text x="210" y="112" text-anchor="middle" font-size="12" fill="#526143">Wall stays fixed · Vacuole changes</text>`}
-function paint({experiment,t,blocked,condition,running}){
- const pause=document.getElementById('lab-pause');pause.disabled=!running&&!window.CellLab?.paused?.();pause.textContent=window.CellLab?.paused?.()?'Resume experiment':'Pause experiment';
- const water=experiment==='water';document.getElementById('batch-note').textContent=water?'Compare the same starting cell at isotonic equilibrium with the selected outside solution. Sizes and timing are illustrative.':'Each dot is one particle in an illustrative batch of 12. Counts describe this animation, not measured secretion rates.';
- const headings=panel.querySelectorAll('h4');headings[0].textContent=water?'Isotonic control':'Normal transport';headings[1].textContent=water?condition+' solution':blocked?'ER → Golgi blocked':'Normal transport (repeat)';
- const a=document.getElementById('control-cargo'),b=document.getElementById('changed-cargo');a.setAttribute('aria-label',water?'Isotonic water-balance control':'Normal protein delivery');b.setAttribute('aria-label',water?'Selected water-balance condition':'Intervention protein delivery');
- if(water){window.Cell3D?.batch?.(null);waterDiagram(a,.65);waterDiagram(b,.65+((condition==='hypertonic'?0:condition==='hypotonic'?1:.65)-.65)*t);document.getElementById('control-count').textContent='No net water movement at equilibrium.';document.getElementById('changed-count').textContent=t===0?'Starting state — make a prediction.':condition==='hypertonic'?'Net water loss; reduced turgor.':condition==='hypotonic'?'Net water entry; increased turgor.':'No net change at equilibrium.';document.getElementById('control-explanation').textContent='The control helps distinguish a change caused by the outside solution from a change caused just by the passage of time.';return;}
- const normal=cargoBatch(t),changed=cargoBatch(t,blocked),n=cargoSummary(normal),c=cargoSummary(changed);drawCargo(a,normal,false);drawCargo(b,changed,blocked);document.getElementById('control-count').textContent=`${n.delivered} / 12 reached the surface`;document.getElementById('changed-count').textContent=`${c.upstream} waiting upstream · ${c.delivered} / 12 reached the surface`;
- document.getElementById('control-explanation').textContent=blocked?'The block affects newly made cargo after the ER. Existing downstream cargo could still be secreted; this model follows only the new batch.':'Both runs have working transport, so they should show the same route and outcome.';
- window.Cell3D?.batch?.(changed);
+
+function waterDiagram(svg, level) {
+  svg.innerHTML = `<rect x="140" y="10" width="140" height="80" rx="7" fill="#eff0d4" stroke="#667f43" stroke-width="6"/><rect x="${155+(1-level)*20}" y="${22+(1-level)*15}" width="${110-(1-level)*40}" height="${56-(1-level)*30}" rx="18" fill="#a7cdd4" stroke="#598c98" stroke-width="2"/><text x="210" y="112" text-anchor="middle" font-size="12" fill="#526143">Wall stays fixed · Vacuole changes</text>`
 }
-document.getElementById('lab-pause').onclick=()=>window.CellLab?.toggleExperiment?.();
-window.CellInvestigations={paint};window.CellLab?.refreshExperiment?.();
+
+function paint({
+  experiment,
+  t,
+  blocked,
+  condition,
+  running
+}) {
+  const pause = document.getElementById('lab-pause');
+  pause.disabled = !running && !window.CellLab?.paused?.();
+  pause.textContent = window.CellLab?.paused?.() ? 'Resume experiment' : 'Pause experiment';
+  const water = experiment === 'water';
+  document.getElementById('batch-note').textContent = water ? 'Compare the same starting cell at isotonic equilibrium with the selected outside solution. Sizes and timing are illustrative.' : 'Each dot is one particle in an illustrative batch of 12. Counts describe this animation, not measured secretion rates.';
+  const headings = panel.querySelectorAll('h4');
+  headings[0].textContent = water ? 'Isotonic control' : 'Normal transport';
+  headings[1].textContent = water ? condition + ' solution' : blocked ? 'ER → Golgi blocked' : 'Normal transport (repeat)';
+  const a = document.getElementById('control-cargo'),
+    b = document.getElementById('changed-cargo');
+  a.setAttribute('aria-label', water ? 'Isotonic water-balance control' : 'Normal protein delivery');
+  b.setAttribute('aria-label', water ? 'Selected water-balance condition' : 'Intervention protein delivery');
+  if (water) {
+    window.Cell3D?.batch?.(null);
+    waterDiagram(a, .65);
+    waterDiagram(b, .65 + ((condition === 'hypertonic' ? 0 : condition === 'hypotonic' ? 1 : .65) - .65) * t);
+    document.getElementById('control-count').textContent = 'No net water movement at equilibrium.';
+    document.getElementById('changed-count').textContent = t === 0 ? 'Starting state — make a prediction.' : condition === 'hypertonic' ? 'Net water loss; reduced turgor.' : condition === 'hypotonic' ? 'Net water entry; increased turgor.' : 'No net change at equilibrium.';
+    document.getElementById('control-explanation').textContent = 'The control helps distinguish a change caused by the outside solution from a change caused just by the passage of time.';
+    return;
+  }
+  const normal = cargoBatch(t),
+    changed = cargoBatch(t, blocked),
+    n = cargoSummary(normal),
+    c = cargoSummary(changed);
+  drawCargo(a, normal, false);
+  drawCargo(b, changed, blocked);
+  document.getElementById('control-count').textContent = `${n.delivered} / 12 reached the surface`;
+  document.getElementById('changed-count').textContent = `${c.upstream} waiting upstream · ${c.delivered} / 12 reached the surface`;
+  document.getElementById('control-explanation').textContent = blocked ? 'The block affects newly made cargo after the ER. Existing downstream cargo could still be secreted; this model follows only the new batch.' : 'Both runs have working transport, so they should show the same route and outcome.';
+  window.Cell3D?.batch?.(changed);
+}
+document.getElementById('lab-pause').onclick = () => window.CellLab?.toggleExperiment?.();
+window.CellInvestigations = {
+  paint
+};
+window.CellLab?.refreshExperiment?.();

@@ -58,6 +58,8 @@ def handler(database, retention_days, admin_file=None, secure_cookies=False):
             self.send_response(200)
             if relative.startswith('admin.'):
                 self.send_header('Cache-Control','no-store');self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");self.send_header('X-Frame-Options','DENY')
+            else:
+                self.send_header('Cache-Control','no-cache')  # always revalidate, so edits show up without version numbers
             self.send_header('Content-Type',mime); self.send_header('Content-Length',str(len(raw))); self.send_header('X-Content-Type-Options','nosniff'); self.send_header('Referrer-Policy','no-referrer'); self.end_headers(); self.wfile.write(raw)
         def do_POST(self):
             # JSON + same-origin checking prevents cross-site browser submissions. No CORS is enabled.

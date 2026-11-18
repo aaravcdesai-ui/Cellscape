@@ -1,109 +1,4496 @@
-:root{--paper:#f7f5ef;--ink:#363a31;--muted:#7d8074;--line:#dfdfd4;--green:#536b45;--purple:#79618c;--canvas:#f6f4e9}
-*{box-sizing:border-box}html{scroll-padding-top:20px}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px}button,a,input{-webkit-tap-highlight-color:transparent}button{font:inherit;color:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid #9779ad;outline-offset:3px}a{color:var(--green)}[hidden]{display:none!important}
-header{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 25px;border-bottom:1px solid var(--line);background:#faf9f4}.brand{display:flex;gap:10px;align-items:center;color:#30372d;text-decoration:none;font-family:Georgia,'Times New Roman',serif;font-size:29px;white-space:nowrap}.brand svg{width:33px;height:36px}.brand>span{font:9px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:1.5px;border-left:1px solid #cccfc0;margin-left:8px;padding-left:16px;color:#777e6d}header nav{display:flex;gap:4px;align-self:stretch;align-items:stretch}header nav button{border:0;border-bottom:2px solid transparent;background:none;font-size:12px;padding:0 18px;color:#7b8072}header nav button[aria-pressed=true]{border-bottom-color:#6c7d52;color:#34452f}header nav button:hover{color:#37492f}.header-note{font-size:11px;color:#868678;font-style:italic;white-space:nowrap}
-main{padding:0 18px;max-width:1850px;margin:auto}.lab-top{height:53px;display:flex;align-items:center;justify-content:space-between;gap:16px}.atlas-breadcrumb{font-size:10px;color:#868577;display:flex;align-items:center;gap:14px}.atlas-breadcrumb span{color:#c0beae}.atlas-breadcrumb strong{font-weight:500;color:#555e4b}.view-tools{display:flex;align-items:center;gap:20px;font-size:11px}.view-tools label{display:flex;gap:6px;align-items:center;cursor:pointer}input{accent-color:#667e51}#quiz{background:#edeadd;border:1px solid #d4d1c0;border-radius:4px;padding:8px 13px;font-size:11px;min-height:34px}
-.workspace{display:grid;grid-template-columns:194px minmax(0,1fr) 310px;height:calc(100dvh - 163px);min-height:650px;max-height:1050px;border:1px solid #d9d9cc;background:#fbfaf5;border-radius:7px;overflow:hidden}
-.organelles{padding:19px 11px 14px;background:#f6f5ee;overflow-y:auto;height:100%;scrollbar-width:thin}.rail-title{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1.3px;color:#7b806f;padding:0 5px}.rail-title span{font-size:9px;letter-spacing:0;color:#9c9f91}.tabs{margin:13px 0 26px;display:grid;gap:6px}.tabs button{width:100%;display:flex;align-items:center;gap:9px;text-align:left;background:transparent;border:1px solid transparent;border-radius:4px;padding:10px 8px;font-size:12px}.tabs button.active{background:#e7ebdc;border-color:#d5ddc7;color:#3f5436}.tabs small{display:block;font-size:9px;color:#8a8e7d;margin-top:5px}.specimen-dot{display:block;position:relative;flex:none;width:30px;height:29px;border:2px solid #c1b184;background:#ece2c2;border-radius:44% 56% 50% 49%;box-shadow:inset 2px 2px 0 #f8efd9}.specimen-dot:after{content:'';width:10px;height:10px;background:#a682ba;border:1px solid #825a98;border-radius:50%;position:absolute;left:5px;top:7px}.plant-dot{background:#e0e9bc;border-color:#95a76d;border-radius:7px;transform:rotate(-5deg)}.plant-dot:after{width:9px;height:9px;left:3px;top:5px}.rail-hint{font-size:9px;color:#9b9d8d;margin:8px 5px 12px}.organelle-title{border-top:1px solid var(--line);padding-top:17px}#organelle-list{display:flex;flex-direction:column;gap:2px}#organelle-list button{display:flex;align-items:center;gap:9px;width:100%;min-height:33px;border:1px solid transparent;border-radius:3px;text-align:left;background:transparent;padding:7px 9px;font-size:11px;line-height:1.4}#organelle-list button:hover{background:#efeee5}#organelle-list button.active{background:#ede5f1;border-color:#dfd1e5;color:#654c79}.organelle-swatch{background:var(--swatch);width:7px;height:7px;border-radius:50%;flex:none}.row-arrow{margin-left:auto;color:#92869a;font-size:12px;opacity:0}button.active .row-arrow{opacity:1}.rail-bottom{font-size:8px;color:#939684;line-height:2.2;border-top:1px solid var(--line);padding:14px 5px 0;margin-top:20px}.key-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#91a17f;margin-right:4px}.key-dot.special{background:#ad96ba}
-.diagram-panel{display:flex;flex-direction:column;gap:10px;background:var(--canvas);padding:22px 22px 14px;border-left:1px solid #dfdfd1;min-width:0;height:100%;overflow:hidden;position:relative}.specimen-title{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}.eyebrow{font-size:9px;font-weight:500;letter-spacing:1.4px;color:#888a77;margin:0 0 8px}h1,h2,h3,p{overflow-wrap:break-word}.specimen-title h1{font:42px/1 Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.7px;margin:0 0 8px}.specimen-title>div>p:last-child{font-size:10px;color:#888b7b;margin:0}.plate-number{font-size:8px;letter-spacing:1.5px;padding-top:5px;color:#9a9a87;white-space:nowrap}.diagram-heading{display:flex;justify-content:space-between;font-size:7px;letter-spacing:1.1px;color:#9a9e88;order:1;margin-top:4px}.diagram-heading>span:last-child{display:none}
-#cell-viewport{order:2;min-height:0;flex:1;overflow:auto;width:100%;scrollbar-width:thin;scrollbar-color:#c3cbb0 transparent;touch-action:pan-x pan-y pinch-zoom;overscroll-behavior-x:contain;display:flex;align-items:center}#cell{flex:none;width:100%;height:auto;aspect-ratio:820/570;overflow:visible}#cell-viewport:focus:not(:focus-visible){outline:none}.zoom-toolbar{order:3;display:flex;align-items:center;gap:0;align-self:flex-start;background:#faf9f2;border:1px solid #d9dacb;border-radius:4px;height:34px}.zoom-toolbar>span{display:none}.zoom-toolbar button{height:32px;width:33px;border:0;background:transparent;font-size:17px}.zoom-toolbar output{font-size:9px;min-width:39px;text-align:center}.zoom-toolbar #zoom-reset{font-size:10px;width:49px;border-left:1px solid #dcded0}.zoom-hint{order:4;position:absolute;bottom:51px;right:22px;margin:0;color:#a0a28e;font-size:8px;line-height:1.5;text-align:right;max-width:190px}.model-note{order:5;font-size:8px;color:#999b88;margin:3px 0 0;line-height:1.6}.diagram-foot{order:6;display:flex;justify-content:space-between;font-size:8px;color:#969b87;padding-top:10px;border-top:1px solid #e0e2d3;margin-top:4px;gap:12px}.diagram-foot>span:last-child{font-size:7px;letter-spacing:.8px}.specimen-callouts{pointer-events:none}.specimen-callouts path{stroke:#6e7365;stroke-width:.8;fill:none;opacity:.75}.specimen-callouts circle{fill:#717363}.specimen-callouts text{fill:#454d42;font:11px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;paint-order:stroke;stroke:#f7f4e9;stroke-width:3px;stroke-linejoin:round}.organelle{cursor:pointer;transition:filter .15s,opacity .15s}.organelle:focus{outline:none}.organelle:hover{filter:brightness(1.04) drop-shadow(0 0 3px #7b726133)}.organelle.selected{filter:drop-shadow(0 0 3px #85609b88)}.organelle:focus-visible{filter:drop-shadow(0 0 5px #be8c36)}.quiz-mode .organelle:hover{filter:brightness(1.04)}#cell[data-compare=shared] .different-structure,#cell[data-compare=different] .shared-structure{opacity:.3}#comparison-highlight{order:1;background:#e8ecd9;color:#64764f;padding:7px 10px;border-radius:3px}
-#cell-details{height:100%;min-width:0;overflow-y:auto;scrollbar-width:thin;border-left:1px solid #ddded0;padding:22px 18px;background:#faf9f3}.detail-top{display:flex;justify-content:space-between;gap:10px;font-size:7px;letter-spacing:1px;color:#858c78;border-bottom:1px solid #dedfd3;padding-bottom:13px;margin-bottom:19px}.detail-top>span:last-child{font-size:6px;color:#9c8aa6}#detail-icon{display:none}#detail-kicker{font-size:7px;letter-spacing:1.1px;color:#94819f;margin:0 0 6px}#detail-title{font:34px/1.12 Georgia,'Times New Roman',serif;margin:0 0 13px;color:#51415a}#description{font-size:11px;line-height:1.9;color:#7a7e70;margin:0 0 20px}.back-to-cell{display:none;font-size:11px;color:#697f52;margin-bottom:16px}.function{padding-top:15px;border-top:1px solid var(--line);margin-top:20px}.function>span,.fact>span{font-size:7px;letter-spacing:1.2px;color:#9d8ba4}.function p,.fact p{font-size:11px;color:#777f6a;line-height:1.8}.fact{margin-top:18px;border-top:1px solid var(--line);padding-top:13px}.fact p{font-family:Georgia,serif;font-style:italic;color:#8c7998}.detail-nav{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);margin-top:20px;padding-top:14px;font-size:8px;color:#8b917e}.detail-nav button{background:none;border:1px solid #d5d8c8;border-radius:3px;width:30px;height:30px}.closeup-heading{display:flex;justify-content:space-between;font-size:7px;letter-spacing:1.1px;color:#8d8391}#closeup{border:1px solid #dfddcf;background:#f3f0e5;border-radius:4px;padding:12px;margin:0 0 15px}#closeup-art svg{width:100%;display:block;max-height:150px;height:auto}.anatomy-marker circle{fill:#faf6ea;stroke:#8a719b;stroke-width:1.6}.anatomy-marker text{font:600 12px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#705483}.anatomy-marker.active circle{fill:#826493}.anatomy-marker.active text{fill:white}#closeup-parts{display:grid;gap:4px}#closeup-parts button{min-height:30px;padding:5px 6px;text-align:left;font-size:9px;line-height:1.5;background:#f9f6ec;border:1px solid #e0ddce;border-radius:3px}#closeup-parts b{display:inline-block;text-align:center;width:17px;margin-right:4px;font-size:9px;font-weight:500;color:#9983a6}#closeup-parts button[aria-pressed=true]{background:#e9e0ed;border-color:#d4c6dc;color:#684d7e}#closeup-note{font-size:10px;line-height:1.8;color:#797e6e;margin:10px 0 0;min-height:42px}
-body[data-page=atlas] .lesson-section,body[data-page=journey] .lab,body[data-page=journey] #comparison,body[data-page=compare] .lab,body[data-page=compare] #protein-journey{display:none}body:not([data-page=atlas]) main{max-width:1280px;padding:0 28px}.sources{font-size:9px;color:#9b9d8a;margin:16px 0 10px;line-height:1.6}.sources a{color:#839071;text-decoration:none}.sources a:hover{text-decoration:underline}footer{display:flex;justify-content:space-between;border-top:1px solid #e4e3d6;padding:12px 0 18px;font-size:9px;color:#999d8d}footer span:last-child{font-size:7px;letter-spacing:1.2px}
-.quiz-actions{display:flex;gap:8px}.quiz-actions button{font-size:12px;text-align:center}
-#quiz-options{display:flex;flex-wrap:wrap;gap:7px}.quiz-option{border:1px solid #cbd6c0;background:#f3f6eb;border-radius:6px;padding:9px 12px;min-height:44px;font-size:13px}
-.quiz-option:disabled{opacity:.55;text-decoration:line-through}.hint-text{font-size:13px;color:#54694c;background:#edf1e2;padding:12px;border-left:3px solid #8ca06f}.quiz-next{background:var(--ink);color:#fffdf4;text-align:center;border-color:var(--ink)}
-.lesson-section{margin-top:65px;scroll-margin-top:24px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:24px}.section-heading h2{font-size:48px;margin:12px 0 0;line-height:1.1}.section-heading>p{font-size:13px;line-height:1.8;color:#54694f;max-width:320px;margin:0}
-.journey-card{border:1px solid #d5ddce;background:#fffefa;border-radius:16px;overflow:hidden}
-.journey-stages{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--line);background:#edf1e5}
-.journey-stages button{border:0;border-right:1px solid var(--line);background:transparent;text-align:left;padding:15px 12px;font-size:11px;line-height:1.5;min-height:74px}.journey-stages button span{display:block;font-size:9px;color:#6b7d60;margin-bottom:5px}.journey-stages button[aria-pressed=true]{background:#244c3e;color:#fffdf3}.journey-stages button[aria-pressed=true] span{color:#e0e8c8}.journey-stages .completed{background:#e0e9d2}
-.journey-viewport{overflow:auto;background:#f3f5eb;scrollbar-width:thin}.journey-viewport svg{display:block;width:100%;min-width:600px;max-height:300px}.journey-viewport text{font:12px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#51674b}
-#protein-dot{filter:drop-shadow(0 0 7px #bd813960)}
-.journey-bottom{display:flex;justify-content:space-between;gap:30px;padding:25px 28px;align-items:center}.journey-bottom>div:first-child{max-width:620px}.journey-bottom h3{font-family:Georgia,'Times New Roman',serif;font-size:29px;margin:7px 0}.journey-bottom p:not(.eyebrow){font-size:14px;line-height:1.8;margin:8px 0 0;color:#52664f}
-.journey-controls{display:flex;gap:7px;flex-wrap:wrap;min-width:240px;max-width:265px;justify-content:flex-end}.journey-controls button{min-height:44px;background:#f5f6ed;border:1px solid #cbd6bf;border-radius:6px;padding:9px 14px;font-size:12px}.journey-controls #journey-play{background:var(--ink);color:white;min-width:117px}.lesson-note{font-size:12px;line-height:1.8;color:#586e51;margin:0;padding:16px 28px;border-top:1px solid #dce1d5}
-.comparison-controls{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}.comparison-controls button{min-height:44px;border:1px solid #c6d2bb;background:transparent;border-radius:7px;font-size:13px;padding:9px 17px}.comparison-controls button[aria-pressed=true]{background:#244c3e;color:white;border-color:#244c3e}
-.comparison-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.compare-card{padding:23px;border:1px solid #d4ddc8;border-radius:12px;background:#fffefa}.compare-card.shared{background:#e8eedf}.compare-card.plant{background:#edf2df}.compare-card h3{font-family:Georgia,'Times New Roman',serif;font-size:29px;margin:10px 0}.compare-card>p:not(.eyebrow){font-size:13px;line-height:1.8;color:#50634c}.compare-card>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}.compare-card button{display:flex;gap:10px;align-items:center;justify-content:space-between;text-align:left;min-height:44px;background:#fffdf5;border:1px solid #d1dcc5;border-radius:6px;padding:9px 12px;font-size:12px}.compare-card button span{color:#6c815d}.compare-card .eyebrow{font-size:9px}.comparison-cards:has(.compare-card:only-child){grid-template-columns:1fr}
-#comparison>.lesson-note{margin-top:20px;padding:16px 0}
-@media(max-width:1100px){.workspace{grid-template-columns:minmax(0,1fr) 335px}.journey-bottom{align-items:flex-start}.section-heading h2{font-size:42px}}
-@media(max-width:1050px){.workspace{grid-template-columns:1fr}.back-to-cell{display:inline-block;align-self:flex-start}.diagram-panel{gap:14px}#cell-viewport{max-height:65vh}aside{padding:24px}#closeup{max-width:640px}#closeup-art svg{max-height:270px}.journey-bottom{display:block}.journey-controls{margin-top:20px;max-width:none;justify-content:flex-start}.comparison-cards{grid-template-columns:1fr 1fr}.compare-card.shared{grid-column:1/-1}}
-@media(max-width:650px){.view-tools{justify-content:center;width:100%;gap:12px}.view-tools label,.lesson-link,#quiz{font-size:12px}.zoom-toolbar{margin:0 8px;gap:6px;font-size:11px}.zoom-toolbar>span{display:none}#cell-viewport{border-radius:0;max-height:53vh}.zoom-toolbar{justify-content:center}.diagram-panel{gap:10px}.diagram-foot{display:none}.model-note{font-size:11px}aside{padding:20px}#closeup{padding:12px}#closeup-note{min-height:0}.lesson-section{margin-top:44px}.section-heading{display:block}.section-heading h2{font-size:38px}.section-heading>p{margin-top:16px;max-width:none}.journey-stages{grid-template-columns:repeat(3,1fr)}.journey-stages button{min-height:65px;font-size:10px;padding:10px}.journey-bottom{padding:20px}.journey-bottom h3{font-size:28px}.journey-controls{min-width:0}.journey-controls button{padding:9px 11px}.lesson-note{padding:15px 20px}.comparison-cards{grid-template-columns:1fr}.compare-card{padding:20px}.comparison-controls{gap:6px}.comparison-controls button{padding:8px 12px;font-size:12px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#protein-dot{transition:none}}
+:root {
+  --paper: #f7f5ef;
+  --ink: #363a31;
+  --muted: #7d8074;
+  --line: #dfdfd4;
+  --green: #536b45;
+  --purple: #79618c;
+  --canvas: #f6f4e9
+}
+* {
+  box-sizing: border-box
+}
+html {
+  scroll-padding-top: 20px
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px
+}
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer
+}
+button:disabled {
+  opacity: .4;
+  cursor: default
+}
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #9779ad;
+  outline-offset: 3px
+}
+a {
+  color: var(--green)
+}
+[hidden] {
+  display: none !important
+}
+header {
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 25px;
+  border-bottom: 1px solid var(--line);
+  background: #faf9f4
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #30372d;
+  text-decoration: none;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 29px;
+  white-space: nowrap
+}
+.brand svg {
+  width: 33px;
+  height: 36px
+}
+.brand>span {
+  font: 9px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: 1.5px;
+  border-left: 1px solid #cccfc0;
+  margin-left: 8px;
+  padding-left: 16px;
+  color: #777e6d
+}
+header nav {
+  display: flex;
+  gap: 4px;
+  align-self: stretch;
+  align-items: stretch
+}
+header nav button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-size: 12px;
+  padding: 0 18px;
+  color: #7b8072
+}
+header nav button[aria-pressed=true] {
+  border-bottom-color: #6c7d52;
+  color: #34452f
+}
+header nav button:hover {
+  color: #37492f
+}
+.header-note {
+  font-size: 11px;
+  color: #868678;
+  font-style: italic;
+  white-space: nowrap
+}
+main {
+  padding: 0 18px;
+  max-width: 1850px;
+  margin: auto
+}
+.lab-top {
+  height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px
+}
+.atlas-breadcrumb {
+  font-size: 10px;
+  color: #868577;
+  display: flex;
+  align-items: center;
+  gap: 14px
+}
+.atlas-breadcrumb span {
+  color: #c0beae
+}
+.atlas-breadcrumb strong {
+  font-weight: 500;
+  color: #555e4b
+}
+.view-tools {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 11px
+}
+.view-tools label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer
+}
+input {
+  accent-color: #667e51
+}
+#quiz {
+  background: #edeadd;
+  border: 1px solid #d4d1c0;
+  border-radius: 4px;
+  padding: 8px 13px;
+  font-size: 11px;
+  min-height: 34px
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 194px minmax(0, 1fr) 310px;
+  height: calc(100dvh - 163px);
+  min-height: 650px;
+  max-height: 1050px;
+  border: 1px solid #d9d9cc;
+  background: #fbfaf5;
+  border-radius: 7px;
+  overflow: hidden
+}
+.organelles {
+  padding: 19px 11px 14px;
+  background: #f6f5ee;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: thin
+}
+.rail-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 1.3px;
+  color: #7b806f;
+  padding: 0 5px
+}
+.rail-title span {
+  font-size: 9px;
+  letter-spacing: 0;
+  color: #9c9f91
+}
+.tabs {
+  margin: 13px 0 26px;
+  display: grid;
+  gap: 6px
+}
+.tabs button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 10px 8px;
+  font-size: 12px
+}
+.tabs button.active {
+  background: #e7ebdc;
+  border-color: #d5ddc7;
+  color: #3f5436
+}
+.tabs small {
+  display: block;
+  font-size: 9px;
+  color: #8a8e7d;
+  margin-top: 5px
+}
+.specimen-dot {
+  display: block;
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 29px;
+  border: 2px solid #c1b184;
+  background: #ece2c2;
+  border-radius: 44% 56% 50% 49%;
+  box-shadow: inset 2px 2px 0 #f8efd9
+}
+.specimen-dot:after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #a682ba;
+  border: 1px solid #825a98;
+  border-radius: 50%;
+  position: absolute;
+  left: 5px;
+  top: 7px
+}
+.plant-dot {
+  background: #e0e9bc;
+  border-color: #95a76d;
+  border-radius: 7px;
+  transform: rotate(-5deg)
+}
+.plant-dot:after {
+  width: 9px;
+  height: 9px;
+  left: 3px;
+  top: 5px
+}
+.rail-hint {
+  font-size: 9px;
+  color: #9b9d8d;
+  margin: 8px 5px 12px
+}
+.organelle-title {
+  border-top: 1px solid var(--line);
+  padding-top: 17px
+}
+#organelle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px
+}
+#organelle-list button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 33px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  text-align: left;
+  background: transparent;
+  padding: 7px 9px;
+  font-size: 11px;
+  line-height: 1.4
+}
+#organelle-list button:hover {
+  background: #efeee5
+}
+#organelle-list button.active {
+  background: #ede5f1;
+  border-color: #dfd1e5;
+  color: #654c79
+}
+.organelle-swatch {
+  background: var(--swatch);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none
+}
+.row-arrow {
+  margin-left: auto;
+  color: #92869a;
+  font-size: 12px;
+  opacity: 0
+}
+button.active .row-arrow {
+  opacity: 1
+}
+.rail-bottom {
+  font-size: 8px;
+  color: #939684;
+  line-height: 2.2;
+  border-top: 1px solid var(--line);
+  padding: 14px 5px 0;
+  margin-top: 20px
+}
+.key-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #91a17f;
+  margin-right: 4px
+}
+.key-dot.special {
+  background: #ad96ba
+}
+.diagram-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--canvas);
+  padding: 22px 22px 14px;
+  border-left: 1px solid #dfdfd1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative
+}
+.specimen-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px
+}
+.eyebrow {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  color: #888a77;
+  margin: 0 0 8px
+}
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: break-word
+}
+.specimen-title h1 {
+  font: 42px/1 Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -.7px;
+  margin: 0 0 8px
+}
+.specimen-title>div>p:last-child {
+  font-size: 10px;
+  color: #888b7b;
+  margin: 0
+}
+.plate-number {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  padding-top: 5px;
+  color: #9a9a87;
+  white-space: nowrap
+}
+.diagram-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  letter-spacing: 1.1px;
+  color: #9a9e88;
+  order: 1;
+  margin-top: 4px
+}
+.diagram-heading>span:last-child {
+  display: none
+}
+#cell-viewport {
+  order: 2;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #c3cbb0 transparent;
+  touch-action: pan-x pan-y pinch-zoom;
+  overscroll-behavior-x: contain;
+  display: flex;
+  align-items: center
+}
+#cell {
+  flex: none;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 820/570;
+  overflow: visible
+}
+#cell-viewport:focus:not(:focus-visible) {
+  outline: none
+}
+.zoom-toolbar {
+  order: 3;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  align-self: flex-start;
+  background: #faf9f2;
+  border: 1px solid #d9dacb;
+  border-radius: 4px;
+  height: 34px
+}
+.zoom-toolbar>span {
+  display: none
+}
+.zoom-toolbar button {
+  height: 32px;
+  width: 33px;
+  border: 0;
+  background: transparent;
+  font-size: 17px
+}
+.zoom-toolbar output {
+  font-size: 9px;
+  min-width: 39px;
+  text-align: center
+}
+.zoom-toolbar #zoom-reset {
+  font-size: 10px;
+  width: 49px;
+  border-left: 1px solid #dcded0
+}
+.zoom-hint {
+  order: 4;
+  position: absolute;
+  bottom: 51px;
+  right: 22px;
+  margin: 0;
+  color: #a0a28e;
+  font-size: 8px;
+  line-height: 1.5;
+  text-align: right;
+  max-width: 190px
+}
+.model-note {
+  order: 5;
+  font-size: 8px;
+  color: #999b88;
+  margin: 3px 0 0;
+  line-height: 1.6
+}
+.diagram-foot {
+  order: 6;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #969b87;
+  padding-top: 10px;
+  border-top: 1px solid #e0e2d3;
+  margin-top: 4px;
+  gap: 12px
+}
+.diagram-foot>span:last-child {
+  font-size: 7px;
+  letter-spacing: .8px
+}
+.specimen-callouts {
+  pointer-events: none
+}
+.specimen-callouts path {
+  stroke: #6e7365;
+  stroke-width: .8;
+  fill: none;
+  opacity: .75
+}
+.specimen-callouts circle {
+  fill: #717363
+}
+.specimen-callouts text {
+  fill: #454d42;
+  font: 11px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  paint-order: stroke;
+  stroke: #f7f4e9;
+  stroke-width: 3px;
+  stroke-linejoin: round
+}
+.organelle {
+  cursor: pointer;
+  transition: filter .15s, opacity .15s
+}
+.organelle:focus {
+  outline: none
+}
+.organelle:hover {
+  filter: brightness(1.04) drop-shadow(0 0 3px #7b726133)
+}
+.organelle.selected {
+  filter: drop-shadow(0 0 3px #85609b88)
+}
+.organelle:focus-visible {
+  filter: drop-shadow(0 0 5px #be8c36)
+}
+.quiz-mode .organelle:hover {
+  filter: brightness(1.04)
+}
+#cell[data-compare=shared] .different-structure,
+#cell[data-compare=different] .shared-structure {
+  opacity: .3
+}
+#comparison-highlight {
+  order: 1;
+  background: #e8ecd9;
+  color: #64764f;
+  padding: 7px 10px;
+  border-radius: 3px
+}
+#cell-details {
+  height: 100%;
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  border-left: 1px solid #ddded0;
+  padding: 22px 18px;
+  background: #faf9f3
+}
+.detail-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #858c78;
+  border-bottom: 1px solid #dedfd3;
+  padding-bottom: 13px;
+  margin-bottom: 19px
+}
+.detail-top>span:last-child {
+  font-size: 6px;
+  color: #9c8aa6
+}
+#detail-icon {
+  display: none
+}
+#detail-kicker {
+  font-size: 7px;
+  letter-spacing: 1.1px;
+  color: #94819f;
+  margin: 0 0 6px
+}
+#detail-title {
+  font: 34px/1.12 Georgia, 'Times New Roman', serif;
+  margin: 0 0 13px;
+  color: #51415a
+}
+#description {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #7a7e70;
+  margin: 0 0 20px
+}
+.back-to-cell {
+  display: none;
+  font-size: 11px;
+  color: #697f52;
+  margin-bottom: 16px
+}
+.function {
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  margin-top: 20px
+}
+.function>span,
+.fact>span {
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  color: #9d8ba4
+}
+.function p,
+.fact p {
+  font-size: 11px;
+  color: #777f6a;
+  line-height: 1.8
+}
+.fact {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 13px
+}
+.fact p {
+  font-family: Georgia, serif;
+  font-style: italic;
+  color: #8c7998
+}
+.detail-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 14px;
+  font-size: 8px;
+  color: #8b917e
+}
+.detail-nav button {
+  background: none;
+  border: 1px solid #d5d8c8;
+  border-radius: 3px;
+  width: 30px;
+  height: 30px
+}
+.closeup-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  letter-spacing: 1.1px;
+  color: #8d8391
+}
+#closeup {
+  border: 1px solid #dfddcf;
+  background: #f3f0e5;
+  border-radius: 4px;
+  padding: 12px;
+  margin: 0 0 15px
+}
+#closeup-art svg {
+  width: 100%;
+  display: block;
+  max-height: 150px;
+  height: auto
+}
+.anatomy-marker circle {
+  fill: #faf6ea;
+  stroke: #8a719b;
+  stroke-width: 1.6
+}
+.anatomy-marker text {
+  font: 600 12px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  fill: #705483
+}
+.anatomy-marker.active circle {
+  fill: #826493
+}
+.anatomy-marker.active text {
+  fill: white
+}
+#closeup-parts {
+  display: grid;
+  gap: 4px
+}
+#closeup-parts button {
+  min-height: 30px;
+  padding: 5px 6px;
+  text-align: left;
+  font-size: 9px;
+  line-height: 1.5;
+  background: #f9f6ec;
+  border: 1px solid #e0ddce;
+  border-radius: 3px
+}
+#closeup-parts b {
+  display: inline-block;
+  text-align: center;
+  width: 17px;
+  margin-right: 4px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #9983a6
+}
+#closeup-parts button[aria-pressed=true] {
+  background: #e9e0ed;
+  border-color: #d4c6dc;
+  color: #684d7e
+}
+#closeup-note {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #797e6e;
+  margin: 10px 0 0;
+  min-height: 42px
+}
+body[data-page=atlas] .lesson-section,
+body[data-page=journey] .lab,
+body[data-page=journey] #comparison,
+body[data-page=compare] .lab,
+body[data-page=compare] #protein-journey {
+  display: none
+}
+body:not([data-page=atlas]) main {
+  max-width: 1280px;
+  padding: 0 28px
+}
+.sources {
+  font-size: 9px;
+  color: #9b9d8a;
+  margin: 16px 0 10px;
+  line-height: 1.6
+}
+.sources a {
+  color: #839071;
+  text-decoration: none
+}
+.sources a:hover {
+  text-decoration: underline
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e4e3d6;
+  padding: 12px 0 18px;
+  font-size: 9px;
+  color: #999d8d
+}
+footer span:last-child {
+  font-size: 7px;
+  letter-spacing: 1.2px
+}
+.quiz-actions {
+  display: flex;
+  gap: 8px
+}
+.quiz-actions button {
+  font-size: 12px;
+  text-align: center
+}
+#quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px
+}
+.quiz-option {
+  border: 1px solid #cbd6c0;
+  background: #f3f6eb;
+  border-radius: 6px;
+  padding: 9px 12px;
+  min-height: 44px;
+  font-size: 13px
+}
+.quiz-option:disabled {
+  opacity: .55;
+  text-decoration: line-through
+}
+.hint-text {
+  font-size: 13px;
+  color: #54694c;
+  background: #edf1e2;
+  padding: 12px;
+  border-left: 3px solid #8ca06f
+}
+.quiz-next {
+  background: var(--ink);
+  color: #fffdf4;
+  text-align: center;
+  border-color: var(--ink)
+}
+.lesson-section {
+  margin-top: 65px;
+  scroll-margin-top: 24px
+}
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px
+}
+.section-heading h2 {
+  font-size: 48px;
+  margin: 12px 0 0;
+  line-height: 1.1
+}
+.section-heading>p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #54694f;
+  max-width: 320px;
+  margin: 0
+}
+.journey-card {
+  border: 1px solid #d5ddce;
+  background: #fffefa;
+  border-radius: 16px;
+  overflow: hidden
+}
+.journey-stages {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid var(--line);
+  background: #edf1e5
+}
+.journey-stages button {
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+  padding: 15px 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  min-height: 74px
+}
+.journey-stages button span {
+  display: block;
+  font-size: 9px;
+  color: #6b7d60;
+  margin-bottom: 5px
+}
+.journey-stages button[aria-pressed=true] {
+  background: #244c3e;
+  color: #fffdf3
+}
+.journey-stages button[aria-pressed=true] span {
+  color: #e0e8c8
+}
+.journey-stages .completed {
+  background: #e0e9d2
+}
+.journey-viewport {
+  overflow: auto;
+  background: #f3f5eb;
+  scrollbar-width: thin
+}
+.journey-viewport svg {
+  display: block;
+  width: 100%;
+  min-width: 600px;
+  max-height: 300px
+}
+.journey-viewport text {
+  font: 12px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  fill: #51674b
+}
+#protein-dot {
+  filter: drop-shadow(0 0 7px #bd813960)
+}
+.journey-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 25px 28px;
+  align-items: center
+}
+.journey-bottom>div:first-child {
+  max-width: 620px
+}
+.journey-bottom h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 29px;
+  margin: 7px 0
+}
+.journey-bottom p:not(.eyebrow) {
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 8px 0 0;
+  color: #52664f
+}
+.journey-controls {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  min-width: 240px;
+  max-width: 265px;
+  justify-content: flex-end
+}
+.journey-controls button {
+  min-height: 44px;
+  background: #f5f6ed;
+  border: 1px solid #cbd6bf;
+  border-radius: 6px;
+  padding: 9px 14px;
+  font-size: 12px
+}
+.journey-controls #journey-play {
+  background: var(--ink);
+  color: white;
+  min-width: 117px
+}
+.lesson-note {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #586e51;
+  margin: 0;
+  padding: 16px 28px;
+  border-top: 1px solid #dce1d5
+}
+.comparison-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap
+}
+.comparison-controls button {
+  min-height: 44px;
+  border: 1px solid #c6d2bb;
+  background: transparent;
+  border-radius: 7px;
+  font-size: 13px;
+  padding: 9px 17px
+}
+.comparison-controls button[aria-pressed=true] {
+  background: #244c3e;
+  color: white;
+  border-color: #244c3e
+}
+.comparison-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px
+}
+.compare-card {
+  padding: 23px;
+  border: 1px solid #d4ddc8;
+  border-radius: 12px;
+  background: #fffefa
+}
+.compare-card.shared {
+  background: #e8eedf
+}
+.compare-card.plant {
+  background: #edf2df
+}
+.compare-card h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 29px;
+  margin: 10px 0
+}
+.compare-card>p:not(.eyebrow) {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #50634c
+}
+.compare-card>div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 20px
+}
+.compare-card button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  min-height: 44px;
+  background: #fffdf5;
+  border: 1px solid #d1dcc5;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 12px
+}
+.compare-card button span {
+  color: #6c815d
+}
+.compare-card .eyebrow {
+  font-size: 9px
+}
+.comparison-cards:has(.compare-card:only-child) {
+  grid-template-columns: 1fr
+}
+#comparison>.lesson-note {
+  margin-top: 20px;
+  padding: 16px 0
+}
+@media(max-width:1100px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr) 335px
+  }
+  .journey-bottom {
+    align-items: flex-start
+  }
+  .section-heading h2 {
+    font-size: 42px
+  }
+}
+@media(max-width:1050px) {
+  .workspace {
+    grid-template-columns: 1fr
+  }
+  .back-to-cell {
+    display: inline-block;
+    align-self: flex-start
+  }
+  .diagram-panel {
+    gap: 14px
+  }
+  #cell-viewport {
+    max-height: 65vh
+  }
+  aside {
+    padding: 24px
+  }
+  #closeup {
+    max-width: 640px
+  }
+  #closeup-art svg {
+    max-height: 270px
+  }
+  .journey-bottom {
+    display: block
+  }
+  .journey-controls {
+    margin-top: 20px;
+    max-width: none;
+    justify-content: flex-start
+  }
+  .comparison-cards {
+    grid-template-columns: 1fr 1fr
+  }
+  .compare-card.shared {
+    grid-column: 1/-1
+  }
+}
+@media(max-width:650px) {
+  .view-tools {
+    justify-content: center;
+    width: 100%;
+    gap: 12px
+  }
+  .view-tools label,
+  .lesson-link,
+  #quiz {
+    font-size: 12px
+  }
+  .zoom-toolbar {
+    margin: 0 8px;
+    gap: 6px;
+    font-size: 11px
+  }
+  .zoom-toolbar>span {
+    display: none
+  }
+  #cell-viewport {
+    border-radius: 0;
+    max-height: 53vh
+  }
+  .zoom-toolbar {
+    justify-content: center
+  }
+  .diagram-panel {
+    gap: 10px
+  }
+  .diagram-foot {
+    display: none
+  }
+  .model-note {
+    font-size: 11px
+  }
+  aside {
+    padding: 20px
+  }
+  #closeup {
+    padding: 12px
+  }
+  #closeup-note {
+    min-height: 0
+  }
+  .lesson-section {
+    margin-top: 44px
+  }
+  .section-heading {
+    display: block
+  }
+  .section-heading h2 {
+    font-size: 38px
+  }
+  .section-heading>p {
+    margin-top: 16px;
+    max-width: none
+  }
+  .journey-stages {
+    grid-template-columns: repeat(3, 1fr)
+  }
+  .journey-stages button {
+    min-height: 65px;
+    font-size: 10px;
+    padding: 10px
+  }
+  .journey-bottom {
+    padding: 20px
+  }
+  .journey-bottom h3 {
+    font-size: 28px
+  }
+  .journey-controls {
+    min-width: 0
+  }
+  .journey-controls button {
+    padding: 9px 11px
+  }
+  .lesson-note {
+    padding: 15px 20px
+  }
+  .comparison-cards {
+    grid-template-columns: 1fr
+  }
+  .compare-card {
+    padding: 20px
+  }
+  .comparison-controls {
+    gap: 6px
+  }
+  .comparison-controls button {
+    padding: 8px 12px;
+    font-size: 12px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior: auto
+  }
+  #protein-dot {
+    transition: none
+  }
+}
 /* Lesson pages use the same compact typography and paper-and-ink palette. */
-.lesson-section{margin:32px 0 0}.section-heading h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:42px;letter-spacing:-.4px}.section-heading p{color:#858a78;font-size:12px}.section-heading .eyebrow{font-size:8px;letter-spacing:1.4px;color:#908b96}.journey-card{border-radius:5px;border-color:#d9dacb;background:#faf9f3}.journey-stages{background:#efeee4}.journey-stages button[aria-pressed=true]{background:#80708c}.journey-stages button span{font-size:8px}.journey-stages .completed{background:#e8e4eb}.journey-viewport{background:#f5f3e8}.journey-bottom h3{font-family:Georgia,'Times New Roman',serif;font-size:28px}.journey-bottom p:not(.eyebrow){font-size:12px;color:#7a806e}.journey-controls #journey-play{background:#80708c}.journey-controls button{border-radius:3px}.lesson-note{font-size:10px;color:#929680}.comparison-controls button{border-radius:3px;font-size:11px}.comparison-controls button[aria-pressed=true]{background:#7d7089;border-color:#7d7089}.compare-card{border-radius:4px;background:#faf9f3;border-color:#dadccc}.compare-card.shared{background:#f0f1e6}.compare-card.plant{background:#eff1e1}.compare-card h3{font-family:Georgia,'Times New Roman',serif;font-size:28px}.compare-card p:not(.eyebrow){font-size:11px;color:#828775}.compare-card button{border-radius:3px;font-size:11px;background:#faf9f0}.comparison-cards:has(.compare-card:only-child){grid-template-columns:1fr}.quiz-option,.quiz-choice{font-size:11px;min-height:34px;border-radius:3px}.quiz-actions button{font-size:10px}#quiz-area>p{font-size:12px;line-height:1.8;color:#6c7461}#feedback{font-size:11px;line-height:1.9;color:#766284}.quiz-next{background:#82718f;color:white;border-color:#82718f}.hint-text{font-size:11px}.zoom-hint{font-size:8px}
-@media(min-width:1600px){.workspace{grid-template-columns:220px minmax(0,1fr) 345px}#organelle-list button{min-height:36px;font-size:12px}#description,.function p,.fact p{font-size:12px}#closeup-art svg{max-height:175px}#closeup-parts button{font-size:10px;min-height:34px}}
-@media(max-width:1150px){.header-note{display:none}.workspace{grid-template-columns:170px minmax(0,1fr) 280px}.organelles{padding:16px 8px}#organelle-list button{padding:7px 5px;font-size:10px}.diagram-panel{padding:20px 14px 14px}#cell-details{padding:20px 14px}.brand>span{display:none}.zoom-hint{max-width:130px;font-size:7px;right:14px}}
-@media(max-width:1000px){.workspace{grid-template-columns:164px minmax(0,1fr);height:auto;max-height:none;min-height:0;overflow:clip;align-items:start}.organelles{grid-row:1/3;height:100%;max-height:1400px}.diagram-panel{min-height:560px;height:auto;position:static}#cell-viewport{flex:none;max-height:470px;min-height:0}.diagram-heading{margin:5px 0}#cell-details{grid-column:2;border-top:1px solid var(--line);height:auto;overflow:visible;padding:22px;scroll-margin-top:15px}.back-to-cell{display:inline-block}#description{font-size:13px}#closeup{max-width:550px}#closeup-art svg{max-height:210px}#closeup-parts button{min-height:38px;font-size:11px}#closeup-note{font-size:12px}.function p,.fact p{font-size:13px}.zoom-hint{position:static;order:4;text-align:left;max-width:none;font-size:9px}.model-note{order:5}.diagram-foot{display:none}.rail-bottom{font-size:7px}header{padding:0 18px}header nav button{padding:0 13px}.lesson-section{margin-top:25px}.comparison-cards{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){header{height:auto;min-height:65px;flex-wrap:wrap;justify-content:center;padding:12px 12px 0;gap:5px}.brand{font-size:26px;width:100%;justify-content:center}.brand svg{width:28px;height:29px}.brand>span{display:block;font-size:8px}header nav{width:100%;justify-content:center;height:45px}header nav button{font-size:11px;padding:0 20px}main{padding:0 10px}.lab-top{height:51px}.atlas-breadcrumb{font-size:8px;gap:6px}.atlas-breadcrumb>strong{display:none}.atlas-breadcrumb>span:last-of-type{display:none}.view-tools{gap:10px;font-size:10px}#quiz{min-height:32px;font-size:9px;padding:7px 8px}.workspace{grid-template-columns:1fr;display:flex;flex-direction:column;overflow:clip}.organelles{order:0;width:100%;height:auto;padding:12px;border-bottom:1px solid var(--line);overflow:visible}.rail-title:first-child,.organelle-title,.rail-hint,.rail-bottom{display:none}.tabs{display:flex;margin:0 0 10px;gap:6px}.tabs button{min-height:44px;padding:7px;justify-content:center;font-size:11px}.tabs small{display:none}.specimen-dot{height:23px;width:24px}.specimen-dot:after{width:8px;height:8px;top:5px;left:4px}#organelle-list{display:flex;flex-direction:row;overflow-x:auto;padding-bottom:5px;gap:5px;scrollbar-width:thin}#organelle-list button{width:auto;min-height:36px;white-space:nowrap;flex:none;border:1px solid #e1e0d4;border-radius:3px;padding:7px 10px;background:#faf9f3;font-size:10px}.row-arrow{display:none}.diagram-panel{order:1;border:0;min-height:0;width:100%;padding:20px 9px 15px;gap:9px}.specimen-title{padding:0 9px}.specimen-title h1{font-size:37px}.specimen-title .eyebrow{font-size:7px;letter-spacing:1.3px}.specimen-title>div>p:last-child{font-size:9px}.plate-number{font-size:7px}.diagram-heading{padding:0 9px;font-size:6px;margin:3px 0}#cell-viewport{height:auto;max-height:55vh;width:100%;min-height:230px;align-items:flex-start}#cell{min-height:0}.specimen-callouts text{font-size:14px;stroke-width:4px}.specimen-callouts path{stroke-width:1.2}.zoom-toolbar{margin-left:9px;height:39px}.zoom-toolbar button{height:37px;width:39px}.zoom-toolbar output{font-size:10px;min-width:44px}.zoom-toolbar #zoom-reset{width:55px}.zoom-hint{margin-left:9px;font-size:9px}.model-note{margin:0 9px;font-size:8px}.diagram-foot{display:none}#cell-details{order:2;grid-column:auto;width:100%;padding:22px 18px;border-left:0;border-top:1px solid #dbddce}#detail-title{font-size:36px}#description{font-size:13px;line-height:1.85}#closeup-art svg{max-height:230px}.detail-top{font-size:8px}#closeup-parts button{font-size:12px;min-height:40px}#closeup-note{font-size:12px}.function p,.fact p{font-size:13px}.detail-nav button{min-width:40px;min-height:40px}.back-to-cell{font-size:12px}body:not([data-page=atlas]) main{padding:0 16px}.section-heading h2{font-size:36px}.journey-stages{grid-template-columns:repeat(3,1fr)}.journey-stages button{font-size:10px}.comparison-cards{grid-template-columns:1fr}.quiz-option,.quiz-choice{font-size:12px;min-height:40px}.quiz-actions button{font-size:11px}#quiz-area>p{font-size:13px}.sources{font-size:8px}footer span:last-child{display:none}.compare-card button{min-height:40px}.lesson-section .section-heading>p{font-size:12px}.journey-bottom p:not(.eyebrow){font-size:13px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+.lesson-section {
+  margin: 32px 0 0
+}
+.section-heading h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 42px;
+  letter-spacing: -.4px
+}
+.section-heading p {
+  color: #858a78;
+  font-size: 12px
+}
+.section-heading .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  color: #908b96
+}
+.journey-card {
+  border-radius: 5px;
+  border-color: #d9dacb;
+  background: #faf9f3
+}
+.journey-stages {
+  background: #efeee4
+}
+.journey-stages button[aria-pressed=true] {
+  background: #80708c
+}
+.journey-stages button span {
+  font-size: 8px
+}
+.journey-stages .completed {
+  background: #e8e4eb
+}
+.journey-viewport {
+  background: #f5f3e8
+}
+.journey-bottom h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 28px
+}
+.journey-bottom p:not(.eyebrow) {
+  font-size: 12px;
+  color: #7a806e
+}
+.journey-controls #journey-play {
+  background: #80708c
+}
+.journey-controls button {
+  border-radius: 3px
+}
+.lesson-note {
+  font-size: 10px;
+  color: #929680
+}
+.comparison-controls button {
+  border-radius: 3px;
+  font-size: 11px
+}
+.comparison-controls button[aria-pressed=true] {
+  background: #7d7089;
+  border-color: #7d7089
+}
+.compare-card {
+  border-radius: 4px;
+  background: #faf9f3;
+  border-color: #dadccc
+}
+.compare-card.shared {
+  background: #f0f1e6
+}
+.compare-card.plant {
+  background: #eff1e1
+}
+.compare-card h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 28px
+}
+.compare-card p:not(.eyebrow) {
+  font-size: 11px;
+  color: #828775
+}
+.compare-card button {
+  border-radius: 3px;
+  font-size: 11px;
+  background: #faf9f0
+}
+.comparison-cards:has(.compare-card:only-child) {
+  grid-template-columns: 1fr
+}
+.quiz-option,
+.quiz-choice {
+  font-size: 11px;
+  min-height: 34px;
+  border-radius: 3px
+}
+.quiz-actions button {
+  font-size: 10px
+}
+#quiz-area>p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #6c7461
+}
+#feedback {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #766284
+}
+.quiz-next {
+  background: #82718f;
+  color: white;
+  border-color: #82718f
+}
+.hint-text {
+  font-size: 11px
+}
+.zoom-hint {
+  font-size: 8px
+}
+@media(min-width:1600px) {
+  .workspace {
+    grid-template-columns: 220px minmax(0, 1fr) 345px
+  }
+  #organelle-list button {
+    min-height: 36px;
+    font-size: 12px
+  }
+  #description,
+  .function p,
+  .fact p {
+    font-size: 12px
+  }
+  #closeup-art svg {
+    max-height: 175px
+  }
+  #closeup-parts button {
+    font-size: 10px;
+    min-height: 34px
+  }
+}
+@media(max-width:1150px) {
+  .header-note {
+    display: none
+  }
+  .workspace {
+    grid-template-columns: 170px minmax(0, 1fr) 280px
+  }
+  .organelles {
+    padding: 16px 8px
+  }
+  #organelle-list button {
+    padding: 7px 5px;
+    font-size: 10px
+  }
+  .diagram-panel {
+    padding: 20px 14px 14px
+  }
+  #cell-details {
+    padding: 20px 14px
+  }
+  .brand>span {
+    display: none
+  }
+  .zoom-hint {
+    max-width: 130px;
+    font-size: 7px;
+    right: 14px
+  }
+}
+@media(max-width:1000px) {
+  .workspace {
+    grid-template-columns: 164px minmax(0, 1fr);
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: clip;
+    align-items: start
+  }
+  .organelles {
+    grid-row: 1/3;
+    height: 100%;
+    max-height: 1400px
+  }
+  .diagram-panel {
+    min-height: 560px;
+    height: auto;
+    position: static
+  }
+  #cell-viewport {
+    flex: none;
+    max-height: 470px;
+    min-height: 0
+  }
+  .diagram-heading {
+    margin: 5px 0
+  }
+  #cell-details {
+    grid-column: 2;
+    border-top: 1px solid var(--line);
+    height: auto;
+    overflow: visible;
+    padding: 22px;
+    scroll-margin-top: 15px
+  }
+  .back-to-cell {
+    display: inline-block
+  }
+  #description {
+    font-size: 13px
+  }
+  #closeup {
+    max-width: 550px
+  }
+  #closeup-art svg {
+    max-height: 210px
+  }
+  #closeup-parts button {
+    min-height: 38px;
+    font-size: 11px
+  }
+  #closeup-note {
+    font-size: 12px
+  }
+  .function p,
+  .fact p {
+    font-size: 13px
+  }
+  .zoom-hint {
+    position: static;
+    order: 4;
+    text-align: left;
+    max-width: none;
+    font-size: 9px
+  }
+  .model-note {
+    order: 5
+  }
+  .diagram-foot {
+    display: none
+  }
+  .rail-bottom {
+    font-size: 7px
+  }
+  header {
+    padding: 0 18px
+  }
+  header nav button {
+    padding: 0 13px
+  }
+  .lesson-section {
+    margin-top: 25px
+  }
+  .comparison-cards {
+    grid-template-columns: 1fr 1fr
+  }
+}
+@media(max-width:650px) {
+  header {
+    height: auto;
+    min-height: 65px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 12px 12px 0;
+    gap: 5px
+  }
+  .brand {
+    font-size: 26px;
+    width: 100%;
+    justify-content: center
+  }
+  .brand svg {
+    width: 28px;
+    height: 29px
+  }
+  .brand>span {
+    display: block;
+    font-size: 8px
+  }
+  header nav {
+    width: 100%;
+    justify-content: center;
+    height: 45px
+  }
+  header nav button {
+    font-size: 11px;
+    padding: 0 20px
+  }
+  main {
+    padding: 0 10px
+  }
+  .lab-top {
+    height: 51px
+  }
+  .atlas-breadcrumb {
+    font-size: 8px;
+    gap: 6px
+  }
+  .atlas-breadcrumb>strong {
+    display: none
+  }
+  .atlas-breadcrumb>span:last-of-type {
+    display: none
+  }
+  .view-tools {
+    gap: 10px;
+    font-size: 10px
+  }
+  #quiz {
+    min-height: 32px;
+    font-size: 9px;
+    padding: 7px 8px
+  }
+  .workspace {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    overflow: clip
+  }
+  .organelles {
+    order: 0;
+    width: 100%;
+    height: auto;
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    overflow: visible
+  }
+  .rail-title:first-child,
+  .organelle-title,
+  .rail-hint,
+  .rail-bottom {
+    display: none
+  }
+  .tabs {
+    display: flex;
+    margin: 0 0 10px;
+    gap: 6px
+  }
+  .tabs button {
+    min-height: 44px;
+    padding: 7px;
+    justify-content: center;
+    font-size: 11px
+  }
+  .tabs small {
+    display: none
+  }
+  .specimen-dot {
+    height: 23px;
+    width: 24px
+  }
+  .specimen-dot:after {
+    width: 8px;
+    height: 8px;
+    top: 5px;
+    left: 4px
+  }
+  #organelle-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    gap: 5px;
+    scrollbar-width: thin
+  }
+  #organelle-list button {
+    width: auto;
+    min-height: 36px;
+    white-space: nowrap;
+    flex: none;
+    border: 1px solid #e1e0d4;
+    border-radius: 3px;
+    padding: 7px 10px;
+    background: #faf9f3;
+    font-size: 10px
+  }
+  .row-arrow {
+    display: none
+  }
+  .diagram-panel {
+    order: 1;
+    border: 0;
+    min-height: 0;
+    width: 100%;
+    padding: 20px 9px 15px;
+    gap: 9px
+  }
+  .specimen-title {
+    padding: 0 9px
+  }
+  .specimen-title h1 {
+    font-size: 37px
+  }
+  .specimen-title .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.3px
+  }
+  .specimen-title>div>p:last-child {
+    font-size: 9px
+  }
+  .plate-number {
+    font-size: 7px
+  }
+  .diagram-heading {
+    padding: 0 9px;
+    font-size: 6px;
+    margin: 3px 0
+  }
+  #cell-viewport {
+    height: auto;
+    max-height: 55vh;
+    width: 100%;
+    min-height: 230px;
+    align-items: flex-start
+  }
+  #cell {
+    min-height: 0
+  }
+  .specimen-callouts text {
+    font-size: 14px;
+    stroke-width: 4px
+  }
+  .specimen-callouts path {
+    stroke-width: 1.2
+  }
+  .zoom-toolbar {
+    margin-left: 9px;
+    height: 39px
+  }
+  .zoom-toolbar button {
+    height: 37px;
+    width: 39px
+  }
+  .zoom-toolbar output {
+    font-size: 10px;
+    min-width: 44px
+  }
+  .zoom-toolbar #zoom-reset {
+    width: 55px
+  }
+  .zoom-hint {
+    margin-left: 9px;
+    font-size: 9px
+  }
+  .model-note {
+    margin: 0 9px;
+    font-size: 8px
+  }
+  .diagram-foot {
+    display: none
+  }
+  #cell-details {
+    order: 2;
+    grid-column: auto;
+    width: 100%;
+    padding: 22px 18px;
+    border-left: 0;
+    border-top: 1px solid #dbddce
+  }
+  #detail-title {
+    font-size: 36px
+  }
+  #description {
+    font-size: 13px;
+    line-height: 1.85
+  }
+  #closeup-art svg {
+    max-height: 230px
+  }
+  .detail-top {
+    font-size: 8px
+  }
+  #closeup-parts button {
+    font-size: 12px;
+    min-height: 40px
+  }
+  #closeup-note {
+    font-size: 12px
+  }
+  .function p,
+  .fact p {
+    font-size: 13px
+  }
+  .detail-nav button {
+    min-width: 40px;
+    min-height: 40px
+  }
+  .back-to-cell {
+    font-size: 12px
+  }
+  body:not([data-page=atlas]) main {
+    padding: 0 16px
+  }
+  .section-heading h2 {
+    font-size: 36px
+  }
+  .journey-stages {
+    grid-template-columns: repeat(3, 1fr)
+  }
+  .journey-stages button {
+    font-size: 10px
+  }
+  .comparison-cards {
+    grid-template-columns: 1fr
+  }
+  .quiz-option,
+  .quiz-choice {
+    font-size: 12px;
+    min-height: 40px
+  }
+  .quiz-actions button {
+    font-size: 11px
+  }
+  #quiz-area>p {
+    font-size: 13px
+  }
+  .sources {
+    font-size: 8px
+  }
+  footer span:last-child {
+    display: none
+  }
+  .compare-card button {
+    min-height: 40px
+  }
+  .lesson-section .section-heading>p {
+    font-size: 12px
+  }
+  .journey-bottom p:not(.eyebrow) {
+    font-size: 13px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important
+  }
+}
 
-@media(min-width:1001px){#description,.function p,.fact p{font-size:12px}#organelle-list button{font-size:12px}.specimen-callouts text{font-size:12px}#closeup-note{font-size:11px}#closeup-parts button{font-size:10px;min-height:32px}}
-#cell-viewport{align-items:flex-start}#cell{margin-block:auto}
+@media(min-width:1001px) {
+  #description,
+  .function p,
+  .fact p {
+    font-size: 12px
+  }
+  #organelle-list button {
+    font-size: 12px
+  }
+  .specimen-callouts text {
+    font-size: 12px
+  }
+  #closeup-note {
+    font-size: 11px
+  }
+  #closeup-parts button {
+    font-size: 10px;
+    min-height: 32px
+  }
+}
+#cell-viewport {
+  align-items: flex-start
+}
+#cell {
+  margin-block: auto
+}
 /* Generated specimen artwork and the seven-view collection. */
-.specimen-thumb{width:36px;height:34px;object-fit:contain;flex:none}
-.organelles{display:flex;flex-direction:column;overflow:hidden}.tabs{flex:none;max-height:340px;overflow-y:auto;margin:11px 0 15px;scrollbar-width:thin;gap:3px}.tabs button{min-height:45px;padding:5px 7px;gap:8px}.tabs small{font-size:8px;line-height:1.4;margin-top:3px}.tabs button>span{min-width:0}.organelle-title{flex:none}.rail-hint{flex:none}#organelle-list{min-height:0;overflow-y:auto;scrollbar-width:thin;flex:1}.rail-bottom{margin-top:10px;padding-top:8px;flex:none}
-.plate-options{display:flex;align-items:flex-end;flex-direction:column;gap:13px}.art-switch{display:flex;border:1px solid #d9d7c8;border-radius:4px;padding:2px;background:#faf8ef}.art-switch button{font-size:8px;background:none;border:0;padding:5px 7px;border-radius:2px;min-height:25px}.art-switch button[aria-pressed=true]{background:#e5e7d7;color:#576a43}.art-switch button:disabled{opacity:.35}.rendered-specimen{pointer-events:none}.hotspot-ring{fill:#faf5e4;stroke:#9b83aa;stroke-width:1;opacity:.75}.hotspot-center{fill:#78538b;pointer-events:none}.hotspot-target{pointer-events:all}.image-hotspots .organelle:hover .hotspot-ring,.image-hotspots .organelle.selected .hotspot-ring{opacity:1;stroke:#77558b;stroke-width:1.6}.image-hotspots .image-label{font:11px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#3e3545;paint-order:stroke;stroke:#faf6e8;stroke-width:4px;stroke-linejoin:round;pointer-events:none}.image-hotspots .organelle:focus{outline:none}.specimen-context{border-top:1px solid var(--line);padding-top:12px;margin-bottom:15px}.specimen-context>span{font-size:7px;letter-spacing:1.2px;color:#9c8aa5}.specimen-context p{font-size:10px;color:#8a8c7b;line-height:1.8;margin:7px 0 0}.organelle-render{display:block;width:100%;height:180px;object-fit:contain;margin:8px 0 12px}#closeup-art>svg.organelle-render{height:180px;max-height:180px;overflow:hidden}.anatomy-schematic{font-size:9px;color:#80718c;border-top:1px solid #dfddcf;margin-bottom:10px}.anatomy-schematic summary{cursor:pointer;padding:9px 2px}.anatomy-schematic>svg{display:block;width:100%;max-height:150px}.specimen-notes{display:grid;grid-template-columns:1fr 2fr;gap:25px;margin:14px 0 0;padding:15px 18px;border:1px solid var(--line);border-radius:5px;background:#f9f7ee}.specimen-notes span{font-size:8px;letter-spacing:1.2px;color:#8d8194}.specimen-notes p{font-size:10px;line-height:1.8;color:#898c7b;margin:7px 0 0}body:not([data-page=atlas]) .specimen-notes{display:none}
-@media(max-width:1000px) and (min-width:651px){.organelles{height:auto;max-height:1500px;overflow-y:auto}.tabs{max-height:380px;flex:none}#organelle-list{flex:none;overflow:visible}.tabs button{font-size:10px}.specimen-thumb{width:30px}}
-@media(max-width:650px){.organelles{display:block;overflow:visible}.tabs{display:flex;max-height:none;overflow-x:auto;overflow-y:hidden;width:100%;padding-bottom:6px;margin-bottom:9px}.tabs button{width:auto;min-width:125px;flex:none;justify-content:flex-start;font-size:10px;padding:5px 8px}.specimen-thumb{width:29px;height:30px}#organelle-list{display:flex;flex-direction:row;overflow-x:auto;flex:none}.plate-options{gap:6px}.art-switch button{padding:4px 6px;font-size:8px}.image-hotspots .image-label{font-size:15px;stroke-width:5px}.hotspot-ring{stroke-width:1.5}.specimen-context p{font-size:12px}.specimen-notes{grid-template-columns:1fr;gap:12px;padding:15px}.specimen-notes p{font-size:11px}#closeup-art>svg.organelle-render,.organelle-render{height:210px;max-height:210px}}
+.specimen-thumb {
+  width: 36px;
+  height: 34px;
+  object-fit: contain;
+  flex: none
+}
+.organelles {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden
+}
+.tabs {
+  flex: none;
+  max-height: 340px;
+  overflow-y: auto;
+  margin: 11px 0 15px;
+  scrollbar-width: thin;
+  gap: 3px
+}
+.tabs button {
+  min-height: 45px;
+  padding: 5px 7px;
+  gap: 8px
+}
+.tabs small {
+  font-size: 8px;
+  line-height: 1.4;
+  margin-top: 3px
+}
+.tabs button>span {
+  min-width: 0
+}
+.organelle-title {
+  flex: none
+}
+.rail-hint {
+  flex: none
+}
+#organelle-list {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  flex: 1
+}
+.rail-bottom {
+  margin-top: 10px;
+  padding-top: 8px;
+  flex: none
+}
+.plate-options {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 13px
+}
+.art-switch {
+  display: flex;
+  border: 1px solid #d9d7c8;
+  border-radius: 4px;
+  padding: 2px;
+  background: #faf8ef
+}
+.art-switch button {
+  font-size: 8px;
+  background: none;
+  border: 0;
+  padding: 5px 7px;
+  border-radius: 2px;
+  min-height: 25px
+}
+.art-switch button[aria-pressed=true] {
+  background: #e5e7d7;
+  color: #576a43
+}
+.art-switch button:disabled {
+  opacity: .35
+}
+.rendered-specimen {
+  pointer-events: none
+}
+.hotspot-ring {
+  fill: #faf5e4;
+  stroke: #9b83aa;
+  stroke-width: 1;
+  opacity: .75
+}
+.hotspot-center {
+  fill: #78538b;
+  pointer-events: none
+}
+.hotspot-target {
+  pointer-events: all
+}
+.image-hotspots .organelle:hover .hotspot-ring,
+.image-hotspots .organelle.selected .hotspot-ring {
+  opacity: 1;
+  stroke: #77558b;
+  stroke-width: 1.6
+}
+.image-hotspots .image-label {
+  font: 11px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  fill: #3e3545;
+  paint-order: stroke;
+  stroke: #faf6e8;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none
+}
+.image-hotspots .organelle:focus {
+  outline: none
+}
+.specimen-context {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-bottom: 15px
+}
+.specimen-context>span {
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  color: #9c8aa5
+}
+.specimen-context p {
+  font-size: 10px;
+  color: #8a8c7b;
+  line-height: 1.8;
+  margin: 7px 0 0
+}
+.organelle-render {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  margin: 8px 0 12px
+}
+#closeup-art>svg.organelle-render {
+  height: 180px;
+  max-height: 180px;
+  overflow: hidden
+}
+.anatomy-schematic {
+  font-size: 9px;
+  color: #80718c;
+  border-top: 1px solid #dfddcf;
+  margin-bottom: 10px
+}
+.anatomy-schematic summary {
+  cursor: pointer;
+  padding: 9px 2px
+}
+.anatomy-schematic>svg {
+  display: block;
+  width: 100%;
+  max-height: 150px
+}
+.specimen-notes {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 25px;
+  margin: 14px 0 0;
+  padding: 15px 18px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #f9f7ee
+}
+.specimen-notes span {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: #8d8194
+}
+.specimen-notes p {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #898c7b;
+  margin: 7px 0 0
+}
+body:not([data-page=atlas]) .specimen-notes {
+  display: none
+}
+@media(max-width:1000px) and (min-width:651px) {
+  .organelles {
+    height: auto;
+    max-height: 1500px;
+    overflow-y: auto
+  }
+  .tabs {
+    max-height: 380px;
+    flex: none
+  }
+  #organelle-list {
+    flex: none;
+    overflow: visible
+  }
+  .tabs button {
+    font-size: 10px
+  }
+  .specimen-thumb {
+    width: 30px
+  }
+}
+@media(max-width:650px) {
+  .organelles {
+    display: block;
+    overflow: visible
+  }
+  .tabs {
+    display: flex;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    padding-bottom: 6px;
+    margin-bottom: 9px
+  }
+  .tabs button {
+    width: auto;
+    min-width: 125px;
+    flex: none;
+    justify-content: flex-start;
+    font-size: 10px;
+    padding: 5px 8px
+  }
+  .specimen-thumb {
+    width: 29px;
+    height: 30px
+  }
+  #organelle-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    flex: none
+  }
+  .plate-options {
+    gap: 6px
+  }
+  .art-switch button {
+    padding: 4px 6px;
+    font-size: 8px
+  }
+  .image-hotspots .image-label {
+    font-size: 15px;
+    stroke-width: 5px
+  }
+  .hotspot-ring {
+    stroke-width: 1.5
+  }
+  .specimen-context p {
+    font-size: 12px
+  }
+  .specimen-notes {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 15px
+  }
+  .specimen-notes p {
+    font-size: 11px
+  }
+  #closeup-art>svg.organelle-render,
+  .organelle-render {
+    height: 210px;
+    max-height: 210px
+  }
+}
 
-#cell{margin-inline:auto}.specimen-context{border-top-style:dotted}
+#cell {
+  margin-inline: auto
+}
+.specimen-context {
+  border-top-style: dotted
+}
 
-@media(max-width:650px){.image-hotspots .organelle:not(.selected) .image-label{display:none}}
+@media(max-width:650px) {
+  .image-hotspots .organelle:not(.selected) .image-label {
+    display: none
+  }
+}
 /* Genuine WebGL specimen viewport. */
-#cell-viewport{position:relative}#viewer3d{display:none;position:absolute;inset:0;min-height:280px;overflow:hidden}
-#cell-viewport[data-mode="3d"]{overflow:hidden;min-height:340px}
-#cell-viewport[data-mode="3d"] #viewer3d{display:block}#cell-viewport[data-mode="3d"] #cell{display:none}
-.cell3d-canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab;outline:none}.cell3d-canvas:active{cursor:grabbing}.cell3d-canvas:focus-visible{outline:2px solid #a78bb5;outline-offset:-3px}
-#viewer3d-status{position:absolute;inset:35% 10% auto;text-align:center;font-size:12px;line-height:1.8;color:#84748d}
-.three-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.three-label{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;border:1px solid #d7cfbc;background:#faf6e9e8;color:#5f5465;font:10px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:4px 8px;border-radius:3px;white-space:nowrap;box-shadow:0 1px 3px #48345308}
-.three-label:before{content:'';display:inline-block;width:4px;height:4px;background:#9f83ac;border-radius:50%;margin-right:5px}.three-label.selected{border-color:#a993b4;background:#f1e8f3eb;color:#74558b}
-.three-tools{display:none;order:3;flex-wrap:wrap;gap:5px}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .three-tools{display:flex}
-.three-tools button{font-size:9px;min-height:29px;padding:5px 9px;border:1px solid #d9d7c7;background:#faf8ef;border-radius:3px}.three-tools button[aria-pressed="true"]{background:#e7e0eb;border-color:#bfaccb;color:#73578a}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-hint{position:static;order:4;text-align:left;font-size:8px;max-width:none}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .model-note{font-size:8px}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:1000px){#cell-viewport[data-mode="3d"]{height:440px;max-height:none;min-height:300px;flex:none}}
-@media(max-width:650px){#cell-viewport[data-mode="3d"]{height:360px;min-height:300px;max-height:60vh}.three-tools{margin:0 9px}.three-tools button{font-size:10px;min-height:36px;padding:6px 8px}.three-label{font-size:9px;padding:4px 6px}.three-label:not(.selected){display:none}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-hint{font-size:9px;line-height:1.8}.art-switch button{font-size:8px;padding:4px 6px}}
+#cell-viewport {
+  position: relative
+}
+#viewer3d {
+  display: none;
+  position: absolute;
+  inset: 0;
+  min-height: 280px;
+  overflow: hidden
+}
+#cell-viewport[data-mode="3d"] {
+  overflow: hidden;
+  min-height: 340px
+}
+#cell-viewport[data-mode="3d"] #viewer3d {
+  display: block
+}
+#cell-viewport[data-mode="3d"] #cell {
+  display: none
+}
+.cell3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  outline: none
+}
+.cell3d-canvas:active {
+  cursor: grabbing
+}
+.cell3d-canvas:focus-visible {
+  outline: 2px solid #a78bb5;
+  outline-offset: -3px
+}
+#viewer3d-status {
+  position: absolute;
+  inset: 35% 10% auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #84748d
+}
+.three-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden
+}
+.three-label {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  border: 1px solid #d7cfbc;
+  background: #faf6e9e8;
+  color: #5f5465;
+  font: 10px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 4px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px #48345308
+}
+.three-label:before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: #9f83ac;
+  border-radius: 50%;
+  margin-right: 5px
+}
+.three-label.selected {
+  border-color: #a993b4;
+  background: #f1e8f3eb;
+  color: #74558b
+}
+.three-tools {
+  display: none;
+  order: 3;
+  flex-wrap: wrap;
+  gap: 5px
+}
+.diagram-panel:has(#cell-viewport[data-mode="3d"]) .three-tools {
+  display: flex
+}
+.three-tools button {
+  font-size: 9px;
+  min-height: 29px;
+  padding: 5px 9px;
+  border: 1px solid #d9d7c7;
+  background: #faf8ef;
+  border-radius: 3px
+}
+.three-tools button[aria-pressed="true"] {
+  background: #e7e0eb;
+  border-color: #bfaccb;
+  color: #73578a
+}
+.diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-hint {
+  position: static;
+  order: 4;
+  text-align: left;
+  font-size: 8px;
+  max-width: none
+}
+.diagram-panel:has(#cell-viewport[data-mode="3d"]) .model-note {
+  font-size: 8px
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0
+}
+@media(max-width:1000px) {
+  #cell-viewport[data-mode="3d"] {
+    height: 440px;
+    max-height: none;
+    min-height: 300px;
+    flex: none
+  }
+}
+@media(max-width:650px) {
+  #cell-viewport[data-mode="3d"] {
+    height: 360px;
+    min-height: 300px;
+    max-height: 60vh
+  }
+  .three-tools {
+    margin: 0 9px
+  }
+  .three-tools button {
+    font-size: 10px;
+    min-height: 36px;
+    padding: 6px 8px
+  }
+  .three-label {
+    font-size: 9px;
+    padding: 4px 6px
+  }
+  .three-label:not(.selected) {
+    display: none
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-hint {
+    font-size: 9px;
+    line-height: 1.8
+  }
+  .art-switch button {
+    font-size: 8px;
+    padding: 4px 6px
+  }
+}
 
 /* Footer information stays readable on narrow screens. Fonts are device-local. */
-footer{flex-wrap:wrap;gap:12px;align-items:center}footer nav{display:flex;flex-wrap:wrap;gap:16px}footer nav a{font-size:11px;text-underline-offset:3px}
+footer {
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center
+}
+footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px
+}
+footer nav a {
+  font-size: 11px;
+  text-underline-offset: 3px
+}
 
 /* A specimen-first stage, with restrained labels in the margins. */
-@media(min-width:1001px){.workspace{grid-template-columns:174px minmax(0,1fr) 300px;min-height:720px;height:calc(100dvh - 155px)}.diagram-panel{padding:20px 12px 12px;gap:8px}.specimen-title{padding:0 10px}.specimen-title h1{font-size:44px}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .diagram-heading{display:none}.diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport{min-height:420px}.diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-toolbar{margin-left:10px}.three-tools{padding:0 10px}}
-.three-leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}.three-leaders path{fill:none;stroke:#8f9685;stroke-width:1;vector-effect:non-scaling-stroke;opacity:.7}.three-leaders path.selected{stroke:#89679b;stroke-width:1.3;opacity:1}
-.three-label{transform:none;max-width:155px;overflow:hidden;text-overflow:ellipsis;font-size:10px;font-weight:500;line-height:1.5;padding:6px 9px;background:#faf9f1f2;border:1px solid #d8d9c9;border-radius:3px;box-shadow:none}.three-label.selected{background:#f5edf7f5;border-color:#b79ec4;color:#644376}.three-label:before{width:4px;height:4px}.three-label:not(.selected){display:block}.three-label[hidden]{display:none!important}
-#focus-3d{color:#694c7a;border-color:#c8b5d0;background:#f1eaf3}.three-tools button{min-height:32px}.profile-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:8px;letter-spacing:1.3px;color:#7c8270}.profile-heading button{font-size:10px;letter-spacing:0;border:0;background:transparent;padding:7px 0;color:#745586;text-decoration:underline;text-underline-offset:3px}#structure-profile{border-top:1px solid #dedfd3;border-bottom:1px solid #dedfd3;padding:12px 0;margin:16px 0}#structure-profile dl{font-size:11px;margin:10px 0 15px}#structure-profile dl>div{display:grid;grid-template-columns:85px 1fr;gap:8px;padding:7px 0;border-bottom:1px dotted #dfdfd1}#structure-profile dt{color:#8b8e7c}#structure-profile dd{margin:0;line-height:1.6;color:#555f4f}.profile-observation{margin:0;font-size:11px;line-height:1.75;color:#6e7663}.profile-observation>span:first-child{display:block;font-size:8px;letter-spacing:1.2px;margin-bottom:4px;color:#8b8e7c}#profile-connections{margin-top:12px}#profile-connections summary{font-size:11px;color:#776087;cursor:pointer;padding:4px 0}#profile-connections p{font-size:12px;line-height:1.8;color:#66705c;margin:9px 0 4px}
-@media(max-width:1000px){#cell-viewport[data-mode="3d"]{height:500px}.three-label{font-size:10px;max-width:140px}}
-@media(max-width:650px){#cell-viewport[data-mode="3d"]{height:410px;max-height:65vh}.three-label{max-width:135px;font-size:10px;padding:5px 8px}.three-tools{gap:6px}.three-tools button{min-height:38px}#structure-profile dl,.profile-observation,#profile-connections summary{font-size:12px}.profile-heading button{font-size:12px}#structure-profile dl>div{grid-template-columns:92px 1fr}.profile-heading{font-size:9px}}
+@media(min-width:1001px) {
+  .workspace {
+    grid-template-columns: 174px minmax(0, 1fr) 300px;
+    min-height: 720px;
+    height: calc(100dvh - 155px)
+  }
+  .diagram-panel {
+    padding: 20px 12px 12px;
+    gap: 8px
+  }
+  .specimen-title {
+    padding: 0 10px
+  }
+  .specimen-title h1 {
+    font-size: 44px
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) .diagram-heading {
+    display: none
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport {
+    min-height: 420px
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-toolbar {
+    margin-left: 10px
+  }
+  .three-tools {
+    padding: 0 10px
+  }
+}
+.three-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none
+}
+.three-leaders path {
+  fill: none;
+  stroke: #8f9685;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: .7
+}
+.three-leaders path.selected {
+  stroke: #89679b;
+  stroke-width: 1.3;
+  opacity: 1
+}
+.three-label {
+  transform: none;
+  max-width: 155px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 6px 9px;
+  background: #faf9f1f2;
+  border: 1px solid #d8d9c9;
+  border-radius: 3px;
+  box-shadow: none
+}
+.three-label.selected {
+  background: #f5edf7f5;
+  border-color: #b79ec4;
+  color: #644376
+}
+.three-label:before {
+  width: 4px;
+  height: 4px
+}
+.three-label:not(.selected) {
+  display: block
+}
+.three-label[hidden] {
+  display: none !important
+}
+#focus-3d {
+  color: #694c7a;
+  border-color: #c8b5d0;
+  background: #f1eaf3
+}
+.three-tools button {
+  min-height: 32px
+}
+.profile-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 8px;
+  letter-spacing: 1.3px;
+  color: #7c8270
+}
+.profile-heading button {
+  font-size: 10px;
+  letter-spacing: 0;
+  border: 0;
+  background: transparent;
+  padding: 7px 0;
+  color: #745586;
+  text-decoration: underline;
+  text-underline-offset: 3px
+}
+#structure-profile {
+  border-top: 1px solid #dedfd3;
+  border-bottom: 1px solid #dedfd3;
+  padding: 12px 0;
+  margin: 16px 0
+}
+#structure-profile dl {
+  font-size: 11px;
+  margin: 10px 0 15px
+}
+#structure-profile dl>div {
+  display: grid;
+  grid-template-columns: 85px 1fr;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px dotted #dfdfd1
+}
+#structure-profile dt {
+  color: #8b8e7c
+}
+#structure-profile dd {
+  margin: 0;
+  line-height: 1.6;
+  color: #555f4f
+}
+.profile-observation {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.75;
+  color: #6e7663
+}
+.profile-observation>span:first-child {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+  color: #8b8e7c
+}
+#profile-connections {
+  margin-top: 12px
+}
+#profile-connections summary {
+  font-size: 11px;
+  color: #776087;
+  cursor: pointer;
+  padding: 4px 0
+}
+#profile-connections p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #66705c;
+  margin: 9px 0 4px
+}
+@media(max-width:1000px) {
+  #cell-viewport[data-mode="3d"] {
+    height: 500px
+  }
+  .three-label {
+    font-size: 10px;
+    max-width: 140px
+  }
+}
+@media(max-width:650px) {
+  #cell-viewport[data-mode="3d"] {
+    height: 410px;
+    max-height: 65vh
+  }
+  .three-label {
+    max-width: 135px;
+    font-size: 10px;
+    padding: 5px 8px
+  }
+  .three-tools {
+    gap: 6px
+  }
+  .three-tools button {
+    min-height: 38px
+  }
+  #structure-profile dl,
+  .profile-observation,
+  #profile-connections summary {
+    font-size: 12px
+  }
+  .profile-heading button {
+    font-size: 12px
+  }
+  #structure-profile dl>div {
+    grid-template-columns: 92px 1fr
+  }
+  .profile-heading {
+    font-size: 9px
+  }
+}
 
-#quiz-save-status{font-size:11px;line-height:1.7;padding:10px;border:1px solid #d9d7c7;background:#f1eee3;color:#626b56;border-radius:4px}
+#quiz-save-status {
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 10px;
+  border: 1px solid #d9d7c7;
+  background: #f1eee3;
+  color: #626b56;
+  border-radius: 4px
+}
 
 /* A specimen fact belongs to the cell, independent of organelle selection. */
-.cell-fun-fact{background:#eeefdf;border:1px solid #d9ddc6;border-radius:6px;padding:15px;margin:0 0 23px}.cell-fun-fact-label{font-size:8px;letter-spacing:1.4px;color:#737d59;display:flex;gap:7px;align-items:center}.cell-fun-fact-label>span{font-size:14px;color:#8c7399}.cell-fun-fact h3{font:20px/1.3 Georgia,serif;color:#4c5b3d;margin:9px 0}.cell-fun-fact p{font-size:12px;line-height:1.8;color:#626d53;margin:0 0 10px}.cell-fun-fact a{font-size:10px;color:#756085;text-underline-offset:3px}@media(max-width:650px){.cell-fun-fact{padding:16px;margin-bottom:22px}.cell-fun-fact h3{font-size:23px}.cell-fun-fact p{font-size:13px}.cell-fun-fact a{display:inline-block;font-size:12px;padding:5px 0}}
+.cell-fun-fact {
+  background: #eeefdf;
+  border: 1px solid #d9ddc6;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 0 0 23px
+}
+.cell-fun-fact-label {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  color: #737d59;
+  display: flex;
+  gap: 7px;
+  align-items: center
+}
+.cell-fun-fact-label>span {
+  font-size: 14px;
+  color: #8c7399
+}
+.cell-fun-fact h3 {
+  font: 20px/1.3 Georgia, serif;
+  color: #4c5b3d;
+  margin: 9px 0
+}
+.cell-fun-fact p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #626d53;
+  margin: 0 0 10px
+}
+.cell-fun-fact a {
+  font-size: 10px;
+  color: #756085;
+  text-underline-offset: 3px
+}
+@media(max-width:650px) {
+  .cell-fun-fact {
+    padding: 16px;
+    margin-bottom: 22px
+  }
+  .cell-fun-fact h3 {
+    font-size: 23px
+  }
+  .cell-fun-fact p {
+    font-size: 13px
+  }
+  .cell-fun-fact a {
+    display: inline-block;
+    font-size: 12px;
+    padding: 5px 0
+  }
+}
 
 /* A guided secretory pathway with one persistent cargo marker. */
-.journey-card{border-radius:8px}.journey-viewport{background:radial-gradient(ellipse at 35% 40%,#faf8ed,#f0eee1)}.journey-viewport svg{min-width:850px;max-height:none;aspect-ratio:960/350}.journey-viewport text{font-size:12px;text-anchor:middle;fill:#58674c}.journey-viewport .journey-zone{font-size:9px;letter-spacing:1.6px;text-anchor:start;fill:#8c917d}.journey-viewport .journey-sub-label{font-size:9px;fill:#96967f}.journey-route{fill:none;stroke:#b5b9a0;stroke-width:2;stroke-dasharray:4 7}.journey-station{opacity:.78;transition:opacity .3s}.journey-station.active{opacity:1}.station-halo{fill:#e8e0ee;opacity:0}.active .station-halo{opacity:.65}.cargo-glow{fill:#e5bf64;opacity:.18}.journey-progress{height:3px;background:#e2e1d3}#journey-progress-fill{height:100%;width:0;background:#92779f}.journey-bottom{align-items:flex-start;padding:24px 28px;border-top:1px solid #dfdfd1}.journey-bottom h3{font-size:30px}.journey-bottom p:not(.eyebrow){font-size:14px;color:#606d56;line-height:1.85}.journey-controls{max-width:310px;min-width:280px}.journey-controls button{font-size:12px}.journey-speed{display:flex;align-items:center;gap:8px;font-size:11px;color:#7c826e}.journey-speed select{font:inherit;background:#faf9ef;color:#5b654e;border:1px solid #d3d6c3;border-radius:4px;padding:6px}.journey-study{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:0 28px 28px}.journey-study>div{border-top:1px solid #dddfcf;padding-top:20px}.cargo-state dl{margin:10px 0;font-size:12px}.cargo-state dl>div{display:grid;grid-template-columns:105px 1fr;gap:12px;padding:7px 0}.cargo-state dt{color:#899079}.cargo-state dd{margin:0;color:#5f6b51}.cargo-state>p:last-child{font-size:12px;line-height:1.85;color:#7b6b86;border-left:2px solid #b8a5c2;padding-left:13px}.journey-check h4{font:20px/1.4 Georgia,serif;margin:8px 0 14px;color:#4c5b3d}#journey-check-options{display:flex;flex-wrap:wrap;gap:7px}#journey-check-options button{background:#f5f3e8;border:1px solid #d3d7c3;border-radius:4px;padding:8px 11px;font-size:12px;min-height:40px;text-align:left}#journey-check-feedback{font-size:12px;line-height:1.7;color:#79618c;min-height:20px}.journey-card>.lesson-note{font-size:11px;line-height:1.8}.journey-stages button{min-height:72px;font-size:12px}.journey-stages button[aria-pressed=true]{box-shadow:inset 0 -3px #b7a2c5}.journey-stages button.completed span:after{content:' ✓'}
-@media(max-width:650px){.journey-study{grid-template-columns:1fr;padding:0 20px 20px;gap:16px}.journey-controls{min-width:0;max-width:none;justify-content:flex-start}.journey-bottom{padding:20px}.journey-bottom h3{font-size:27px}.journey-bottom p:not(.eyebrow){font-size:13px}.journey-viewport svg{min-width:780px}.journey-stages button{font-size:11px}.journey-study .eyebrow{font-size:9px}.cargo-state dl>div{grid-template-columns:92px 1fr}.journey-check h4{font-size:21px}}
-@media(prefers-reduced-motion:reduce){.journey-station{transition:none}}
+.journey-card {
+  border-radius: 8px
+}
+.journey-viewport {
+  background: radial-gradient(ellipse at 35% 40%, #faf8ed, #f0eee1)
+}
+.journey-viewport svg {
+  min-width: 850px;
+  max-height: none;
+  aspect-ratio: 960/350
+}
+.journey-viewport text {
+  font-size: 12px;
+  text-anchor: middle;
+  fill: #58674c
+}
+.journey-viewport .journey-zone {
+  font-size: 9px;
+  letter-spacing: 1.6px;
+  text-anchor: start;
+  fill: #8c917d
+}
+.journey-viewport .journey-sub-label {
+  font-size: 9px;
+  fill: #96967f
+}
+.journey-route {
+  fill: none;
+  stroke: #b5b9a0;
+  stroke-width: 2;
+  stroke-dasharray: 4 7
+}
+.journey-station {
+  opacity: .78;
+  transition: opacity .3s
+}
+.journey-station.active {
+  opacity: 1
+}
+.station-halo {
+  fill: #e8e0ee;
+  opacity: 0
+}
+.active .station-halo {
+  opacity: .65
+}
+.cargo-glow {
+  fill: #e5bf64;
+  opacity: .18
+}
+.journey-progress {
+  height: 3px;
+  background: #e2e1d3
+}
+#journey-progress-fill {
+  height: 100%;
+  width: 0;
+  background: #92779f
+}
+.journey-bottom {
+  align-items: flex-start;
+  padding: 24px 28px;
+  border-top: 1px solid #dfdfd1
+}
+.journey-bottom h3 {
+  font-size: 30px
+}
+.journey-bottom p:not(.eyebrow) {
+  font-size: 14px;
+  color: #606d56;
+  line-height: 1.85
+}
+.journey-controls {
+  max-width: 310px;
+  min-width: 280px
+}
+.journey-controls button {
+  font-size: 12px
+}
+.journey-speed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #7c826e
+}
+.journey-speed select {
+  font: inherit;
+  background: #faf9ef;
+  color: #5b654e;
+  border: 1px solid #d3d6c3;
+  border-radius: 4px;
+  padding: 6px
+}
+.journey-study {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 0 28px 28px
+}
+.journey-study>div {
+  border-top: 1px solid #dddfcf;
+  padding-top: 20px
+}
+.cargo-state dl {
+  margin: 10px 0;
+  font-size: 12px
+}
+.cargo-state dl>div {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  gap: 12px;
+  padding: 7px 0
+}
+.cargo-state dt {
+  color: #899079
+}
+.cargo-state dd {
+  margin: 0;
+  color: #5f6b51
+}
+.cargo-state>p:last-child {
+  font-size: 12px;
+  line-height: 1.85;
+  color: #7b6b86;
+  border-left: 2px solid #b8a5c2;
+  padding-left: 13px
+}
+.journey-check h4 {
+  font: 20px/1.4 Georgia, serif;
+  margin: 8px 0 14px;
+  color: #4c5b3d
+}
+#journey-check-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px
+}
+#journey-check-options button {
+  background: #f5f3e8;
+  border: 1px solid #d3d7c3;
+  border-radius: 4px;
+  padding: 8px 11px;
+  font-size: 12px;
+  min-height: 40px;
+  text-align: left
+}
+#journey-check-feedback {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #79618c;
+  min-height: 20px
+}
+.journey-card>.lesson-note {
+  font-size: 11px;
+  line-height: 1.8
+}
+.journey-stages button {
+  min-height: 72px;
+  font-size: 12px
+}
+.journey-stages button[aria-pressed=true] {
+  box-shadow: inset 0 -3px #b7a2c5
+}
+.journey-stages button.completed span:after {
+  content: ' ✓'
+}
+@media(max-width:650px) {
+  .journey-study {
+    grid-template-columns: 1fr;
+    padding: 0 20px 20px;
+    gap: 16px
+  }
+  .journey-controls {
+    min-width: 0;
+    max-width: none;
+    justify-content: flex-start
+  }
+  .journey-bottom {
+    padding: 20px
+  }
+  .journey-bottom h3 {
+    font-size: 27px
+  }
+  .journey-bottom p:not(.eyebrow) {
+    font-size: 13px
+  }
+  .journey-viewport svg {
+    min-width: 780px
+  }
+  .journey-stages button {
+    font-size: 11px
+  }
+  .journey-study .eyebrow {
+    font-size: 9px
+  }
+  .cargo-state dl>div {
+    grid-template-columns: 92px 1fr
+  }
+  .journey-check h4 {
+    font-size: 21px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .journey-station {
+    transition: none
+  }
+}
 
 /* Guided virtual investigations and integrated 3D lessons. */
-body:not([data-page=lab]) #virtual-lab{display:none}body[data-page=lab] .lab,body[data-page=lab] #protein-journey,body[data-page=lab] #comparison{display:none}#viewer3d[data-lesson=true]{display:block;inset:0;min-height:0}.lesson-3d-stage{position:relative;height:440px;min-width:0;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#faf8ef,#eeeede)}.journey-viewport:has(#journey-3d-stage:not([hidden])){overflow:hidden}.lesson-mode{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}.lesson-mode strong{display:block;font:20px Georgia,serif;color:#4c5d40}.lesson-mode small{display:block;font-size:11px;color:#858b75;margin-top:5px}.lesson-mode-buttons{display:flex;gap:5px}.lesson-mode button,.lab-actions button{font-size:12px;padding:9px 12px;border:1px solid #cdd2bc;border-radius:4px;background:#f7f6eb;min-height:40px}.lesson-mode button[aria-pressed=true]{background:#e7e0ec;color:#6c4c80;border-color:#bca7c7}#lesson-goal{font-size:11px;color:#7b6787}.lesson-3d-hint{font-size:10px;line-height:1.8;color:#858b75;padding:9px 20px;margin:0;border-top:1px solid #e0e0d0}.investigation{display:grid;grid-template-columns:330px minmax(0,1fr);border:1px solid #d7dbc8;border-radius:7px;overflow:hidden;background:#faf9ef}.lab-controls{padding:23px;border-right:1px solid #dcdfce}.lab-controls>label{display:block;font-size:12px;color:#67775a;margin-bottom:8px}.lab-controls select{max-width:100%;width:100%;padding:10px;border:1px solid #c8d0b6;border-radius:4px;background:#fffdf5;font:12px system-ui,sans-serif}.lab-controls .eyebrow{margin-top:24px}.lab-controls p{font-size:12px;line-height:1.8;color:#707c62}.lab-controls h3,.lab-observation h3{font:22px Georgia,serif;color:#5c4c67}.lab-controls input{vertical-align:middle}#lab-block-control{font-size:12px;border-block:1px solid #dedfcd;padding:15px 0;margin-top:18px}#lab-block-control p{font-size:10px;margin-bottom:0}#lab-predictions{display:grid;gap:7px}#lab-predictions button,#practice-options button{padding:10px 12px;min-height:43px;text-align:left;font-size:12px;line-height:1.6;border:1px solid #d3d8c3;border-radius:4px;background:#f5f4e8}#lab-predictions button[aria-pressed=true]{background:#e8e0ed;border-color:#b5a1c1;color:#6d4c7f}.lab-actions{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}#lab-run,#practice-start{background:#7b6888;color:#fff;border-color:#7b6888}#lab-progress{width:100%;height:5px;accent-color:#8b7399}.lab-observation{min-width:0}.lab-observation>p,.lab-observation>div:not(.lesson-3d-stage){margin:18px 24px;font-size:13px;line-height:1.85;color:#647556}#lab-3d-status{font-size:10px;color:#90967e}#lab-explain{border-top:1px solid #dadfca;padding-top:12px}#lab-explain button{border:1px solid #cbd2bb;border-radius:4px;padding:8px 11px;background:#f2f2e6;font-size:12px}.lab-reference{font-size:11px;color:#838b75;line-height:1.9;margin:15px 0 35px}.mixed-practice{border:1px solid #d6dbc8;border-radius:7px;background:#faf8ef;padding:27px}.mixed-practice h2{font:32px Georgia,serif;margin:8px 0}.mixed-practice>p{font-size:13px;color:#7a826e}#practice-area{margin-top:24px;border-top:1px solid #dadecc;padding-top:24px}#practice-prompt{font:24px/1.4 Georgia,serif;color:#4a5c3f;max-width:800px}#practice-figure{max-width:350px}#practice-figure svg{width:100%;height:auto;max-height:200px}#practice-options{display:grid;gap:9px;max-width:720px}#practice-feedback,#practice-save-status{font-size:12px;line-height:1.8;color:#7e638d;max-width:820px}#practice-save-status:empty{display:none}#practice-save-status{border-left:2px solid #c8b4d2;padding-left:12px;margin-top:17px}@media(max-width:900px){.investigation{grid-template-columns:1fr}.lab-controls{border-right:0;border-bottom:1px solid #d9ddcb}.lab-observation .lesson-3d-stage{height:400px}header nav button{padding:0 10px}}@media(max-width:650px){header nav{overflow-x:auto;justify-content:flex-start}header nav button{flex:none;padding:0 13px}.lesson-mode{padding:15px;gap:12px}.lesson-mode-buttons button{font-size:11px}.lesson-3d-stage{height:360px}.mixed-practice{padding:18px}.mixed-practice h2{font-size:29px}#practice-prompt{font-size:22px}.lab-controls{padding:18px}.lab-observation .lesson-3d-stage{height:340px}.lab-observation>p,.lab-observation>div:not(.lesson-3d-stage){margin:15px 18px}.lesson-mode small{line-height:1.8}}
+body:not([data-page=lab]) #virtual-lab {
+  display: none
+}
+body[data-page=lab] .lab,
+body[data-page=lab] #protein-journey,
+body[data-page=lab] #comparison {
+  display: none
+}
+#viewer3d[data-lesson=true] {
+  display: block;
+  inset: 0;
+  min-height: 0
+}
+.lesson-3d-stage {
+  position: relative;
+  height: 440px;
+  min-width: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #faf8ef, #eeeede)
+}
+.journey-viewport:has(#journey-3d-stage:not([hidden])) {
+  overflow: hidden
+}
+.lesson-mode {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap
+}
+.lesson-mode strong {
+  display: block;
+  font: 20px Georgia, serif;
+  color: #4c5d40
+}
+.lesson-mode small {
+  display: block;
+  font-size: 11px;
+  color: #858b75;
+  margin-top: 5px
+}
+.lesson-mode-buttons {
+  display: flex;
+  gap: 5px
+}
+.lesson-mode button,
+.lab-actions button {
+  font-size: 12px;
+  padding: 9px 12px;
+  border: 1px solid #cdd2bc;
+  border-radius: 4px;
+  background: #f7f6eb;
+  min-height: 40px
+}
+.lesson-mode button[aria-pressed=true] {
+  background: #e7e0ec;
+  color: #6c4c80;
+  border-color: #bca7c7
+}
+#lesson-goal {
+  font-size: 11px;
+  color: #7b6787
+}
+.lesson-3d-hint {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #858b75;
+  padding: 9px 20px;
+  margin: 0;
+  border-top: 1px solid #e0e0d0
+}
+.investigation {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  border: 1px solid #d7dbc8;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #faf9ef
+}
+.lab-controls {
+  padding: 23px;
+  border-right: 1px solid #dcdfce
+}
+.lab-controls>label {
+  display: block;
+  font-size: 12px;
+  color: #67775a;
+  margin-bottom: 8px
+}
+.lab-controls select {
+  max-width: 100%;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c8d0b6;
+  border-radius: 4px;
+  background: #fffdf5;
+  font: 12px system-ui, sans-serif
+}
+.lab-controls .eyebrow {
+  margin-top: 24px
+}
+.lab-controls p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #707c62
+}
+.lab-controls h3,
+.lab-observation h3 {
+  font: 22px Georgia, serif;
+  color: #5c4c67
+}
+.lab-controls input {
+  vertical-align: middle
+}
+#lab-block-control {
+  font-size: 12px;
+  border-block: 1px solid #dedfcd;
+  padding: 15px 0;
+  margin-top: 18px
+}
+#lab-block-control p {
+  font-size: 10px;
+  margin-bottom: 0
+}
+#lab-predictions {
+  display: grid;
+  gap: 7px
+}
+#lab-predictions button,
+#practice-options button {
+  padding: 10px 12px;
+  min-height: 43px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.6;
+  border: 1px solid #d3d8c3;
+  border-radius: 4px;
+  background: #f5f4e8
+}
+#lab-predictions button[aria-pressed=true] {
+  background: #e8e0ed;
+  border-color: #b5a1c1;
+  color: #6d4c7f
+}
+.lab-actions {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 14px 0
+}
+#lab-run,
+#practice-start {
+  background: #7b6888;
+  color: #fff;
+  border-color: #7b6888
+}
+#lab-progress {
+  width: 100%;
+  height: 5px;
+  accent-color: #8b7399
+}
+.lab-observation {
+  min-width: 0
+}
+.lab-observation>p,
+.lab-observation>div:not(.lesson-3d-stage) {
+  margin: 18px 24px;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #647556
+}
+#lab-3d-status {
+  font-size: 10px;
+  color: #90967e
+}
+#lab-explain {
+  border-top: 1px solid #dadfca;
+  padding-top: 12px
+}
+#lab-explain button {
+  border: 1px solid #cbd2bb;
+  border-radius: 4px;
+  padding: 8px 11px;
+  background: #f2f2e6;
+  font-size: 12px
+}
+.lab-reference {
+  font-size: 11px;
+  color: #838b75;
+  line-height: 1.9;
+  margin: 15px 0 35px
+}
+.mixed-practice {
+  border: 1px solid #d6dbc8;
+  border-radius: 7px;
+  background: #faf8ef;
+  padding: 27px
+}
+.mixed-practice h2 {
+  font: 32px Georgia, serif;
+  margin: 8px 0
+}
+.mixed-practice>p {
+  font-size: 13px;
+  color: #7a826e
+}
+#practice-area {
+  margin-top: 24px;
+  border-top: 1px solid #dadecc;
+  padding-top: 24px
+}
+#practice-prompt {
+  font: 24px/1.4 Georgia, serif;
+  color: #4a5c3f;
+  max-width: 800px
+}
+#practice-figure {
+  max-width: 350px
+}
+#practice-figure svg {
+  width: 100%;
+  height: auto;
+  max-height: 200px
+}
+#practice-options {
+  display: grid;
+  gap: 9px;
+  max-width: 720px
+}
+#practice-feedback,
+#practice-save-status {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #7e638d;
+  max-width: 820px
+}
+#practice-save-status:empty {
+  display: none
+}
+#practice-save-status {
+  border-left: 2px solid #c8b4d2;
+  padding-left: 12px;
+  margin-top: 17px
+}
+@media(max-width:900px) {
+  .investigation {
+    grid-template-columns: 1fr
+  }
+  .lab-controls {
+    border-right: 0;
+    border-bottom: 1px solid #d9ddcb
+  }
+  .lab-observation .lesson-3d-stage {
+    height: 400px
+  }
+  header nav button {
+    padding: 0 10px
+  }
+}
+@media(max-width:650px) {
+  header nav {
+    overflow-x: auto;
+    justify-content: flex-start
+  }
+  header nav button {
+    flex: none;
+    padding: 0 13px
+  }
+  .lesson-mode {
+    padding: 15px;
+    gap: 12px
+  }
+  .lesson-mode-buttons button {
+    font-size: 11px
+  }
+  .lesson-3d-stage {
+    height: 360px
+  }
+  .mixed-practice {
+    padding: 18px
+  }
+  .mixed-practice h2 {
+    font-size: 29px
+  }
+  #practice-prompt {
+    font-size: 22px
+  }
+  .lab-controls {
+    padding: 18px
+  }
+  .lab-observation .lesson-3d-stage {
+    height: 340px
+  }
+  .lab-observation>p,
+  .lab-observation>div:not(.lesson-3d-stage) {
+    margin: 15px 18px
+  }
+  .lesson-mode small {
+    line-height: 1.8
+  }
+}
 /* Keep lesson maps and SVG label overlays separate from the GPU viewport. */
-[hidden]{display:none!important}
-.journey-viewport .three-leaders{min-width:0;max-height:none;aspect-ratio:auto;width:100%;height:100%}
+[hidden] {
+  display: none !important
+}
+.journey-viewport .three-leaders {
+  min-width: 0;
+  max-height: none;
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%
+}
 
 /* A working study desk inspired by the reference recording. */
-.studio-nav{display:flex;gap:3px;flex:none}.studio-nav button{display:grid;place-items:center;gap:3px;background:transparent;border:0;border-radius:5px;padding:8px 9px;color:#746b7b}.studio-nav button>span{font-size:19px;line-height:1}.studio-nav small{font-size:9px}.studio-nav button:hover{background:#ece9df;color:#4c5c3e}header .brand{font-size:27px}header nav button{padding-inline:12px}.specimen-actions{order:4;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 10px}.specimen-actions>div{display:flex;gap:5px;flex-wrap:wrap}.specimen-actions button{font-size:11px;min-height:34px;border:1px solid #d5d4c7;background:#faf8f0;border-radius:4px;padding:6px 9px}.specimen-actions button[aria-pressed=true]{color:#775082;background:#ece2ed;border-color:#cbb3d1}.studio-status{order:7;font-size:11px;line-height:1.7;color:#775b87;margin:0 10px}.studio-status:empty{display:none}.diagram-panel .zoom-hint{position:static;order:5;max-width:none;text-align:left;margin:0 10px;font-size:10px}.diagram-panel .diagram-foot{display:none}.diagram-panel>.model-note:not(#comparison-highlight){font-size:10px;margin:0 10px}.diagram-panel .three-tools button{font-size:11px;min-height:34px}.specimen-title h1{color:#343c2e}.specimen-title>div>p:last-child{font:italic 13px Georgia,serif}.art-switch button{font-size:10px;padding:6px 8px}.plate-number{font-size:9px}#description,.function p,.fact p{font-size:13px;line-height:1.85;color:#69725f}.detail-top{font-size:9px;line-height:1.5}.detail-top>span:last-child{font-size:8px}#detail-kicker{font-size:9px}#detail-title{font-size:32px;margin-top:5px}.profile-heading{font-size:9px}#structure-profile dl,.profile-observation,#profile-connections summary{font-size:12px}.cell-fun-fact{margin-top:22px}.function>span,.fact>span,.closeup-heading{font-size:9px}.habitat-card{border:1px solid #ddd8c9;border-radius:6px;background:#f5f1e6;margin-top:18px;padding:14px}.habitat-card svg{display:block;width:100%;height:100px;border-radius:4px;margin-top:14px}.habitat-card>p:not(.eyebrow){font:13px/1.7 Georgia,serif;color:#68725b}.habitat-card>span{font-size:8px;letter-spacing:1px;color:#8b8c7b}.specimen-context{display:none}.specimen-notes{display:none!important}#study-desk{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;margin-top:14px}body:not([data-page=atlas]) #study-desk,body[data-quiz=true] #study-desk,body[data-quiz=true] .habitat-card,body[data-quiz=true] .specimen-actions{display:none}.study-desk>section{border:1px solid #dcd8c9;background:#faf7ee;border-radius:8px;padding:20px 22px}.desk-heading{display:flex;justify-content:space-between;align-items:start;gap:16px}.desk-heading h2{font:25px Georgia,serif;margin:5px 0 16px;color:#47573c}.desk-heading .eyebrow{font-size:8px}.desk-page{font-size:8px;letter-spacing:1px;color:#979482;white-space:nowrap}.tissue-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 75px;gap:9px}.tissue-tiles button{min-width:0;padding:0;background:#eeecdf;border:1px solid #dfdbcb;border-radius:5px;overflow:hidden}.tissue-tiles svg{width:100%;height:72px;display:block}.tissue-tiles button>span{display:block;font-size:10px;padding:7px 3px}.tissue-tiles .add-tissue{border-style:dashed;background:transparent;color:#8e729a;font-size:25px}.tissue-tiles .add-tissue span{font-size:10px;color:#7e8370}.study-desk p:not(.eyebrow){font-size:11px;line-height:1.7;color:#7b816c}.desk-link{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 0 0;border:0;background:transparent;border-top:1px solid #dddccd;color:#526544;font-size:12px}.desk-link>span{font-size:17px}.compare-pair{display:grid;grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);align-items:center;gap:5px;min-height:104px}.compare-pair>div,.compare-pair>label{border:1px solid #dfdbcd;background:#f2efdf;border-radius:5px;padding:9px;display:flex;align-items:center;gap:9px;min-width:0}.compare-pair>label{flex-direction:row-reverse}.compare-pair img{width:65px;height:70px;object-fit:contain;mix-blend-mode:multiply}.compare-pair strong{font:16px Georgia,serif;font-weight:400}.compare-pair select{width:100%;min-width:0;font:14px Georgia,serif;border:0;background:transparent;color:#4f5d43;cursor:pointer}.versus{font:italic 24px Georgia,serif;color:#92759f;text-align:center}
-#studio-dialog{width:min(1050px,calc(100vw - 32px));max-height:calc(100dvh - 40px);padding:0;border:1px solid #cbc9b9;border-radius:12px;background:#f8f5ec;color:#3e4935;box-shadow:0 25px 100px #2e302e44;overflow:auto}#studio-dialog::backdrop{background:#242d2490;backdrop-filter:blur(4px)}.studio-dialog-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:24px 30px;border-bottom:1px solid #dedacb;background:#f8f5ec}.studio-dialog-head h2{font:34px Georgia,serif;font-weight:400;margin:5px 0}.studio-dialog-head>button{border:1px solid #d7d1c1;border-radius:50%;background:#eeebdf;font-size:25px;width:38px;height:38px;flex:none}#studio-dialog-body{padding:0 30px 30px}.tool-intro{font-size:13px;line-height:1.8;color:#7a806b;max-width:780px}.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}.gallery-grid button{padding:15px;background:#efeddf;border:1px solid #d9d5c5;border-radius:7px;text-align:left}.gallery-grid button:hover{background:#e7e8d6;border-color:#a8b990}.gallery-grid img{width:100%;height:145px;object-fit:contain;mix-blend-mode:multiply}.gallery-grid h3{font:22px Georgia,serif;margin:10px 0 6px}.gallery-grid p,.gallery-grid small{font-size:11px;line-height:1.6;color:#7e8371}.library-list{display:grid;gap:10px}.library-list article{border:1px solid #dad6c8;padding:16px;position:relative;background:#f0edde;border-radius:5px}.library-list article>button:first-child{font:22px Georgia,serif;background:none;border:0;color:#655071;text-align:left;padding:0 70px 0 0}.library-list p{font-size:12px;color:#758065;line-height:1.8;max-width:85%}.remove-item{position:absolute;right:12px;top:16px;background:none;border:0;text-decoration:underline;color:#83728d;font-size:11px}.tool-empty{padding:50px;text-align:center;border:1px dashed #d7d0bc;font:24px Georgia,serif;color:#8c927b}.notebook-layout{display:grid;grid-template-columns:230px 1fr;gap:28px;margin-top:25px}.note-index{border-right:1px solid #ded9c9;padding-right:18px;display:flex;flex-direction:column;gap:8px}.note-index button{background:none;border:1px solid #dcd5c2;border-radius:4px;font:12px/1.6 system-ui,sans-serif;padding:9px;text-align:left}.note-index button[aria-current=true]{background:#e6e8d5;border-color:#c1ccaa}.notebook-layout h3{font:28px Georgia,serif;margin:10px 0 20px}.notebook-layout label{display:block;font-size:12px;color:#7d856e;margin-bottom:8px}.notebook-layout textarea{resize:vertical;width:100%;font:16px/1.9 Georgia,serif;color:#4d5842;padding:18px;border:1px solid #d8d2bd;border-radius:6px;background:repeating-linear-gradient(#fdfbf2,#fdfbf2 29px,#e5e1d1 30px);min-height:220px}.note-state{font-size:11px;color:#8c7297;line-height:1.8}.notebook-layout>div>button,#studio-dialog-body>button,.microscope-controls button{border:1px solid #cfd1bc;background:#edeedc;padding:9px 14px;border-radius:5px;font-size:12px}.setting-row{display:flex;align-items:center;gap:12px;min-height:60px;border-block:1px solid #e0d9c8;margin:20px 0}.comparison-study{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:25px 0}.comparison-study article{background:#efedde;border:1px solid #dad6c5;padding:22px;border-radius:7px}.comparison-study h3{font:28px Georgia,serif;font-weight:400;margin:8px 0}.comparison-study img{width:100%;height:220px;object-fit:contain;mix-blend-mode:multiply}.comparison-study p:not(.eyebrow){font-size:13px;line-height:1.8;color:#778066}.comparison-study h4{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8b7695;font-weight:500}.comparison-study article>button{background:#e2e7cf;padding:9px 13px;border:1px solid #bfcaa7;border-radius:4px;font-size:12px;margin-top:18px}.structure-tags{display:flex;flex-wrap:wrap;gap:6px}.structure-tags button{border:1px solid #d6cfba;background:#f6f2e6;border-radius:4px;padding:7px 10px;font-size:11px}.microscope-modes{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 12px}.microscope-modes button{padding:9px 12px;font-size:12px;border:1px solid #d5d0bf;background:#f1eddf;border-radius:5px}.microscope-modes button[aria-pressed=true]{background:#e7deec;border-color:#c1a9cb;color:#70517d}.microscope-stage{height:360px;overflow:auto;background:#eae7dc;border:1px solid #d3cfbd;border-radius:7px;display:grid;place-items:center}.microscope-stage>div{width:min(600px,90%);transform-origin:top left;transition:transform .15s}.microscope-stage svg,.microscope-stage img{width:100%;max-height:340px;object-fit:contain;display:block}.microscope-caption,.image-message{font-size:12px;color:#7e846c;line-height:1.8}.microscope-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.microscope-controls output{font-size:12px;min-width:40px;text-align:center}.image-picker{border:1px dashed #a8b294;border-radius:5px;padding:9px 14px;font-size:12px;color:#62784e;cursor:pointer}.image-picker:has(+input:focus-visible){outline:2px solid #9779ad;outline-offset:3px}
-@media(min-width:1101px){.workspace{grid-template-columns:180px minmax(0,1fr) 285px;min-height:680px;height:calc(100dvh - 335px);max-height:920px;border:0;background:transparent;gap:14px;overflow:visible}.organelles,.diagram-panel,#cell-details{border:1px solid #ddd9ca;border-radius:8px}.diagram-panel{padding:21px 10px 13px;background:radial-gradient(ellipse at 50% 42%,#fcf9ee,#f1efdf);gap:7px}.diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport{min-height:330px}.organelles{padding:17px 10px}#cell-details{padding:20px 17px}.tabs{margin-bottom:12px;max-height:355px}.tabs button{min-height:43px}.specimen-title h1{font-size:43px}.specimen-title .eyebrow{display:none}.diagram-panel>.diagram-heading{display:none}#study-desk{margin-left:194px}}
-@media(max-width:1250px){header{padding-inline:18px;gap:12px}.brand>span{display:none}.studio-nav button{padding:8px 7px}header nav button{padding-inline:9px;font-size:11px}.compare-pair img{width:42px;height:60px}.compare-pair strong,.compare-pair select{font-size:13px}}
-@media(max-width:1100px){#study-desk{margin-left:0}.workspace{height:auto;max-height:none;overflow:visible}.diagram-panel,#cell-details{height:auto}.diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport{height:480px;min-height:340px}.studio-nav small{display:none}.studio-nav button{padding:8px}.desk-page{display:none}}
-@media(max-width:750px){header{height:auto;min-height:100px;display:grid;grid-template-columns:1fr auto;gap:0;padding:12px 15px 0}header .brand{font-size:25px}header nav{grid-row:2;grid-column:1/-1;width:100%;min-height:44px;justify-content:space-between}header nav button{padding:0 10px;font-size:11px}.studio-nav button{padding:8px}.studio-nav button>span{font-size:20px}.workspace{border-radius:6px}#study-desk{grid-template-columns:1fr}.study-desk>section{padding:18px}.desk-heading h2{font-size:26px}.specimen-actions{padding:0;gap:8px;flex-wrap:wrap}.specimen-actions button{font-size:11px;min-height:40px}.specimen-actions>div{gap:6px}.diagram-panel .three-tools{padding:0;margin:0}.tissue-tiles{grid-template-columns:repeat(3,minmax(0,1fr)) 55px;gap:6px}.tissue-tiles svg{height:64px}.tissue-tiles button>span{font-size:9px}.compare-pair img{width:60px;height:65px}.compare-pair strong,.compare-pair select{font-size:15px}#studio-dialog{width:calc(100vw - 18px);max-height:calc(100dvh - 20px);border-radius:8px}.studio-dialog-head{padding:18px}.studio-dialog-head h2{font-size:28px}#studio-dialog-body{padding:0 18px 20px}.gallery-grid{grid-template-columns:1fr 1fr;gap:10px}.gallery-grid button{padding:10px}.gallery-grid img{height:100px}.gallery-grid h3{font-size:19px}.notebook-layout{grid-template-columns:1fr;gap:16px}.note-index{border:0;padding:0;max-height:140px;overflow:auto}.comparison-study{grid-template-columns:1fr}.comparison-study img{height:200px}.microscope-stage{height:270px}.microscope-stage svg,.microscope-stage img{max-height:250px}.microscope-controls button{min-height:40px}.habitat-card svg{height:150px}}
+.studio-nav {
+  display: flex;
+  gap: 3px;
+  flex: none
+}
+.studio-nav button {
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  padding: 8px 9px;
+  color: #746b7b
+}
+.studio-nav button>span {
+  font-size: 19px;
+  line-height: 1
+}
+.studio-nav small {
+  font-size: 9px
+}
+.studio-nav button:hover {
+  background: #ece9df;
+  color: #4c5c3e
+}
+header .brand {
+  font-size: 27px
+}
+header nav button {
+  padding-inline: 12px
+}
+.specimen-actions {
+  order: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 10px
+}
+.specimen-actions>div {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap
+}
+.specimen-actions button {
+  font-size: 11px;
+  min-height: 34px;
+  border: 1px solid #d5d4c7;
+  background: #faf8f0;
+  border-radius: 4px;
+  padding: 6px 9px
+}
+.specimen-actions button[aria-pressed=true] {
+  color: #775082;
+  background: #ece2ed;
+  border-color: #cbb3d1
+}
+.studio-status {
+  order: 7;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #775b87;
+  margin: 0 10px
+}
+.studio-status:empty {
+  display: none
+}
+.diagram-panel .zoom-hint {
+  position: static;
+  order: 5;
+  max-width: none;
+  text-align: left;
+  margin: 0 10px;
+  font-size: 10px
+}
+.diagram-panel .diagram-foot {
+  display: none
+}
+.diagram-panel>.model-note:not(#comparison-highlight) {
+  font-size: 10px;
+  margin: 0 10px
+}
+.diagram-panel .three-tools button {
+  font-size: 11px;
+  min-height: 34px
+}
+.specimen-title h1 {
+  color: #343c2e
+}
+.specimen-title>div>p:last-child {
+  font: italic 13px Georgia, serif
+}
+.art-switch button {
+  font-size: 10px;
+  padding: 6px 8px
+}
+.plate-number {
+  font-size: 9px
+}
+#description,
+.function p,
+.fact p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #69725f
+}
+.detail-top {
+  font-size: 9px;
+  line-height: 1.5
+}
+.detail-top>span:last-child {
+  font-size: 8px
+}
+#detail-kicker {
+  font-size: 9px
+}
+#detail-title {
+  font-size: 32px;
+  margin-top: 5px
+}
+.profile-heading {
+  font-size: 9px
+}
+#structure-profile dl,
+.profile-observation,
+#profile-connections summary {
+  font-size: 12px
+}
+.cell-fun-fact {
+  margin-top: 22px
+}
+.function>span,
+.fact>span,
+.closeup-heading {
+  font-size: 9px
+}
+.habitat-card {
+  border: 1px solid #ddd8c9;
+  border-radius: 6px;
+  background: #f5f1e6;
+  margin-top: 18px;
+  padding: 14px
+}
+.habitat-card svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+  border-radius: 4px;
+  margin-top: 14px
+}
+.habitat-card>p:not(.eyebrow) {
+  font: 13px/1.7 Georgia, serif;
+  color: #68725b
+}
+.habitat-card>span {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #8b8c7b
+}
+.specimen-context {
+  display: none
+}
+.specimen-notes {
+  display: none !important
+}
+#study-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 14px
+}
+body:not([data-page=atlas]) #study-desk,
+body[data-quiz=true] #study-desk,
+body[data-quiz=true] .habitat-card,
+body[data-quiz=true] .specimen-actions {
+  display: none
+}
+.study-desk>section {
+  border: 1px solid #dcd8c9;
+  background: #faf7ee;
+  border-radius: 8px;
+  padding: 20px 22px
+}
+.desk-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px
+}
+.desk-heading h2 {
+  font: 25px Georgia, serif;
+  margin: 5px 0 16px;
+  color: #47573c
+}
+.desk-heading .eyebrow {
+  font-size: 8px
+}
+.desk-page {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #979482;
+  white-space: nowrap
+}
+.tissue-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) 75px;
+  gap: 9px
+}
+.tissue-tiles button {
+  min-width: 0;
+  padding: 0;
+  background: #eeecdf;
+  border: 1px solid #dfdbcb;
+  border-radius: 5px;
+  overflow: hidden
+}
+.tissue-tiles svg {
+  width: 100%;
+  height: 72px;
+  display: block
+}
+.tissue-tiles button>span {
+  display: block;
+  font-size: 10px;
+  padding: 7px 3px
+}
+.tissue-tiles .add-tissue {
+  border-style: dashed;
+  background: transparent;
+  color: #8e729a;
+  font-size: 25px
+}
+.tissue-tiles .add-tissue span {
+  font-size: 10px;
+  color: #7e8370
+}
+.study-desk p:not(.eyebrow) {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #7b816c
+}
+.desk-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 9px 0 0;
+  border: 0;
+  background: transparent;
+  border-top: 1px solid #dddccd;
+  color: #526544;
+  font-size: 12px
+}
+.desk-link>span {
+  font-size: 17px
+}
+.compare-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  min-height: 104px
+}
+.compare-pair>div,
+.compare-pair>label {
+  border: 1px solid #dfdbcd;
+  background: #f2efdf;
+  border-radius: 5px;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0
+}
+.compare-pair>label {
+  flex-direction: row-reverse
+}
+.compare-pair img {
+  width: 65px;
+  height: 70px;
+  object-fit: contain;
+  mix-blend-mode: multiply
+}
+.compare-pair strong {
+  font: 16px Georgia, serif;
+  font-weight: 400
+}
+.compare-pair select {
+  width: 100%;
+  min-width: 0;
+  font: 14px Georgia, serif;
+  border: 0;
+  background: transparent;
+  color: #4f5d43;
+  cursor: pointer
+}
+.versus {
+  font: italic 24px Georgia, serif;
+  color: #92759f;
+  text-align: center
+}
+#studio-dialog {
+  width: min(1050px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  padding: 0;
+  border: 1px solid #cbc9b9;
+  border-radius: 12px;
+  background: #f8f5ec;
+  color: #3e4935;
+  box-shadow: 0 25px 100px #2e302e44;
+  overflow: auto
+}
+#studio-dialog::backdrop {
+  background: #242d2490;
+  backdrop-filter: blur(4px)
+}
+.studio-dialog-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 30px;
+  border-bottom: 1px solid #dedacb;
+  background: #f8f5ec
+}
+.studio-dialog-head h2 {
+  font: 34px Georgia, serif;
+  font-weight: 400;
+  margin: 5px 0
+}
+.studio-dialog-head>button {
+  border: 1px solid #d7d1c1;
+  border-radius: 50%;
+  background: #eeebdf;
+  font-size: 25px;
+  width: 38px;
+  height: 38px;
+  flex: none
+}
+#studio-dialog-body {
+  padding: 0 30px 30px
+}
+.tool-intro {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #7a806b;
+  max-width: 780px
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 22px
+}
+.gallery-grid button {
+  padding: 15px;
+  background: #efeddf;
+  border: 1px solid #d9d5c5;
+  border-radius: 7px;
+  text-align: left
+}
+.gallery-grid button:hover {
+  background: #e7e8d6;
+  border-color: #a8b990
+}
+.gallery-grid img {
+  width: 100%;
+  height: 145px;
+  object-fit: contain;
+  mix-blend-mode: multiply
+}
+.gallery-grid h3 {
+  font: 22px Georgia, serif;
+  margin: 10px 0 6px
+}
+.gallery-grid p,
+.gallery-grid small {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #7e8371
+}
+.library-list {
+  display: grid;
+  gap: 10px
+}
+.library-list article {
+  border: 1px solid #dad6c8;
+  padding: 16px;
+  position: relative;
+  background: #f0edde;
+  border-radius: 5px
+}
+.library-list article>button:first-child {
+  font: 22px Georgia, serif;
+  background: none;
+  border: 0;
+  color: #655071;
+  text-align: left;
+  padding: 0 70px 0 0
+}
+.library-list p {
+  font-size: 12px;
+  color: #758065;
+  line-height: 1.8;
+  max-width: 85%
+}
+.remove-item {
+  position: absolute;
+  right: 12px;
+  top: 16px;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  color: #83728d;
+  font-size: 11px
+}
+.tool-empty {
+  padding: 50px;
+  text-align: center;
+  border: 1px dashed #d7d0bc;
+  font: 24px Georgia, serif;
+  color: #8c927b
+}
+.notebook-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 28px;
+  margin-top: 25px
+}
+.note-index {
+  border-right: 1px solid #ded9c9;
+  padding-right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px
+}
+.note-index button {
+  background: none;
+  border: 1px solid #dcd5c2;
+  border-radius: 4px;
+  font: 12px/1.6 system-ui, sans-serif;
+  padding: 9px;
+  text-align: left
+}
+.note-index button[aria-current=true] {
+  background: #e6e8d5;
+  border-color: #c1ccaa
+}
+.notebook-layout h3 {
+  font: 28px Georgia, serif;
+  margin: 10px 0 20px
+}
+.notebook-layout label {
+  display: block;
+  font-size: 12px;
+  color: #7d856e;
+  margin-bottom: 8px
+}
+.notebook-layout textarea {
+  resize: vertical;
+  width: 100%;
+  font: 16px/1.9 Georgia, serif;
+  color: #4d5842;
+  padding: 18px;
+  border: 1px solid #d8d2bd;
+  border-radius: 6px;
+  background: repeating-linear-gradient(#fdfbf2, #fdfbf2 29px, #e5e1d1 30px);
+  min-height: 220px
+}
+.notebook-layout>div>button.clear-saved {
+  margin-left: 10px;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  color: #7a5f86
+}
+.note-state {
+  font-size: 11px;
+  color: #8c7297;
+  line-height: 1.8
+}
+.notebook-layout>div>button,
+#studio-dialog-body>button,
+.microscope-controls button {
+  border: 1px solid #cfd1bc;
+  background: #edeedc;
+  padding: 9px 14px;
+  border-radius: 5px;
+  font-size: 12px
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  border-block: 1px solid #e0d9c8;
+  margin: 20px 0
+}
+.comparison-study {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 25px 0
+}
+.comparison-study article {
+  background: #efedde;
+  border: 1px solid #dad6c5;
+  padding: 22px;
+  border-radius: 7px
+}
+.comparison-study h3 {
+  font: 28px Georgia, serif;
+  font-weight: 400;
+  margin: 8px 0
+}
+.comparison-study img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  mix-blend-mode: multiply
+}
+.comparison-study p:not(.eyebrow) {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #778066
+}
+.comparison-study h4 {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8b7695;
+  font-weight: 500
+}
+.comparison-study article>button {
+  background: #e2e7cf;
+  padding: 9px 13px;
+  border: 1px solid #bfcaa7;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 18px
+}
+.structure-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px
+}
+.structure-tags button {
+  border: 1px solid #d6cfba;
+  background: #f6f2e6;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 11px
+}
+.microscope-modes {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 20px 0 12px
+}
+.microscope-modes button {
+  padding: 9px 12px;
+  font-size: 12px;
+  border: 1px solid #d5d0bf;
+  background: #f1eddf;
+  border-radius: 5px
+}
+.microscope-modes button[aria-pressed=true] {
+  background: #e7deec;
+  border-color: #c1a9cb;
+  color: #70517d
+}
+.microscope-stage {
+  height: 360px;
+  overflow: auto;
+  background: #eae7dc;
+  border: 1px solid #d3cfbd;
+  border-radius: 7px;
+  display: grid;
+  place-items: center
+}
+.microscope-stage>div {
+  width: min(600px, 90%);
+  transform-origin: top left;
+  transition: transform .15s
+}
+.microscope-stage svg,
+.microscope-stage img {
+  width: 100%;
+  max-height: 340px;
+  object-fit: contain;
+  display: block
+}
+.microscope-caption,
+.image-message {
+  font-size: 12px;
+  color: #7e846c;
+  line-height: 1.8
+}
+.microscope-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap
+}
+.microscope-controls output {
+  font-size: 12px;
+  min-width: 40px;
+  text-align: center
+}
+.image-picker {
+  border: 1px dashed #a8b294;
+  border-radius: 5px;
+  padding: 9px 14px;
+  font-size: 12px;
+  color: #62784e;
+  cursor: pointer
+}
+.image-picker:has(+input:focus-visible) {
+  outline: 2px solid #9779ad;
+  outline-offset: 3px
+}
+@media(min-width:1101px) {
+  .workspace {
+    grid-template-columns: 180px minmax(0, 1fr) 285px;
+    min-height: 680px;
+    height: calc(100dvh - 335px);
+    max-height: 920px;
+    border: 0;
+    background: transparent;
+    gap: 14px;
+    overflow: visible
+  }
+  .organelles,
+  .diagram-panel,
+  #cell-details {
+    border: 1px solid #ddd9ca;
+    border-radius: 8px
+  }
+  .diagram-panel {
+    padding: 21px 10px 13px;
+    background: radial-gradient(ellipse at 50% 42%, #fcf9ee, #f1efdf);
+    gap: 7px
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport {
+    min-height: 330px
+  }
+  .organelles {
+    padding: 17px 10px
+  }
+  #cell-details {
+    padding: 20px 17px
+  }
+  .tabs {
+    margin-bottom: 12px;
+    max-height: 355px
+  }
+  .tabs button {
+    min-height: 43px
+  }
+  .specimen-title h1 {
+    font-size: 43px
+  }
+  .specimen-title .eyebrow {
+    display: none
+  }
+  .diagram-panel>.diagram-heading {
+    display: none
+  }
+  #study-desk {
+    margin-left: 194px
+  }
+}
+@media(max-width:1250px) {
+  header {
+    padding-inline: 18px;
+    gap: 12px
+  }
+  .brand>span {
+    display: none
+  }
+  .studio-nav button {
+    padding: 8px 7px
+  }
+  header nav button {
+    padding-inline: 9px;
+    font-size: 11px
+  }
+  .compare-pair img {
+    width: 42px;
+    height: 60px
+  }
+  .compare-pair strong,
+  .compare-pair select {
+    font-size: 13px
+  }
+}
+@media(max-width:1100px) {
+  #study-desk {
+    margin-left: 0
+  }
+  .workspace {
+    height: auto;
+    max-height: none;
+    overflow: visible
+  }
+  .diagram-panel,
+  #cell-details {
+    height: auto
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport {
+    height: 480px;
+    min-height: 340px
+  }
+  .studio-nav small {
+    display: none
+  }
+  .studio-nav button {
+    padding: 8px
+  }
+  .desk-page {
+    display: none
+  }
+}
+@media(max-width:750px) {
+  header {
+    height: auto;
+    min-height: 100px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0;
+    padding: 12px 15px 0
+  }
+  header .brand {
+    font-size: 25px
+  }
+  header nav {
+    grid-row: 2;
+    grid-column: 1/-1;
+    width: 100%;
+    min-height: 44px;
+    justify-content: space-between
+  }
+  header nav button {
+    padding: 0 10px;
+    font-size: 11px
+  }
+  .studio-nav button {
+    padding: 8px
+  }
+  .studio-nav button>span {
+    font-size: 20px
+  }
+  .workspace {
+    border-radius: 6px
+  }
+  #study-desk {
+    grid-template-columns: 1fr
+  }
+  .study-desk>section {
+    padding: 18px
+  }
+  .desk-heading h2 {
+    font-size: 26px
+  }
+  .specimen-actions {
+    padding: 0;
+    gap: 8px;
+    flex-wrap: wrap
+  }
+  .specimen-actions button {
+    font-size: 11px;
+    min-height: 40px
+  }
+  .specimen-actions>div {
+    gap: 6px
+  }
+  .diagram-panel .three-tools {
+    padding: 0;
+    margin: 0
+  }
+  .tissue-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) 55px;
+    gap: 6px
+  }
+  .tissue-tiles svg {
+    height: 64px
+  }
+  .tissue-tiles button>span {
+    font-size: 9px
+  }
+  .compare-pair img {
+    width: 60px;
+    height: 65px
+  }
+  .compare-pair strong,
+  .compare-pair select {
+    font-size: 15px
+  }
+  #studio-dialog {
+    width: calc(100vw - 18px);
+    max-height: calc(100dvh - 20px);
+    border-radius: 8px
+  }
+  .studio-dialog-head {
+    padding: 18px
+  }
+  .studio-dialog-head h2 {
+    font-size: 28px
+  }
+  #studio-dialog-body {
+    padding: 0 18px 20px
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px
+  }
+  .gallery-grid button {
+    padding: 10px
+  }
+  .gallery-grid img {
+    height: 100px
+  }
+  .gallery-grid h3 {
+    font-size: 19px
+  }
+  .notebook-layout {
+    grid-template-columns: 1fr;
+    gap: 16px
+  }
+  .note-index {
+    border: 0;
+    padding: 0;
+    max-height: 140px;
+    overflow: auto
+  }
+  .comparison-study {
+    grid-template-columns: 1fr
+  }
+  .comparison-study img {
+    height: 200px
+  }
+  .microscope-stage {
+    height: 270px
+  }
+  .microscope-stage svg,
+  .microscope-stage img {
+    max-height: 250px
+  }
+  .microscope-controls button {
+    min-height: 40px
+  }
+  .habitat-card svg {
+    height: 150px
+  }
+}
 
-.compare-pair>div{flex-direction:column;gap:3px}.compare-pair>label{flex-direction:column-reverse;gap:3px}.compare-pair strong,.compare-pair select{text-align:center}.compare-pair img{height:64px;width:66px}.compare-pair select{font-size:13px}
-#anatomy-player{position:absolute;z-index:4;bottom:12px;left:12px;right:12px;padding:13px 15px;background:#fbf8edf2;border:1px solid #cfc6b2;border-radius:7px;box-shadow:0 6px 24px #4a45351a;backdrop-filter:blur(8px)}.anatomy-player-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.anatomy-player-heading strong{font:19px Georgia,serif;color:#5c4567}.anatomy-player-heading button{background:none;border:0;font-size:24px;color:#7c7082}#anatomy-animation-steps{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}#anatomy-animation-steps button{padding:5px 8px;background:#f0eddf;border:1px solid #d8d1be;border-radius:4px;font-size:10px}#anatomy-animation-steps button[aria-pressed=true]{background:#e9dff0;border-color:#b59cc3}#anatomy-animation-caption{font-size:11px;line-height:1.65;color:#646f56;margin:9px 0}.anatomy-playback{display:flex;align-items:center;gap:7px}.anatomy-playback button{font-size:11px;padding:6px 12px;border:1px solid #bfb5c5;background:#f4edf6;border-radius:4px}.anatomy-playback span{font-size:9px;color:#8c8c76;margin-left:auto}#explode-3d[aria-pressed=true]{background:#e3e8d2;border-color:#a5b789}@media(max-width:650px){#anatomy-player{bottom:5px;left:5px;right:5px;padding:9px}.anatomy-player-heading strong{font-size:17px}.anatomy-playback span{max-width:100px;line-height:1.5}#anatomy-animation-caption{font-size:10px}.three-tools{flex-wrap:wrap}}
+.compare-pair>div {
+  flex-direction: column;
+  gap: 3px
+}
+.compare-pair>label {
+  flex-direction: column-reverse;
+  gap: 3px
+}
+.compare-pair strong,
+.compare-pair select {
+  text-align: center
+}
+.compare-pair img {
+  height: 64px;
+  width: 66px
+}
+.compare-pair select {
+  font-size: 13px
+}
+#anatomy-player {
+  position: absolute;
+  z-index: 4;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 13px 15px;
+  background: #fbf8edf2;
+  border: 1px solid #cfc6b2;
+  border-radius: 7px;
+  box-shadow: 0 6px 24px #4a45351a;
+  backdrop-filter: blur(8px)
+}
+.anatomy-player-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px
+}
+.anatomy-player-heading strong {
+  font: 19px Georgia, serif;
+  color: #5c4567
+}
+.anatomy-player-heading button {
+  background: none;
+  border: 0;
+  font-size: 24px;
+  color: #7c7082
+}
+#anatomy-animation-steps {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 7px
+}
+#anatomy-animation-steps button {
+  padding: 5px 8px;
+  background: #f0eddf;
+  border: 1px solid #d8d1be;
+  border-radius: 4px;
+  font-size: 10px
+}
+#anatomy-animation-steps button[aria-pressed=true] {
+  background: #e9dff0;
+  border-color: #b59cc3
+}
+#anatomy-animation-caption {
+  font-size: 11px;
+  line-height: 1.65;
+  color: #646f56;
+  margin: 9px 0
+}
+.anatomy-playback {
+  display: flex;
+  align-items: center;
+  gap: 7px
+}
+.anatomy-playback button {
+  font-size: 11px;
+  padding: 6px 12px;
+  border: 1px solid #bfb5c5;
+  background: #f4edf6;
+  border-radius: 4px
+}
+.anatomy-playback span {
+  font-size: 9px;
+  color: #8c8c76;
+  margin-left: auto
+}
+#explode-3d[aria-pressed=true] {
+  background: #e3e8d2;
+  border-color: #a5b789
+}
+@media(max-width:650px) {
+  #anatomy-player {
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    padding: 9px
+  }
+  .anatomy-player-heading strong {
+    font-size: 17px
+  }
+  .anatomy-playback span {
+    max-width: 100px;
+    line-height: 1.5
+  }
+  #anatomy-animation-caption {
+    font-size: 10px
+  }
+  .three-tools {
+    flex-wrap: wrap
+  }
+}
 /* Guided activities, controlled experiments, and keyboard/touch access. */
-.skip-link{position:fixed;z-index:100;top:8px;left:8px;transform:translateY(-150%);padding:12px 18px;background:#354b2c;color:white;border-radius:4px}.skip-link:focus{transform:none}input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #79538f;outline-offset:3px}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #79538f;outline-offset:3px}#main-content:focus{outline:none}#guided-discovery{padding:18px 22px;margin-bottom:15px;border:1px solid #d5d7c3;border-radius:7px;background:#f0f2e4}.discovery-head{display:flex;gap:16px;align-items:center;justify-content:space-between}.discovery-head h2{font:25px Georgia,serif;margin:5px 0;color:#435537}.discovery-head label{font-size:12px;display:flex;gap:8px;align-items:center}.discovery-head select{max-width:240px;font:13px system-ui,sans-serif;background:#fffdf4;border:1px solid #bec7aa;border-radius:5px;padding:9px}.discovery-head>button,#discovery-exit,#discovery-options button{min-height:42px;border:1px solid #aebd96;background:#e2e9d2;border-radius:5px;padding:9px 13px;font-size:12px}#discovery-work{border-top:1px solid #d6dbc5;margin-top:16px;padding-top:12px}#discovery-goal{font:20px/1.5 Georgia,serif;color:#435a35}#discovery-targets{display:flex;flex-wrap:wrap;gap:12px 28px;font-size:13px;line-height:1.7;padding-left:20px}#discovery-targets li{padding:5px 10px;max-width:310px}#discovery-targets .discovered{background:#e0e9cd;color:#3e5e2e;border-radius:4px}#discovery-feedback,#discovery-progress{font-size:13px;line-height:1.8;color:#63516e}#discovery-check{border-block:1px solid #d4dac1;margin:15px 0;padding:8px 0 18px}#discovery-check h3{font:21px/1.5 Georgia,serif}#discovery-options{display:flex;flex-wrap:wrap;gap:8px}#discovery-options button{text-align:left;background:#fffaf0}body[data-quiz=true] #guided-discovery{display:none}#experiment-comparison{border:1px solid #d4d9c2;border-radius:7px;padding:17px;background:#f6f5e9}.experiment-compare-head{display:flex;gap:10px;align-items:center;justify-content:space-between}.experiment-compare-head h3{font:24px Georgia,serif;margin:5px 0}.experiment-compare-head button{min-height:40px;border:1px solid #c4b4cd;padding:8px;background:#eee6f1;border-radius:4px;font-size:12px}.experiment-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}.experiment-pair article{min-width:0;background:#fffaf0;border:1px solid #dadccb;padding:10px;border-radius:5px}.experiment-pair h4{font-size:12px;color:#4c603f;margin:4px 0}.experiment-pair svg{display:block;width:100%;height:auto}.experiment-pair p,#batch-note,#control-explanation{font-size:11px;line-height:1.7;color:#5e6d50}#control-explanation{border-top:1px solid #d8dcc8;padding-top:12px}#touch-3d{display:none}.eyebrow,.rail-title,.tabs small,.rail-hint,.model-note,.closeup-heading{color:#626b55}.tabs small{font-size:10px}#organelle-list button{font-size:12px}#profile-connections,#profile-recognize,.profile-observation{color:#606b55}.anatomy-playback span{color:#626b55}@media(max-width:900px){.experiment-pair{grid-template-columns:1fr}.discovery-head{flex-wrap:wrap;gap:12px}.discovery-head>div{width:100%}.discovery-head label{flex:1;min-width:0}.discovery-head select{width:100%;max-width:none}.workspace{height:auto;max-height:none}.organelles{max-height:none}#cell-details{max-height:none;height:auto;overflow:visible}.lab-controls{padding-bottom:18px}}
-@media(max-width:750px){#touch-3d{display:inline-block}button,.three-tools button,.art-switch button,.zoom-toolbar button,#organelle-list button,#anatomy-animation-steps button,.anatomy-playback button{min-height:44px}.studio-nav button{min-width:44px;min-height:44px}.studio-nav small{display:block;font-size:9px}.studio-nav button>span{font-size:17px}header{padding:8px 10px 0;gap:3px}header .brand{font-size:23px}.studio-nav{gap:0}header nav button{padding:0 8px}.lab-top{height:auto;min-height:56px;flex-wrap:wrap;padding-block:9px;gap:9px}.atlas-breadcrumb{font-size:11px}.view-tools{width:auto;gap:10px}.view-tools button{min-height:44px}.workspace{display:flex;flex-direction:column;min-height:0;overflow:visible}.organelles{width:100%;height:auto;max-height:none}.tabs{display:flex;overflow:auto;max-height:none;gap:5px}.tabs button{min-width:140px}.rail-bottom{display:none}#organelle-list{flex-direction:row;overflow:auto;max-width:100%;padding-bottom:5px}#organelle-list button{width:auto;min-width:max-content;white-space:nowrap}.diagram-panel{height:auto;overflow:visible}.diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport{height:430px;min-height:320px;max-height:65dvh}.specimen-title{gap:8px;flex-wrap:wrap}.specimen-title h1{font-size:36px}.plate-options{flex-direction:row;align-items:center}.plate-number{display:none}.specimen-title .art-switch{margin-top:5px}.three-tools{display:flex;flex-wrap:wrap;gap:6px}.three-tools button{flex:1 1 auto;padding:8px 10px;font-size:12px}.diagram-panel .zoom-hint{font-size:12px;line-height:1.7}.model-note{font-size:11px!important}#guided-discovery{padding:16px}#discovery-targets{display:block}#discovery-targets li{max-width:none}#discovery-feedback,#discovery-progress{font-size:14px}#discovery-options{display:grid}#discovery-options button{font-size:13px}#discovery-work>button{min-height:44px}.experiment-compare-head{flex-wrap:wrap}.lab-observation>div:not(.lesson-3d-stage){margin:15px 12px}.experiment-pair svg{min-height:100px}.lab-controls p,.lab-observation p,#lab-predictions button{font-size:14px}#lab-predictions button,#practice-options button{font-size:14px;min-height:48px}.lab-controls select{font-size:16px}.anatomy-player-heading strong{font-size:16px}#anatomy-animation-steps{gap:4px}#anatomy-animation-steps button{flex:1;font-size:10px}#anatomy-animation-caption{font-size:12px}.lesson-3d-stage{height:400px}#anatomy-player{position:relative;left:auto;right:auto;bottom:auto;margin-top:330px}#viewer3d:has(#anatomy-player:not([hidden])){overflow:auto}.discovery-head select{font-size:16px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-@media(max-width:750px){#anatomy-player{position:absolute;left:5px;right:5px;bottom:5px;margin-top:0}#viewer3d:has(#anatomy-player:not([hidden])){overflow:hidden}}
-.discovery-return{display:none}.discovery-model-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 13px;margin-right:10px;font-size:13px;color:#4c663b;text-underline-offset:3px}@media(max-width:750px){body[data-discovery=active] .discovery-return{display:block;order:1;font-size:13px;line-height:1.7;color:#644c75;padding:10px;border:1px solid #d8cce0;border-radius:4px;background:#f2eaf5}}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 8px;
+  left: 8px;
+  transform: translateY(-150%);
+  padding: 12px 18px;
+  background: #354b2c;
+  color: white;
+  border-radius: 4px
+}
+.skip-link:focus {
+  transform: none
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #79538f;
+  outline-offset: 3px
+}
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #79538f;
+  outline-offset: 3px
+}
+#main-content:focus {
+  outline: none
+}
+#guided-discovery {
+  padding: 18px 22px;
+  margin-bottom: 15px;
+  border: 1px solid #d5d7c3;
+  border-radius: 7px;
+  background: #f0f2e4
+}
+.discovery-head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between
+}
+.discovery-head h2 {
+  font: 25px Georgia, serif;
+  margin: 5px 0;
+  color: #435537
+}
+.discovery-head label {
+  font-size: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center
+}
+.discovery-head select {
+  max-width: 240px;
+  font: 13px system-ui, sans-serif;
+  background: #fffdf4;
+  border: 1px solid #bec7aa;
+  border-radius: 5px;
+  padding: 9px
+}
+.discovery-head>button,
+#discovery-exit,
+#discovery-options button {
+  min-height: 42px;
+  border: 1px solid #aebd96;
+  background: #e2e9d2;
+  border-radius: 5px;
+  padding: 9px 13px;
+  font-size: 12px
+}
+#discovery-work {
+  border-top: 1px solid #d6dbc5;
+  margin-top: 16px;
+  padding-top: 12px
+}
+#discovery-goal {
+  font: 20px/1.5 Georgia, serif;
+  color: #435a35
+}
+#discovery-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  font-size: 13px;
+  line-height: 1.7;
+  padding-left: 20px
+}
+#discovery-targets li {
+  padding: 5px 10px;
+  max-width: 310px
+}
+#discovery-targets .discovered {
+  background: #e0e9cd;
+  color: #3e5e2e;
+  border-radius: 4px
+}
+#discovery-feedback,
+#discovery-progress {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #63516e
+}
+#discovery-check {
+  border-block: 1px solid #d4dac1;
+  margin: 15px 0;
+  padding: 8px 0 18px
+}
+#discovery-check h3 {
+  font: 21px/1.5 Georgia, serif
+}
+#discovery-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px
+}
+#discovery-options button {
+  text-align: left;
+  background: #fffaf0
+}
+body[data-quiz=true] #guided-discovery {
+  display: none
+}
+#experiment-comparison {
+  border: 1px solid #d4d9c2;
+  border-radius: 7px;
+  padding: 17px;
+  background: #f6f5e9
+}
+.experiment-compare-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between
+}
+.experiment-compare-head h3 {
+  font: 24px Georgia, serif;
+  margin: 5px 0
+}
+.experiment-compare-head button {
+  min-height: 40px;
+  border: 1px solid #c4b4cd;
+  padding: 8px;
+  background: #eee6f1;
+  border-radius: 4px;
+  font-size: 12px
+}
+.experiment-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px
+}
+.experiment-pair article {
+  min-width: 0;
+  background: #fffaf0;
+  border: 1px solid #dadccb;
+  padding: 10px;
+  border-radius: 5px
+}
+.experiment-pair h4 {
+  font-size: 12px;
+  color: #4c603f;
+  margin: 4px 0
+}
+.experiment-pair svg {
+  display: block;
+  width: 100%;
+  height: auto
+}
+.experiment-pair p,
+#batch-note,
+#control-explanation {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #5e6d50
+}
+#control-explanation {
+  border-top: 1px solid #d8dcc8;
+  padding-top: 12px
+}
+#touch-3d {
+  display: none
+}
+.eyebrow,
+.rail-title,
+.tabs small,
+.rail-hint,
+.model-note,
+.closeup-heading {
+  color: #626b55
+}
+.tabs small {
+  font-size: 10px
+}
+#organelle-list button {
+  font-size: 12px
+}
+#profile-connections,
+#profile-recognize,
+.profile-observation {
+  color: #606b55
+}
+.anatomy-playback span {
+  color: #626b55
+}
+@media(max-width:900px) {
+  .experiment-pair {
+    grid-template-columns: 1fr
+  }
+  .discovery-head {
+    flex-wrap: wrap;
+    gap: 12px
+  }
+  .discovery-head>div {
+    width: 100%
+  }
+  .discovery-head label {
+    flex: 1;
+    min-width: 0
+  }
+  .discovery-head select {
+    width: 100%;
+    max-width: none
+  }
+  .workspace {
+    height: auto;
+    max-height: none
+  }
+  .organelles {
+    max-height: none
+  }
+  #cell-details {
+    max-height: none;
+    height: auto;
+    overflow: visible
+  }
+  .lab-controls {
+    padding-bottom: 18px
+  }
+}
+@media(max-width:750px) {
+  #touch-3d {
+    display: inline-block
+  }
+  button,
+  .three-tools button,
+  .art-switch button,
+  .zoom-toolbar button,
+  #organelle-list button,
+  #anatomy-animation-steps button,
+  .anatomy-playback button {
+    min-height: 44px
+  }
+  .studio-nav button {
+    min-width: 44px;
+    min-height: 44px
+  }
+  .studio-nav small {
+    display: block;
+    font-size: 9px
+  }
+  .studio-nav button>span {
+    font-size: 17px
+  }
+  header {
+    padding: 8px 10px 0;
+    gap: 3px
+  }
+  header .brand {
+    font-size: 23px
+  }
+  .studio-nav {
+    gap: 0
+  }
+  header nav button {
+    padding: 0 8px
+  }
+  .lab-top {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    padding-block: 9px;
+    gap: 9px
+  }
+  .atlas-breadcrumb {
+    font-size: 11px
+  }
+  .view-tools {
+    width: auto;
+    gap: 10px
+  }
+  .view-tools button {
+    min-height: 44px
+  }
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible
+  }
+  .organelles {
+    width: 100%;
+    height: auto;
+    max-height: none
+  }
+  .tabs {
+    display: flex;
+    overflow: auto;
+    max-height: none;
+    gap: 5px
+  }
+  .tabs button {
+    min-width: 140px
+  }
+  .rail-bottom {
+    display: none
+  }
+  #organelle-list {
+    flex-direction: row;
+    overflow: auto;
+    max-width: 100%;
+    padding-bottom: 5px
+  }
+  #organelle-list button {
+    width: auto;
+    min-width: max-content;
+    white-space: nowrap
+  }
+  .diagram-panel {
+    height: auto;
+    overflow: visible
+  }
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) #cell-viewport {
+    height: 430px;
+    min-height: 320px;
+    max-height: 65dvh
+  }
+  .specimen-title {
+    gap: 8px;
+    flex-wrap: wrap
+  }
+  .specimen-title h1 {
+    font-size: 36px
+  }
+  .plate-options {
+    flex-direction: row;
+    align-items: center
+  }
+  .plate-number {
+    display: none
+  }
+  .specimen-title .art-switch {
+    margin-top: 5px
+  }
+  .three-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px
+  }
+  .three-tools button {
+    flex: 1 1 auto;
+    padding: 8px 10px;
+    font-size: 12px
+  }
+  .diagram-panel .zoom-hint {
+    font-size: 12px;
+    line-height: 1.7
+  }
+  .model-note {
+    font-size: 11px !important
+  }
+  #guided-discovery {
+    padding: 16px
+  }
+  #discovery-targets {
+    display: block
+  }
+  #discovery-targets li {
+    max-width: none
+  }
+  #discovery-feedback,
+  #discovery-progress {
+    font-size: 14px
+  }
+  #discovery-options {
+    display: grid
+  }
+  #discovery-options button {
+    font-size: 13px
+  }
+  #discovery-work>button {
+    min-height: 44px
+  }
+  .experiment-compare-head {
+    flex-wrap: wrap
+  }
+  .lab-observation>div:not(.lesson-3d-stage) {
+    margin: 15px 12px
+  }
+  .experiment-pair svg {
+    min-height: 100px
+  }
+  .lab-controls p,
+  .lab-observation p,
+  #lab-predictions button {
+    font-size: 14px
+  }
+  #lab-predictions button,
+  #practice-options button {
+    font-size: 14px;
+    min-height: 48px
+  }
+  .lab-controls select {
+    font-size: 16px
+  }
+  .anatomy-player-heading strong {
+    font-size: 16px
+  }
+  #anatomy-animation-steps {
+    gap: 4px
+  }
+  #anatomy-animation-steps button {
+    flex: 1;
+    font-size: 10px
+  }
+  #anatomy-animation-caption {
+    font-size: 12px
+  }
+  .lesson-3d-stage {
+    height: 400px
+  }
+  #anatomy-player {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 330px
+  }
+  #viewer3d:has(#anatomy-player:not([hidden])) {
+    overflow: auto
+  }
+  .discovery-head select {
+    font-size: 16px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important
+  }
+}
+@media(max-width:750px) {
+  #anatomy-player {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    margin-top: 0
+  }
+  #viewer3d:has(#anatomy-player:not([hidden])) {
+    overflow: hidden
+  }
+}
+.discovery-return {
+  display: none
+}
+.discovery-model-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 13px;
+  margin-right: 10px;
+  font-size: 13px;
+  color: #4c663b;
+  text-underline-offset: 3px
+}
+@media(max-width:750px) {
+  body[data-discovery=active] .discovery-return {
+    display: block;
+    order: 1;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #644c75;
+    padding: 10px;
+    border: 1px solid #d8cce0;
+    border-radius: 4px;
+    background: #f2eaf5
+  }
+}
 
 /* Feedback stays available without interrupting the learning activity. */
-.feedback-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;border:1px solid #c8ceba;border-radius:5px;background:#f5f6ec;color:#435936;font:12px/1.4 system-ui,sans-serif;text-decoration:none;white-space:nowrap}.feedback-link:hover{background:#e9eddf;border-color:#8e9c79}.feedback-link:focus-visible{outline:2px solid #596e47;outline-offset:3px}footer nav .feedback-link{font-size:11px}@media(max-width:750px){.view-tools{flex-wrap:wrap}.view-tools .feedback-link{font-size:11px;padding-inline:8px}footer{flex-wrap:wrap;gap:12px}footer nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px}}
+.feedback-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #c8ceba;
+  border-radius: 5px;
+  background: #f5f6ec;
+  color: #435936;
+  font: 12px/1.4 system-ui, sans-serif;
+  text-decoration: none;
+  white-space: nowrap
+}
+.feedback-link:hover {
+  background: #e9eddf;
+  border-color: #8e9c79
+}
+.feedback-link:focus-visible {
+  outline: 2px solid #596e47;
+  outline-offset: 3px
+}
+footer nav .feedback-link {
+  font-size: 11px
+}
+@media(max-width:750px) {
+  .view-tools {
+    flex-wrap: wrap
+  }
+  .view-tools .feedback-link {
+    font-size: 11px;
+    padding-inline: 8px
+  }
+  footer {
+    flex-wrap: wrap;
+    gap: 12px
+  }
+  footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px
+  }
+}
+
+/* Phones: tighten everything above the 3D model so it shows on the first screen. */
+@media(max-width:650px) {
+  .lab-top .atlas-breadcrumb {
+    display: none
+  }
+  .lab-top {
+    min-height: 0;
+    padding-block: 6px
+  }
+  #guided-discovery {
+    padding: 10px 12px;
+    margin-bottom: 10px
+  }
+  #guided-discovery .discovery-head .eyebrow {
+    display: none
+  }
+  .discovery-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 10px;
+    align-items: center
+  }
+  .discovery-head>div {
+    grid-column: 1 / -1;
+    width: auto
+  }
+  .discovery-head h2 {
+    font-size: 19px;
+    margin: 0
+  }
+  /* "Activity" stays as the select's accessible name but is hidden visually to give the menu room. */
+  .discovery-head label {
+    font-size: 0;
+    min-width: 0
+  }
+  .discovery-head select {
+    width: 100%;
+    max-width: none;
+    font-size: 16px;
+    padding: 8px;
+    text-overflow: ellipsis
+  }
+  .discovery-head>button {
+    min-height: 44px;
+    padding: 8px 12px;
+    white-space: nowrap
+  }
+  .specimen-title .eyebrow,
+  .specimen-title .plate-number {
+    display: none
+  }
+  .specimen-title h1 {
+    font-size: 30px;
+    margin-bottom: 4px
+  }
+  /* Same as desktop: the 3D view does not need the specimen caption above it. */
+  .diagram-panel:has(#cell-viewport[data-mode="3d"]) .diagram-heading {
+    display: none
+  }
+}
