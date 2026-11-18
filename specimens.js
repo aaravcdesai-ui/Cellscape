@@ -41,7 +41,7 @@ const specializedStructures=[
  ['t-tubule','T tubules','Electrical activation','Carrying the signal inward','Transverse tubules are invaginations of the muscle cell membrane. They help carry electrical excitation into the fiber’s interior.','Carries membrane excitation deep into a muscle fiber.','T tubules are continuous with the cell’s surface membrane.']
 ];
 function renderSpecimenNavigation(current){
- document.querySelector('.tabs').innerHTML=Object.entries(specimenCatalog).map(([id,s])=>`<button class="${id===current?'active':''}" data-type="${id}" aria-pressed="${id===current}"><img class="specimen-thumb" src="assets/specimens/${id}.png" alt="" loading="lazy"><span>${s.name}<small>${s.subtitle}</small></span></button>`).join('');
+ document.querySelector('.tabs').innerHTML=Object.entries(specimenCatalog).map(([id,s])=>`<button class="${id===current?'active':''}" data-type="${id}" aria-pressed="${id===current}"><img class="specimen-thumb" src="assets/specimens/thumbs/${id}.webp" alt="" width="36" height="24" decoding="async"><span>${s.name}<small>${s.subtitle}</small></span></button>`).join('');
 }
 renderSpecimenNavigation('plant');
 let artworkMode=location.protocol==='file:'?'rendered':'3d';
@@ -53,7 +53,7 @@ function chooseSpecimen(next){
 function renderImageSpecimen(model,active,showLabels){
  const spec=specimenCatalog[model];
  const landmarks=['nucleus','vacuole','chloroplast','mitochondrion','nucleoid','axon','microvilli','myofibril'];
- let out=`<image class="rendered-specimen" href="assets/specimens/${model}.png" x="0" y="11.667" width="820" height="546.667" preserveAspectRatio="xMidYMid meet"/><g class="image-hotspots">`;
+ let out=`<image class="rendered-specimen" href="assets/specimens/${model}.webp" x="0" y="11.667" width="820" height="546.667" preserveAspectRatio="xMidYMid meet"/><g class="image-hotspots">`;
  for(const [id,[x,y,r]] of Object.entries(spec.spots)){
   const item=structures.find(s=>s.id===id);if(!item)continue;
   const visible=showLabels&&(id===active||landmarks.includes(id));
@@ -77,8 +77,8 @@ function renderAtlasArtwork(model,active,showLabels){
 }
 function specimenDetailImage(id){
  const spec=specimenCatalog[type],spot=spec.spots[id];
- if((id==='nucleus'||id==='nucleolus')&&type!=='leukocyte')return `<img class="organelle-render" src="assets/organelles/nucleus.png" alt="Illustrated cutaway of a nucleus with chromatin, pores, and nucleolus.">`;
+ if((id==='nucleus'||id==='nucleolus')&&type!=='leukocyte')return `<img class="organelle-render" src="assets/organelles/nucleus.webp" decoding="async" alt="Illustrated cutaway of a nucleus with chromatin, pores, and nucleolus.">`;
  if(!spot)return '';
  const [x,y,r]=spot,half=Math.max(r*1.6,35),left=Math.max(0,x-half),top=Math.max(12,y-half),side=Math.min(half*2,820-left,558-top);
- return `<svg class="organelle-render" viewBox="${left} ${top} ${side} ${side}" role="img" aria-label="Enlarged view of ${structures.find(s=>s.id===id).name} in the specimen illustration"><image href="assets/specimens/${type}.png" x="0" y="11.667" width="820" height="546.667"/></svg>`;
+ return `<svg class="organelle-render" viewBox="${left} ${top} ${side} ${side}" role="img" aria-label="Enlarged view of ${structures.find(s=>s.id===id).name} in the specimen illustration"><image href="assets/specimens/${type}.webp" x="0" y="11.667" width="820" height="546.667"/></svg>`;
 }

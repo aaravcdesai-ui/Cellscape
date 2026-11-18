@@ -3,7 +3,9 @@ from pathlib import Path
 import argparse, json, re, shutil
 ROOT=Path(__file__).resolve().parent.parent
 FILES=['index.html','about.html','NOTICE.md','style.css','app.js','diagram.js','specimens.js','learning.js','lab.js','lab-data.js','studio.js','viewer3d.js','cell-models.js','anatomy-motion.js','experiment-model.js','investigations.js','discovery.js']
-ASSETS=['assets/organelles/nucleus.png']+[f'assets/specimens/{n}.png' for n in ['plant','animal','leukocyte','neuron','epithelial','bacteria','muscle']]
+SPECIMENS=['plant','animal','leukocyte','neuron','epithelial','bacteria','muscle']
+# Ship only the optimized WebP files; the PNG masters stay in the repo (see scripts/optimize_images.py).
+ASSETS=['assets/organelles/nucleus.webp']+[f'assets/specimens/{n}.webp' for n in SPECIMENS]+[f'assets/specimens/thumbs/{n}.webp' for n in SPECIMENS]
 VENDOR=[f'vendor/three/{n}' for n in ['LICENSE','three.module.js','three.core.js','OrbitControls.js']]
 PRACTICE_JS="""// Public release: no network calls, accounts, or answer persistence.
 window.QuizStore={

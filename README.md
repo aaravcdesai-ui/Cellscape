@@ -46,7 +46,7 @@ Notebook text, bookmarks, and lesson progress reset on reload; download notes be
 
 Biology explanations use original wording checked against OpenStax’s **Biology 2e** (cells, membrane traffic, cytoskeleton, and osmosis) and **Anatomy and Physiology 2e** (epithelial, muscle, and nervous tissue). Full references are in [Credits & sources](about.html#credits).
 
-The eight PNG illustrations were generated for this project with OpenAI image generation. The 3D meshes and SVG diagrams are built in code. They are educational illustrations, not microscopy images. [Generation prompts](design/specimen-generation-prompts.json) and [artwork provenance](NOTICE.md) document their origins and design references.
+The eight PNG illustrations were generated for this project with OpenAI image generation. The 3D meshes and SVG diagrams are built in code. They are educational illustrations, not microscopy images. The PNGs are lossless masters; the site loads WebP copies made by `python3 scripts/optimize_images.py` (needs Pillow), so re-run it after changing any artwork. [Generation prompts](design/specimen-generation-prompts.json) and [artwork provenance](NOTICE.md) document their origins and design references.
 
 Three.js and OrbitControls use the bundled [MIT license](vendor/three/LICENSE). Preserve third-party notices when redistributing.
 

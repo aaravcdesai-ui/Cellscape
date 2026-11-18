@@ -141,7 +141,7 @@ function renderCloseup(s){
  const photo=specimenDetailImage(s.id);
  const sketch=diagramAnatomyIds.has(s.id)?anatomyArt(s.id):'';
  $('#closeup-art').innerHTML=photo+(sketch?`<details class="anatomy-schematic"><summary>Annotated anatomy</summary>${sketch}</details>`:'');
- if(!photo&&!sketch)$('#closeup-art').innerHTML=`<img class="organelle-render" src="assets/specimens/${type}.png" alt="${specimenCatalog[type].name} teaching illustration">`;
+ if(!photo&&!sketch)$('#closeup-art').innerHTML=`<img class="organelle-render" src="assets/specimens/${type}.webp" decoding="async" alt="${specimenCatalog[type].name} teaching illustration">`;
  $('#closeup-count').textContent=diagramAnatomyIds.has(s.id)?'3 FEATURES':'3 STUDY NOTES';
  $('#closeup-parts').innerHTML=anatomy[s.id].map(([label],i)=>`<button data-part="${i}" aria-pressed="${i===0}"><b>${i+1}</b> ${label}</button>`).join('');
  const showPart=i=>{
