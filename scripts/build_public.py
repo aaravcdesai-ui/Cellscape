@@ -70,6 +70,23 @@ def stamp_versions(destination):
     """
     hashes, active = {}, set()
 
+    # Artwork paths are built at runtime (assets/specimens/${kind}.webp), so they get one shared
+    # version: a hash of every shipped image. Changing any artwork renews all of its URLs (and,
+    # through the rewritten scripts, the scripts' own hashes), so cached art never pairs with new
+    # hotspot coordinates.
+    art = hashlib.sha256()
+    for image in sorted((destination / "assets").rglob("*.webp")):
+        art.update(image.relative_to(destination).as_posix().encode())
+        art.update(image.read_bytes())
+    art_version = art.hexdigest()[:10]
+    for script in destination.glob("*.js"):
+        text = script.read_text()
+        stamped = re.sub(r"(assets/[\w/${}.-]*?\.webp)(?![?\w])", rf"\1?v={art_version}", text)
+        if stamped != text:
+            script.write_text(stamped)
+        if re.search(r"\.webp(?!\?v=)", stamped):
+            raise ValueError(f"Unversioned artwork path left in {script.name}")
+
     def digest(rel):
         if rel in hashes:
             return hashes[rel]
