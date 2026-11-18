@@ -10,20 +10,20 @@ const specimenCatalog = {
     where: 'Photosynthetic tissues, such as the leaf mesophyll.',
     ids: ['nucleus', 'nucleolus', 'chloroplast', 'mitochondrion', 'rough-er', 'smooth-er', 'golgi', 'ribosomes', 'vacuole', 'membrane', 'wall', 'cytosol', 'peroxisome', 'cytoskeleton', 'vesicle'],
     spots: {
-      nucleus: [190, 110, 67],
-      nucleolus: [213, 129, 22],
-      chloroplast: [420, 83, 57],
-      mitochondrion: [704, 239, 44],
-      'rough-er': [116, 191, 48],
-      'smooth-er': [338, 58, 14],
-      golgi: [594, 350, 66],
-      ribosomes: [261, 163, 17],
-      vacuole: [450, 256, 104],
-      membrane: [678, 431, 18],
-      wall: [414, 518, 38],
-      cytosol: [752, 202, 16],
-      cytoskeleton: [366, 437, 20],
-      vesicle: [593, 268, 13]
+      nucleus: [212, 130, 70],
+      nucleolus: [250, 140, 20],
+      chloroplast: [507, 90, 58],
+      mitochondrion: [657, 167, 40],
+      'rough-er': [153, 207, 40],
+      'smooth-er': [353, 87, 30],
+      golgi: [123, 280, 45],
+      ribosomes: [220, 213, 15],
+      vacuole: [440, 247, 110],
+      membrane: [507, 480, 16],
+      wall: [467, 527, 35],
+      cytosol: [700, 247, 16],
+      cytoskeleton: [557, 445, 18],
+      vesicle: [565, 421, 14]
     }
   },
   leukocyte: {
@@ -35,15 +35,15 @@ const specimenCatalog = {
     where: 'Blood and tissues involved in immune defense.',
     ids: ['nucleus', 'mitochondrion', 'rough-er', 'golgi', 'ribosomes', 'lysosome', 'vesicle', 'membrane', 'cytosol'],
     spots: {
-      nucleus: [423, 114, 66],
-      mitochondrion: [535, 143, 20],
-      'rough-er': [245, 370, 58],
-      golgi: [512, 372, 44],
-      ribosomes: [246, 218, 15],
-      lysosome: [405, 330, 22],
-      vesicle: [490, 329, 11],
-      membrane: [664, 216, 23],
-      cytosol: [575, 261, 20]
+      nucleus: [400, 127, 62],
+      mitochondrion: [603, 230, 22],
+      'rough-er': [453, 360, 40],
+      golgi: [547, 330, 35],
+      ribosomes: [533, 143, 15],
+      lysosome: [417, 320, 18],
+      vesicle: [365, 420, 16],
+      membrane: [657, 253, 22],
+      cytosol: [353, 220, 18]
     }
   },
   neuron: {
@@ -55,15 +55,15 @@ const specimenCatalog = {
     where: 'The brain, spinal cord, and peripheral nervous system.',
     ids: ['soma', 'nucleus', 'dendrites', 'axon', 'myelin', 'terminals', 'mitochondrion', 'rough-er', 'membrane'],
     spots: {
-      soma: [300, 315, 65],
-      nucleus: [235, 268, 33],
-      dendrites: [155, 113, 45],
-      axon: [365, 280, 25],
-      myelin: [520, 285, 38],
-      terminals: [748, 262, 48],
-      mitochondrion: [295, 228, 17],
-      'rough-er': [220, 218, 24],
-      membrane: [187, 339, 19]
+      soma: [165, 305, 50],
+      nucleus: [203, 257, 40],
+      dendrites: [140, 87, 35],
+      axon: [333, 290, 20],
+      myelin: [460, 280, 35],
+      terminals: [773, 313, 40],
+      mitochondrion: [267, 223, 18],
+      'rough-er': [227, 200, 20],
+      membrane: [307, 247, 16]
     }
   },
   epithelial: {
@@ -75,15 +75,15 @@ const specimenCatalog = {
     where: 'Absorptive epithelia, including the lining of the small intestine.',
     ids: ['microvilli', 'nucleus', 'junctions', 'basement', 'mitochondrion', 'rough-er', 'golgi', 'membrane', 'cytoskeleton'],
     spots: {
-      microvilli: [414, 56, 73],
-      nucleus: [379, 424, 57],
-      junctions: [523, 250, 17],
-      basement: [407, 536, 52],
-      mitochondrion: [467, 180, 29],
-      'rough-er': [305, 334, 32],
-      golgi: [419, 258, 43],
-      membrane: [530, 398, 18],
-      cytoskeleton: [394, 126, 23]
+      microvilli: [407, 67, 60],
+      nucleus: [367, 440, 70],
+      junctions: [547, 177, 18],
+      basement: [393, 527, 25],
+      mitochondrion: [453, 170, 25],
+      'rough-er': [393, 313, 40],
+      golgi: [387, 220, 40],
+      membrane: [240, 293, 16],
+      cytoskeleton: [280, 160, 18]
     }
   },
   bacteria: {
@@ -95,15 +95,15 @@ const specimenCatalog = {
     where: 'Diverse habitats, including soil, water, and the bodies of other organisms.',
     ids: ['nucleoid', 'plasmid', 'bacterial-ribosomes', 'membrane', 'bacterial-wall', 'capsule', 'pili', 'flagellum', 'cytosol'],
     spots: {
-      nucleoid: [316, 288, 81],
-      plasmid: [500, 263, 23],
-      'bacterial-ribosomes': [438, 211, 21],
-      membrane: [402, 359, 16],
-      'bacterial-wall': [418, 374, 17],
-      capsule: [461, 383, 19],
-      pili: [297, 134, 26],
-      flagellum: [680, 176, 61],
-      cytosol: [229, 326, 17]
+      nucleoid: [393, 253, 75],
+      plasmid: [585, 259, 22],
+      'bacterial-ribosomes': [313, 337, 18],
+      membrane: [347, 379, 13],
+      'bacterial-wall': [467, 363, 14],
+      capsule: [467, 413, 20],
+      pili: [180, 160, 22],
+      flagellum: [747, 193, 30],
+      cytosol: [200, 313, 16]
     }
   },
   animal: {
@@ -115,19 +115,19 @@ const specimenCatalog = {
     where: 'Animal tissues; organelle abundance varies with cell function.',
     ids: ['nucleus', 'nucleolus', 'mitochondrion', 'rough-er', 'smooth-er', 'golgi', 'ribosomes', 'membrane', 'cytosol', 'lysosome', 'peroxisome', 'centrosome', 'cytoskeleton', 'vesicle'],
     spots: {
-      nucleus: [482, 120, 85],
-      nucleolus: [482, 152, 29],
-      mitochondrion: [686, 320, 57],
-      'rough-er': [480, 279, 54],
-      'smooth-er': [175, 160, 62],
-      golgi: [245, 297, 74],
-      ribosomes: [398, 249, 17],
-      membrane: [766, 414, 22],
-      cytosol: [655, 440, 18],
-      lysosome: [527, 350, 30],
-      centrosome: [175, 389, 34],
-      cytoskeleton: [263, 456, 24],
-      vesicle: [380, 366, 17]
+      nucleus: [233, 153, 85],
+      nucleolus: [287, 160, 30],
+      mitochondrion: [193, 380, 52],
+      'rough-er': [313, 280, 45],
+      'smooth-er': [543, 177, 50],
+      golgi: [493, 360, 75],
+      ribosomes: [253, 307, 15],
+      membrane: [787, 287, 20],
+      cytosol: [740, 400, 18],
+      lysosome: [80, 270, 25],
+      centrosome: [427, 103, 30],
+      cytoskeleton: [667, 427, 22],
+      vesicle: [637, 297, 14]
     }
   },
   muscle: {
@@ -139,13 +139,13 @@ const specimenCatalog = {
     where: 'Skeletal muscles attached to the skeleton.',
     ids: ['myofibril', 'sarcomere', 'sarcoplasmic-reticulum', 't-tubule', 'mitochondrion', 'nucleus', 'membrane'],
     spots: {
-      myofibril: [639, 302, 49],
-      sarcomere: [347, 229, 28],
-      'sarcoplasmic-reticulum': [412, 278, 27],
-      't-tubule': [494, 333, 32],
-      mitochondrion: [520, 275, 27],
-      nucleus: [544, 122, 32],
-      membrane: [417, 77, 29]
+      myofibril: [110, 347, 45],
+      sarcomere: [373, 247, 25],
+      'sarcoplasmic-reticulum': [413, 140, 25],
+      't-tubule': [453, 260, 25],
+      mitochondrion: [360, 341, 28],
+      nucleus: [180, 220, 35],
+      membrane: [313, 143, 22]
     }
   }
 };
