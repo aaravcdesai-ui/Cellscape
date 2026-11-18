@@ -18,9 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
-      - name: Prepare public files
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Prepare public files (minified)
         run: |
-          python3 scripts/build_public.py
+          npm install -g esbuild@0.25.0
+          python3 scripts/build_public.py --minify
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

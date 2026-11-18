@@ -23,5 +23,13 @@ jobs:
           node tests/model-geometry.mjs
           node tests/anatomy-motion.mjs
           node tests/experiment-model.mjs
-      - name: Public build
+      - name: Public build (plain)
         run: python scripts/build_public.py
+      - name: Public build (minified), then rerun the model tests against the minified files
+        run: |
+          npm install -g esbuild@0.25.0
+          python scripts/build_public.py --minify
+          cp -r tests _site/tests
+          node _site/tests/model-geometry.mjs
+          node _site/tests/anatomy-motion.mjs
+          node _site/tests/experiment-model.mjs
