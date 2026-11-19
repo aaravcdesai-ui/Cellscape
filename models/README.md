@@ -1,0 +1,75 @@
+# Artist-made 3D models (GLB)
+
+Any specimen can use a real 3D model instead of the procedural one built in `cell-models.js`.
+Specimens without a model keep the procedural version, so they can be upgraded one at a time.
+
+## Add a model
+
+1. Put the file here, e.g. `models/plant.glb`.
+2. List it in `models/manifest.json`:
+
+   ```json
+   {
+     "plant": { "file": "plant.glb", "credit": "Jane Doe (CC BY 4.0)" }
+   }
+   ```
+
+   Keys are specimen ids: `plant`, `animal`, `leukocyte`, `neuron`, `epithelial`, `bacteria`,
+   `muscle`. `credit` appears on snapshots; for CC BY models, also add the full attribution
+   to `NOTICE.md`.
+3. Reload. The page first shows the procedural model, then swaps in the GLB once it loads.
+   Lessons (protein journey, virtual lab) keep using the procedural models.
+
+The public build (`scripts/build_public.py`) only publishes files listed in the manifest, and
+versions their URLs so visitors never get a stale cached copy.
+
+## Make each organelle a separate, named part
+
+Clicking, labels, isolate and the exploded view all work per structure, so **each organelle must
+be its own object**, named after its structure. A single fused mesh will display, but nothing
+in it can be selected.
+
+Names are matched loosely, so normal Blender names work:
+
+| Object name in Blender            | Becomes        |
+| --------------------------------- | -------------- |
+| `Nucleus`, `nucleus.001`          | `nucleus`      |
+| `Golgi apparatus`, `golgi_stack`  | `golgi`        |
+| `Rough ER`, `Smooth_ER.002`       | `rough-er`, `smooth-er` |
+| `Mitochondria`, `Mitochondrion.3` | `mitochondrion`|
+| `Cell Wall`, `Plasma membrane`    | `wall`, `membrane` |
+| `Central_Vacuole`, `Cytoplasm`    | `vacuole`, `cytosol` |
+
+Copies such as `Chloroplast.001` and `Chloroplast.002` all join the same structure. Parts inside
+a named parent (e.g. ribbons under `Golgi`) inherit the parent's structure. If a name can't be
+matched, add a custom property `structureId` (Object Properties → Custom Properties, e.g.
+`structureId` = `peroxisome`) and enable "Custom Properties" in the glTF export options.
+
+The valid ids for each specimen are the `ids` lists in `specimens.js`. Structures the model
+leaves out still appear in the list but show nothing in 3D.
+
+## Size, orientation and performance
+
+- **Size and position don't matter**: the model is scaled to the procedural model's size, centred,
+  and placed on the floor. Model it upright (Y up, glTF's default) with the open/cutaway side
+  facing the front (+Z).
+- **Keep it light**: aim for under ~300k triangles and a few MB. Compress before adding:
+
+  ```bash
+  npx gltfpack -i plant-raw.glb -o plant.glb -cc -tc
+  ```
+
+  (`gltfpack` uses meshopt compression, which the site decodes; Draco is not supported.)
+- **Materials**: use Blender's Principled BSDF; it exports as glTF PBR materials. Avoid
+  emission, since the selection highlight uses it.
+
+## Where to get models
+
+- **Make them in [Blender](https://www.blender.org)** (free), using the specimen illustrations
+  in `assets/specimens/` as references.
+- **AI image-to-3D** ([Meshy](https://www.meshy.ai), [Tripo](https://www.tripo3d.ai),
+  [Hyper3D Rodin](https://hyper3d.ai)): generate **one organelle at a time** (crop it from the
+  illustration), then assemble and name the parts in Blender. Check each service's licence for
+  commercial or public use.
+- **Existing models**: [NIH 3D](https://3d.nih.gov) and [Sketchfab](https://sketchfab.com)
+  (filter for CC0 or CC BY). Check each licence and credit the author.

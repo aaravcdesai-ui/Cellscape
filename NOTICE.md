@@ -10,7 +10,7 @@ This is an independent educational project. It is not affiliated with or endorse
 
 ## Third-party software
 
-Three.js 0.180.0, including OrbitControls: Copyright 2010–2025 Three.js authors, MIT license. Preserve `vendor/three/LICENSE` and the library's license headers when distributing the website. No Google Fonts files or external font imports are bundled.
+Three.js 0.180.0, including OrbitControls, GLTFLoader and BufferGeometryUtils: Copyright 2010–2025 Three.js authors, MIT license. meshoptimizer decoder (`vendor/three/meshopt_decoder.module.js`): Copyright 2016–2024 Arseny Kapoulkine, MIT license. Preserve `vendor/three/LICENSE` and the library's license headers when distributing the website. No Google Fonts files or external font imports are bundled.
 
 ## Biology sources
 

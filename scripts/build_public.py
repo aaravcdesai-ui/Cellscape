@@ -22,6 +22,7 @@ FILES = [
     "experiment-model.js",
     "investigations.js",
     "discovery.js",
+    "glb-parts.js",
 ]
 SPECIMENS = [
     "plant",
@@ -38,9 +39,22 @@ ASSETS = (
     + [f"assets/specimens/{n}.webp" for n in SPECIMENS]
     + [f"assets/specimens/thumbs/{n}.webp" for n in SPECIMENS]
 )
+# Artist-made GLB models: only the files the manifest lists are published.
+MODELS = ["models/manifest.json"] + [
+    f"models/{entry['file']}"
+    for entry in json.loads((ROOT / "models/manifest.json").read_text()).values()
+]
 VENDOR = [
     f"vendor/three/{n}"
-    for n in ["LICENSE", "three.module.js", "three.core.js", "OrbitControls.js"]
+    for n in [
+        "LICENSE",
+        "three.module.js",
+        "three.core.js",
+        "OrbitControls.js",
+        "GLTFLoader.js",
+        "BufferGeometryUtils.js",
+        "meshopt_decoder.module.js",
+    ]
 ]
 PRACTICE_JS = """// Public release: no network calls, accounts, or answer persistence.
 window.QuizStore={
@@ -75,16 +89,19 @@ def stamp_versions(destination):
     # through the rewritten scripts, the scripts' own hashes), so cached art never pairs with new
     # hotspot coordinates.
     art = hashlib.sha256()
-    for image in sorted((destination / "assets").rglob("*.webp")):
+    shipped = sorted((destination / "assets").rglob("*.webp")) + sorted(
+        (destination / "models").glob("*")
+    )
+    for image in shipped:
         art.update(image.relative_to(destination).as_posix().encode())
         art.update(image.read_bytes())
     art_version = art.hexdigest()[:10]
     for script in destination.glob("*.js"):
         text = script.read_text()
-        stamped = re.sub(r"(assets/[\w/${}.-]*?\.webp)(?![?\w])", rf"\1?v={art_version}", text)
+        stamped = re.sub(r"(assets/[\w/${}.-]*?\.webp|models/manifest\.json)(?![?\w])", rf"\1?v={art_version}", text)
         if stamped != text:
             script.write_text(stamped)
-        if re.search(r"\.webp(?!\?v=)", stamped):
+        if re.search(r"\.webp(?!\?v=)|manifest\.json(?!\?v=)", stamped):
             raise ValueError(f"Unversioned artwork path left in {script.name}")
 
     def digest(rel):
@@ -168,7 +185,7 @@ def build(destination, minified=False):
             raise ValueError("Output is not a Cellscape public build")
         shutil.rmtree(destination)
     destination.mkdir(parents=True)
-    for name in FILES + ASSETS + VENDOR:
+    for name in FILES + ASSETS + MODELS + VENDOR:
         source = ROOT / name
         if source.is_symlink() or not source.is_file():
             raise ValueError(f"Unexpected source: {name}")
@@ -209,6 +226,7 @@ def build(destination, minified=False):
     expected = set(
         FILES
         + ASSETS
+        + MODELS
         + VENDOR
         + ["quiz-store.js", ".nojekyll", ".cellscape-public-build"]
     )

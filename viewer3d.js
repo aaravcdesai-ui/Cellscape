@@ -9,6 +9,10 @@ import {
   explodedRig,
   closeupLessons
 } from './anatomy-motion.js';
+import {
+  organizeGlb,
+  fitToBox
+} from './glb-parts.js';
 const host = document.querySelector('#viewer3d');
 const status = document.querySelector('#viewer3d-status');
 const homeViewport = host.parentElement;
@@ -329,6 +333,13 @@ function fit(defaultDirection = false, selectionOnly = false) {
       account(world)
     }
   });
+  // Nothing visible to frame (e.g. a structure a loaded model does not include): fall back to the
+  // bounding box corners, so the camera never receives NaN from empty min/max values.
+  if (!fittedPoints.length) {
+    for (const x of [box.min.x, box.max.x])
+      for (const y of [box.min.y, box.max.y])
+        for (const z of [box.min.z, box.max.z]) account(new T.Vector3(x, y, z))
+  }
   distance = Math.max(1, distance * 1.08);
   // Center the actual visible geometry rather than its conservative bounding box.
   for (let iteration = 0; iteration < 3; iteration++) {
@@ -449,7 +460,12 @@ function disposeModel() {
     }
   });
   geometries.forEach(g => g.dispose());
-  materials.forEach(m => m.dispose());
+  materials.forEach(m => {
+    // GLB materials carry their own texture maps; procedural ones share the surface texture.
+    for (const value of Object.values(m))
+      if (value?.isTexture) value.dispose();
+    m.dispose()
+  });
   model.userData.texture?.dispose();
   model = null;
   selectable.length = 0;
@@ -460,15 +476,84 @@ function disposeModel() {
   leaderNodes.clear();
 }
 
+// Artist-made models: models/manifest.json maps a specimen to a GLB file, e.g.
+// {"plant": {"file": "plant.glb", "credit": "…"}}. Listed specimens first show the procedural
+// model, then swap to the GLB once it has loaded; unlisted ones stay procedural.
+let glbManifest = null,
+  glbLoader = null,
+  glbRequest = 0;
+
+// The public build stamps this URL with a hash of the artwork and models (?v=…); GLB requests
+// reuse that query so a cached old file never pairs with a new manifest.
+function modelManifest() {
+  glbManifest ||= fetch('models/manifest.json').then(async r => r.ok ? {
+    entries: await r.json(),
+    query: new URL(r.url).search
+  } : {
+    entries: {},
+    query: ''
+  }).catch(() => ({
+    entries: {},
+    query: ''
+  }));
+  return glbManifest
+}
+
+async function loaderForGlb() {
+  if (!glbLoader) {
+    glbLoader = Promise.all([import('./vendor/three/GLTFLoader.js'), import('./vendor/three/meshopt_decoder.module.js')]).then(([{
+      GLTFLoader
+    }, {
+      MeshoptDecoder
+    }]) => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder))
+  }
+  return glbLoader
+}
+
+async function upgradeToGlb(kind) {
+  const request = ++glbRequest;
+  const {
+    entries,
+    query
+  } = await modelManifest(), entry = entries[kind];
+  if (!entry?.file || request !== glbRequest) return;
+  try {
+    const loader = await loaderForGlb(),
+      gltf = await loader.loadAsync('models/' + entry.file + query);
+    // Skip if the visitor moved to another specimen or a lesson while it loaded.
+    if (request !== glbRequest || currentKind !== kind || lessonMode) return;
+    const reference = new T.Box3().setFromObject(model),
+      ids = typeof specimenCatalog !== 'undefined' ? specimenCatalog[kind]?.ids || [] : [],
+      upgraded = fitToBox(organizeGlb(gltf.scene, ids, kind), reference);
+    upgraded.userData.credit = entry.credit || '';
+    disposeModel();
+    install(upgraded, kind, false);
+    rig.set(spread);
+    applySelection();
+    host.dataset.modelSource = 'glb';
+  } catch (error) {
+    console.warn(`Could not load models/${entry.file}; keeping the procedural ${kind} model.`, error)
+  }
+}
+
 function build(kind) {
   disposeModel();
-  model = buildCellModel(kind);
+  install(buildCellModel(kind), kind, true);
+  host.dataset.modelSource = 'procedural';
+  if (!lessonMode) upgradeToGlb(kind);
+  else glbRequest++;
+}
+
+function install(newModel, kind, reset) {
+  model = newModel;
   scene.add(model);
   rig = explodedRig(model);
   currentKind = kind;
-  focusedView = false;
-  isolated = false;
-  cutaway = true;
+  if (reset) {
+    focusedView = false;
+    isolated = false;
+    cutaway = true
+  }
   model.traverse(o => {
     if (o.isMesh) {
       selectable.push(o);
@@ -487,7 +572,8 @@ function build(kind) {
     if (o.isGroup && o.userData.structureId) labelAnchors.set(o.userData.structureId, o)
   });
   host.querySelector('canvas').setAttribute('aria-label', kind + ' cell 3D model. Drag to rotate; scroll to zoom. Arrow keys rotate, Shift plus arrows pan, plus and minus zoom, Home resets.');
-  fit(true);
+  // A swapped-in GLB is fitted to the procedural model's box, so the camera can stay put.
+  if (reset) fit(true);
   dirty = true;
 }
 
@@ -700,6 +786,43 @@ function dispatchSelection(id) {
   }))
 }
 
+// A small warm photo studio, rendered once into a prefiltered environment map: a dim room with a
+// large softbox above-left (matching the key light), a cool rim panel and a low front fill.
+function studioEnvironment(renderer) {
+  const studio = new T.Scene(),
+    geometry = new T.PlaneGeometry(1, 1),
+    room = new T.Mesh(new T.BoxGeometry(1, 1, 1), new T.MeshBasicMaterial({
+      color: 0x6f6a60,
+      side: T.BackSide
+    }));
+  room.scale.set(32, 20, 32);
+  room.position.y = 6;
+  studio.add(room);
+  const panel = (color, strength, position, size) => {
+    const light = new T.Mesh(geometry, new T.MeshBasicMaterial({
+      color: new T.Color(color).multiplyScalar(strength),
+      side: T.DoubleSide
+    }));
+    light.position.set(...position);
+    light.scale.set(size[0], size[1], 1);
+    light.lookAt(0, 0, 0);
+    studio.add(light)
+  };
+  panel(0xfff1dc, 7, [-6, 12, 7], [11, 7]);
+  panel(0xdbe3ff, 2.6, [11, 5, -7], [6, 9]);
+  panel(0xffffff, 1.4, [0, 2.5, 15], [16, 4]);
+  panel(0xefe4cc, 1.1, [0, -9, 0], [24, 24]);
+  const pmrem = new T.PMREMGenerator(renderer),
+    texture = pmrem.fromScene(studio, .04).texture;
+  pmrem.dispose();
+  studio.traverse(o => {
+    o.material?.dispose()
+  });
+  geometry.dispose();
+  room.geometry.dispose();
+  return texture
+}
+
 function init() {
   try {
     renderer = new T.WebGLRenderer({
@@ -710,17 +833,21 @@ function init() {
     });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     renderer.outputColorSpace = T.SRGBColorSpace;
-    renderer.toneMapping = T.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = .97;
+    // Neutral tone mapping keeps the specimen colours saturated (ACES washes them out).
+    renderer.toneMapping = T.NeutralToneMapping;
+    renderer.toneMappingExposure = .92;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = T.PCFSoftShadowMap;
     renderer.localClippingEnabled = true;
     scene = new T.Scene();
     camera = new T.PerspectiveCamera(38, 1, .05, 200);
     camera.position.set(10, 8, 12);
-    scene.add(new T.HemisphereLight(0xfff8e9, 0xa8ac91, 1.6));
-    scene.add(new T.AmbientLight(0xffffff, .3));
-    const key = new T.DirectionalLight(0xfff4e0, 3.0);
+    // Image-based lighting gives soft reflections and form; the flat fill lights stay low so
+    // surfaces keep contrast instead of looking chalky.
+    scene.environment = studioEnvironment(renderer);
+    scene.environmentIntensity = .85;
+    scene.add(new T.HemisphereLight(0xfff8e9, 0xa8ac91, .45));
+    const key = new T.DirectionalLight(0xfff4e0, 2.4);
     key.position.set(-5, 12, 8);
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
@@ -1102,7 +1229,8 @@ async function snapshot() {
   ctx.fillText('Cellscape / ' + (window.CellAtlasBridge?.specimenName?.() || currentKind + ' cell'), 18, host.clientHeight + 28);
   ctx.fillStyle = '#737d65';
   ctx.font = '10px sans-serif';
-  ctx.fillText('Procedural teaching model · Simplified anatomy · Not to scale', 18, host.clientHeight + 49);
+  const madeBy = model?.userData.source === 'glb' ? '3D model' + (model.userData.credit ? ' by ' + model.userData.credit : '') : 'Procedural teaching model';
+  ctx.fillText(madeBy + ' · Simplified anatomy · Not to scale', 18, host.clientHeight + 49);
   ctx.restore();
   return new Promise(resolve => output.toBlob(resolve, 'image/png'));
 }

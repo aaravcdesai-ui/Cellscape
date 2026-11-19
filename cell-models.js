@@ -22,11 +22,28 @@ const palette = {
   ribosomes: 0xc5a2be
 };
 
+// The surface-noise texture of the model being built; every material uses it as a fine bump.
+let surface = null;
+
+// Biological surfaces: a soft sheen (the velvety edge glow of tissue) and a thin clearcoat (a
+// moist highlight) over a fairly rough base, instead of uniform matte plastic.
+// Colours are deepened and saturated in one place so the palette matches the richer
+// reference illustrations without retuning every specimen.
 function material(color, options = {}) {
-  return new T.MeshStandardMaterial({
-    color,
-    roughness: .43,
-    metalness: .035,
+  const base = new T.Color(color),
+    hsl = base.getHSL({});
+  base.setHSL(hsl.h, Math.min(1, hsl.s * 1.2), hsl.l * .94);
+  return new T.MeshPhysicalMaterial({
+    color: base,
+    roughness: .5,
+    metalness: 0,
+    sheen: .35,
+    sheenRoughness: .55,
+    sheenColor: base.clone().lerp(new T.Color(0xffffff), .25),
+    clearcoat: .32,
+    clearcoatRoughness: .38,
+    bumpMap: surface,
+    bumpScale: .018,
     ...options
   })
 }
@@ -74,14 +91,44 @@ function randomInside(r) {
   return p.multiplyScalar(r)
 }
 
+// Tileable multi-scale value noise (fractal Brownian motion): soft lumps plus fine grain, so
+// surfaces read as granular cytoplasm and membrane rather than smooth plastic.
 function membraneTexture() {
-  const size = 128,
-    data = new Uint8Array(size * size * 4);
+  let noiseSeed = 0x2f6b9d1;
+  const noiseRandom = () => (noiseSeed = (noiseSeed * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const size = 256,
+    data = new Uint8Array(size * size * 4),
+    octaves = [
+      [8, .5],
+      [16, .27],
+      [32, .15],
+      [64, .08]
+    ].map(([cells, weight]) => {
+      const grid = Float32Array.from({
+        length: cells * cells
+      }, noiseRandom);
+      return [cells, weight, grid]
+    }),
+    smooth = t => t * t * (3 - 2 * t);
+  // Keep the layout's random sequence where it was: the original 128×128 texture drew this many.
+  for (let i = 0; i < 128 * 128; i++) random();
   for (let y = 0; y < size; y++)
     for (let x = 0; x < size; x++) {
-      const i = (y * size + x) * 4,
-        n = 160 + Math.floor(random() * 42 + 18 * Math.sin(x * .42) * Math.cos(y * .37));
-      data[i] = data[i + 1] = data[i + 2] = n;
+      let n = 0;
+      for (const [cells, weight, grid] of octaves) {
+        const gx = x / size * cells,
+          gy = y / size * cells,
+          x0 = Math.floor(gx),
+          y0 = Math.floor(gy),
+          fx = smooth(gx - x0),
+          fy = smooth(gy - y0),
+          at = (i, j) => grid[(j % cells) * cells + (i % cells)],
+          top = at(x0, y0) + (at(x0 + 1, y0) - at(x0, y0)) * fx,
+          bottom = at(x0, y0 + 1) + (at(x0 + 1, y0 + 1) - at(x0, y0 + 1)) * fx;
+        n += weight * (top + (bottom - top) * fy)
+      }
+      const i = (y * size + x) * 4;
+      data[i] = data[i + 1] = data[i + 2] = Math.round(255 * Math.min(1, n));
       data[i + 3] = 255
     }
   const texture = new T.DataTexture(data, size, size);
@@ -746,6 +793,7 @@ export function buildCellModel(kind) {
   root.name = kind;
   const tex = membraneTexture();
   root.userData.texture = tex;
+  surface = tex;
   if (kind === 'plant') plant(root, tex);
   else if (kind === 'animal') animal(root, tex);
   else if (kind === 'leukocyte') animal(root, tex, true);

@@ -48,7 +48,7 @@ Biology explanations use original wording checked against OpenStax’s **Biology
 
 The eight PNG illustrations were generated for this project with OpenAI image generation. The 3D meshes and SVG diagrams are built in code. They are educational illustrations, not microscopy images. The PNGs are lossless masters; the site loads WebP copies made by `python3 scripts/optimize_images.py` (needs Pillow), so re-run it after changing any artwork. [Generation prompts](design/specimen-generation-prompts.json) and [artwork provenance](NOTICE.md) document their origins and design references.
 
-Three.js and OrbitControls use the bundled [MIT license](vendor/three/LICENSE). Preserve third-party notices when redistributing.
+Any specimen can use an artist-made GLB model instead of its procedural one; see the [3D models guide](models/README.md). Three.js and its add-ons use the bundled [MIT license](vendor/three/LICENSE). Preserve third-party notices when redistributing.
 
 ## Tests and public builds
 
@@ -62,6 +62,7 @@ GitHub Actions runs all of these on every push to `main` and on pull requests. W
 node tests/model-geometry.mjs
 node tests/anatomy-motion.mjs
 node tests/experiment-model.mjs
+node tests/glb-parts.mjs
 ```
 
 `python3 scripts/build_public.py` creates a practice-only `_site/` folder, excluding the backend, admin dashboard, and private data. It also adds a content hash (`?v=…`) to every script and stylesheet URL, so browsers pick up changes automatically; don't add version numbers by hand. Add `--minify` to shrink scripts and stylesheets with [esbuild](https://esbuild.github.io/) (install it first with `npm install -g esbuild@0.25.0`); the GitHub workflows do this automatically. The manual GitHub Pages workflow uses this build; the live beta is hosted separately through Sites. GitHub pushes do not automatically redeploy it. Online answer saving requires a separate backend deployment; see the [hosting notes](backend/README.md#online-hosting-is-separate).

@@ -35,6 +35,7 @@ PUBLIC = {
     "lab.js",
     "lab-data.js",
     "studio.js",
+    "glb-parts.js",
 }
 
 
@@ -119,7 +120,7 @@ def handler(database, retention_days, admin_file=None, secure_cookies=False):
             relative = path.lstrip("/") or "index.html"
             target = (ROOT / relative).resolve()
             allowed = relative in PUBLIC or relative.startswith(
-                ("assets/", "vendor/three/")
+                ("assets/", "vendor/three/", "models/")
             )
             if (
                 ".." in Path(relative).parts
@@ -134,6 +135,8 @@ def handler(database, retention_days, admin_file=None, secure_cookies=False):
             mime = mimetypes.guess_type(str(target))[0] or "application/octet-stream"
             if target.suffix == ".js":
                 mime = "text/javascript"
+            elif target.suffix == ".glb":
+                mime = "model/gltf-binary"
             self.send_response(200)
             if relative.startswith("admin."):
                 self.send_header("Cache-Control", "no-store")
