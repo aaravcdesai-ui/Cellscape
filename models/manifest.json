@@ -1,1 +1,4 @@
-{}
+{
+  "plant": { "file": "plant.glb", "credit": "Cellscape (Blender build script)" },
+  "animal": { "file": "animal.glb", "credit": "Cellscape (Blender build script)" }
+}

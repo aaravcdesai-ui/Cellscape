@@ -28,3 +28,7 @@ admin.json
 
 # Separate public hosting checkout (contains only the sanitized frontend).
 sites/cellscape-public/
+
+# Editable Blender scenes from scripts/blender/build_models.py --blend (the GLBs are the shipped output)
+models/*.blend
+models/*.blend1
