@@ -529,6 +529,9 @@ async function upgradeToGlb(kind) {
     disposeModel();
     install(upgraded, kind, false);
     rig.set(spread);
+    // fitToBox only matches width and floor, so frame the new shape, unless the visitor is
+    // already focused on one structure.
+    if (!focusedView && !isolated) fit(true);
     applySelection();
     host.dataset.modelSource = 'glb';
   } catch (error) {

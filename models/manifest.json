@@ -1,4 +1,30 @@
 {
-  "plant": { "file": "plant.glb", "credit": "Cellscape (Blender build script)" },
-  "animal": { "file": "animal.glb", "credit": "Cellscape (Blender build script)" }
+  "plant": {
+    "file": "plant.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "animal": {
+    "file": "animal.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "leukocyte": {
+    "file": "leukocyte.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "neuron": {
+    "file": "neuron.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "epithelial": {
+    "file": "epithelial.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "bacteria": {
+    "file": "bacteria.glb",
+    "credit": "Cellscape (Blender build script)"
+  },
+  "muscle": {
+    "file": "muscle.glb",
+    "credit": "Cellscape (Blender build script)"
+  }
 }
