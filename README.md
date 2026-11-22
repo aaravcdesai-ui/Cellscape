@@ -2,7 +2,7 @@
 
 Explore cell biology through interactive 3D models, guided lessons, and quizzes.
 
-**[Open the website](https://aaravcdesai-ui.github.io/Cellscape/)** · **[Give feedback](https://docs.google.com/forms/d/e/1FAIpQLScB47LlYJ65J61OxtcgeM8RBIHqqAtnVqTZnHFuAJve-Kru_A/viewform)**
+**[Open the website](https://cellscapes.netlify.app)** · **[Give feedback](https://docs.google.com/forms/d/e/1FAIpQLScB47LlYJ65J61OxtcgeM8RBIHqqAtnVqTZnHFuAJve-Kru_A/viewform)**
 
 ## Features
 
