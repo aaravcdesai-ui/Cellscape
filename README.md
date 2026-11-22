@@ -2,7 +2,7 @@
 
 Explore cell biology through interactive 3D models, guided lessons, and quizzes.
 
-**[Open the website](https://cellscape-cell-atlas.arcane-heron-5162.chatgpt.site)** · **[Give feedback](https://docs.google.com/forms/d/e/1FAIpQLScB47LlYJ65J61OxtcgeM8RBIHqqAtnVqTZnHFuAJve-Kru_A/viewform)**
+**[Open the website](https://aaravcdesai-ui.github.io/Cellscape/)** · **[Give feedback](https://docs.google.com/forms/d/e/1FAIpQLScB47LlYJ65J61OxtcgeM8RBIHqqAtnVqTZnHFuAJve-Kru_A/viewform)**
 
 ## Features
 
@@ -65,4 +65,4 @@ node tests/experiment-model.mjs
 node tests/glb-parts.mjs
 ```
 
-`python3 scripts/build_public.py` creates a practice-only `_site/` folder, excluding the backend, admin dashboard, and private data. It also adds a content hash (`?v=…`) to every script and stylesheet URL, so browsers pick up changes automatically; don't add version numbers by hand. Add `--minify` to shrink scripts and stylesheets with [esbuild](https://esbuild.github.io/) (install it first with `npm install -g esbuild@0.25.0`); the GitHub workflows do this automatically. The manual GitHub Pages workflow uses this build; the live beta is hosted separately through Sites. GitHub pushes do not automatically redeploy it. Online answer saving requires a separate backend deployment; see the [hosting notes](backend/README.md#online-hosting-is-separate).
+`python3 scripts/build_public.py` creates a practice-only `_site/` folder, excluding the backend, admin dashboard, and private data. It also adds a content hash (`?v=…`) to every script and stylesheet URL, so browsers pick up changes automatically; don't add version numbers by hand. Add `--minify` to shrink scripts and stylesheets with [esbuild](https://esbuild.github.io/) (install it first with `npm install -g esbuild@0.25.0`); the GitHub workflows do this automatically. Netlify runs this build (see `netlify.toml`) and redeploys the live site on every push to `main`, with preview links for pull requests. The manual GitHub Pages workflow publishes the same build as a backup. Online answer saving requires a separate backend deployment; see the [hosting notes](backend/README.md#online-hosting-is-separate).
