@@ -539,11 +539,41 @@ async function upgradeToGlb(kind) {
   }
 }
 
+// The GLB (1–2 MB) waits so it doesn't compete with the first page load: it starts once the
+// page has loaded and the browser is idle, or as soon as the visitor touches the viewer or
+// picks another specimen. With Data Saver or a slow connection it waits for that interaction.
+let glbAllowed = false,
+  builtOnce = false;
+
+function allowGlb() {
+  if (glbAllowed) return;
+  glbAllowed = true;
+  if (currentKind && !lessonMode && host.dataset.modelSource === 'procedural') upgradeToGlb(currentKind);
+}
+
+for (const type of ['pointerdown', 'wheel', 'keydown', 'touchstart']) host.addEventListener(type, allowGlb, {
+  once: true,
+  passive: true
+});
+{
+  const connection = navigator.connection,
+    slow = connection && (connection.saveData || /2g|3g/.test(connection.effectiveType || ''));
+  const whenIdle = () => setTimeout(() => (window.requestIdleCallback || (f => f()))(allowGlb, {
+    timeout: 3000
+  }), 1500);
+  if (!slow) document.readyState === 'complete' ? whenIdle() : addEventListener('load', whenIdle, {
+    once: true
+  });
+}
+
 function build(kind) {
   disposeModel();
   install(buildCellModel(kind), kind, true);
   host.dataset.modelSource = 'procedural';
-  if (!lessonMode) upgradeToGlb(kind);
+  // Picking another specimen is an interaction too.
+  if (builtOnce && !lessonMode) glbAllowed = true;
+  builtOnce = true;
+  if (!lessonMode && glbAllowed) upgradeToGlb(kind);
   else glbRequest++;
 }
 
@@ -1053,6 +1083,8 @@ function endLesson() {
   if (lessonTrail) lessonTrail.visible = false;
   for (const [object, scale] of waterBases) object.scale.copy(scale);
   waterBases.clear();
+  // A cell first built inside a lesson stays procedural there; upgrade it back in the atlas.
+  if (glbAllowed && host.dataset.modelSource === 'procedural') upgradeToGlb(currentKind);
 }
 
 function setLesson({

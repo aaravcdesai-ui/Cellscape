@@ -35,7 +35,7 @@ SPECIMENS = [
 ]
 # Ship only the optimized WebP files; the PNG masters stay in the repo (see scripts/optimize_images.py).
 ASSETS = (
-    ["assets/organelles/nucleus.webp"]
+    ["assets/organelles/nucleus.webp", "assets/icon.svg", "assets/apple-touch-icon.png", "assets/social-card.jpg"]
     + [f"assets/specimens/{n}.webp" for n in SPECIMENS]
     + [f"assets/specimens/thumbs/{n}.webp" for n in SPECIMENS]
 )
