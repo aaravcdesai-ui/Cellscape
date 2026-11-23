@@ -71,7 +71,7 @@ header {
   height: 36px
 }
 .brand>span {
-  font: 9px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font: 11.5px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   letter-spacing: 1.5px;
   border-left: 1px solid #cccfc0;
   margin-left: 8px;
@@ -118,7 +118,7 @@ main {
   gap: 16px
 }
 .atlas-breadcrumb {
-  font-size: 10px;
+  font-size: 12px;
   color: #868577;
   display: flex;
   align-items: center;
@@ -175,13 +175,13 @@ input {
 .rail-title {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 11.5px;
   letter-spacing: 1.3px;
   color: #7b806f;
   padding: 0 5px
 }
 .rail-title span {
-  font-size: 9px;
+  font-size: 11.5px;
   letter-spacing: 0;
   color: #9c9f91
 }
@@ -202,6 +202,10 @@ input {
   padding: 10px 8px;
   font-size: 12px
 }
+/* Rows grow with their text instead of squeezing to fit the scrolling list. */
+.tabs {
+  grid-auto-rows: max-content
+}
 .tabs button.active {
   background: #e7ebdc;
   border-color: #d5ddc7;
@@ -209,7 +213,7 @@ input {
 }
 .tabs small {
   display: block;
-  font-size: 9px;
+  font-size: 11.5px;
   color: #8a8e7d;
   margin-top: 5px
 }
@@ -248,7 +252,7 @@ input {
   top: 5px
 }
 .rail-hint {
-  font-size: 9px;
+  font-size: 13px;
   color: #9b9d8d;
   margin: 8px 5px 12px
 }
@@ -300,7 +304,7 @@ button.active .row-arrow {
   opacity: 1
 }
 .rail-bottom {
-  font-size: 8px;
+  font-size: 11px;
   color: #939684;
   line-height: 2.2;
   border-top: 1px solid var(--line);
@@ -337,7 +341,7 @@ button.active .row-arrow {
   gap: 15px
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 500;
   letter-spacing: 1.4px;
   color: #888a77;
@@ -356,12 +360,12 @@ p {
   margin: 0 0 8px
 }
 .specimen-title>div>p:last-child {
-  font-size: 10px;
+  font-size: 12px;
   color: #888b7b;
   margin: 0
 }
 .plate-number {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.5px;
   padding-top: 5px;
   color: #9a9a87;
@@ -370,7 +374,7 @@ p {
 .diagram-heading {
   display: flex;
   justify-content: space-between;
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.1px;
   color: #9a9e88;
   order: 1;
@@ -424,12 +428,12 @@ p {
   font-size: 17px
 }
 .zoom-toolbar output {
-  font-size: 9px;
+  font-size: 11.5px;
   min-width: 39px;
   text-align: center
 }
 .zoom-toolbar #zoom-reset {
-  font-size: 10px;
+  font-size: 12px;
   width: 49px;
   border-left: 1px solid #dcded0
 }
@@ -440,14 +444,14 @@ p {
   right: 22px;
   margin: 0;
   color: #a0a28e;
-  font-size: 8px;
+  font-size: 13px;
   line-height: 1.5;
   text-align: right;
   max-width: 190px
 }
 .model-note {
   order: 5;
-  font-size: 8px;
+  font-size: 13px;
   color: #999b88;
   margin: 3px 0 0;
   line-height: 1.6
@@ -456,7 +460,7 @@ p {
   order: 6;
   display: flex;
   justify-content: space-between;
-  font-size: 8px;
+  font-size: 11px;
   color: #969b87;
   padding-top: 10px;
   border-top: 1px solid #e0e2d3;
@@ -464,7 +468,7 @@ p {
   gap: 12px
 }
 .diagram-foot>span:last-child {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: .8px
 }
 .specimen-callouts {
@@ -530,7 +534,7 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #858c78;
   border-bottom: 1px solid #dedfd3;
@@ -538,14 +542,14 @@ p {
   margin-bottom: 19px
 }
 .detail-top>span:last-child {
-  font-size: 6px;
+  font-size: 11px;
   color: #9c8aa6
 }
 #detail-icon {
   display: none
 }
 #detail-kicker {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.1px;
   color: #94819f;
   margin: 0 0 6px
@@ -574,7 +578,7 @@ p {
 }
 .function>span,
 .fact>span {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.2px;
   color: #9d8ba4
 }
@@ -601,7 +605,7 @@ p {
   border-top: 1px solid var(--line);
   margin-top: 20px;
   padding-top: 14px;
-  font-size: 8px;
+  font-size: 11px;
   color: #8b917e
 }
 .detail-nav button {
@@ -634,7 +638,7 @@ p {
 .closeup-heading {
   display: flex;
   justify-content: space-between;
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.1px;
   color: #8d8391
 }
@@ -674,7 +678,7 @@ p {
   min-height: 30px;
   padding: 5px 6px;
   text-align: left;
-  font-size: 9px;
+  font-size: 11.5px;
   line-height: 1.5;
   background: #f9f6ec;
   border: 1px solid #e0ddce;
@@ -685,7 +689,7 @@ p {
   text-align: center;
   width: 17px;
   margin-right: 4px;
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 500;
   color: #9983a6
 }
@@ -695,7 +699,7 @@ p {
   color: #684d7e
 }
 #closeup-note {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.8;
   color: #797e6e;
   margin: 10px 0 0;
@@ -713,7 +717,7 @@ body:not([data-page=atlas]) main {
   padding: 0 28px
 }
 .sources {
-  font-size: 9px;
+  font-size: 13px;
   color: #9b9d8a;
   margin: 16px 0 10px;
   line-height: 1.6
@@ -730,11 +734,11 @@ footer {
   justify-content: space-between;
   border-top: 1px solid #e4e3d6;
   padding: 12px 0 18px;
-  font-size: 9px;
+  font-size: 11.5px;
   color: #999d8d
 }
 footer span:last-child {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.2px
 }
 .quiz-actions {
@@ -822,7 +826,7 @@ footer span:last-child {
 }
 .journey-stages button span {
   display: block;
-  font-size: 9px;
+  font-size: 11.5px;
   color: #6b7d60;
   margin-bottom: 5px
 }
@@ -973,7 +977,7 @@ footer span:last-child {
   color: #6c815d
 }
 .compare-card .eyebrow {
-  font-size: 9px
+  font-size: 11.5px
 }
 .comparison-cards:has(.compare-card:only-child) {
   grid-template-columns: 1fr
@@ -1093,7 +1097,7 @@ footer span:last-child {
   }
   .journey-stages button {
     min-height: 65px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 10px
   }
   .journey-bottom {
@@ -1148,7 +1152,7 @@ footer span:last-child {
   font-size: 12px
 }
 .section-heading .eyebrow {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.4px;
   color: #908b96
 }
@@ -1164,7 +1168,7 @@ footer span:last-child {
   background: #80708c
 }
 .journey-stages button span {
-  font-size: 8px
+  font-size: 11px
 }
 .journey-stages .completed {
   background: #e8e4eb
@@ -1187,7 +1191,7 @@ footer span:last-child {
   border-radius: 3px
 }
 .lesson-note {
-  font-size: 10px;
+  font-size: 13px;
   color: #929680
 }
 .comparison-controls button {
@@ -1232,7 +1236,7 @@ footer span:last-child {
   border-radius: 3px
 }
 .quiz-actions button {
-  font-size: 10px
+  font-size: 12px
 }
 #quiz-area>p {
   font-size: 12px;
@@ -1253,7 +1257,7 @@ footer span:last-child {
   font-size: 11px
 }
 .zoom-hint {
-  font-size: 8px
+  font-size: 13px
 }
 @media(min-width:1600px) {
   .workspace {
@@ -1272,7 +1276,7 @@ footer span:last-child {
     max-height: 175px
   }
   #closeup-parts button {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 34px
   }
 }
@@ -1288,7 +1292,7 @@ footer span:last-child {
   }
   #organelle-list button {
     padding: 7px 5px;
-    font-size: 10px
+    font-size: 12px
   }
   .diagram-panel {
     padding: 20px 14px 14px
@@ -1301,7 +1305,7 @@ footer span:last-child {
   }
   .zoom-hint {
     max-width: 130px;
-    font-size: 7px;
+    font-size: 12px;
     right: 14px
   }
 }
@@ -1368,7 +1372,7 @@ footer span:last-child {
     order: 4;
     text-align: left;
     max-width: none;
-    font-size: 9px
+    font-size: 13px
   }
   .model-note {
     order: 5
@@ -1377,7 +1381,7 @@ footer span:last-child {
     display: none
   }
   .rail-bottom {
-    font-size: 7px
+    font-size: 11px
   }
   header {
     padding: 0 18px
@@ -1412,7 +1416,7 @@ footer span:last-child {
   }
   .brand>span {
     display: block;
-    font-size: 8px
+    font-size: 11px
   }
   header nav {
     width: 100%;
@@ -1430,7 +1434,7 @@ footer span:last-child {
     height: 51px
   }
   .atlas-breadcrumb {
-    font-size: 8px;
+    font-size: 11px;
     gap: 6px
   }
   .atlas-breadcrumb>strong {
@@ -1441,11 +1445,11 @@ footer span:last-child {
   }
   .view-tools {
     gap: 10px;
-    font-size: 10px
+    font-size: 12px
   }
   #quiz {
     min-height: 32px;
-    font-size: 9px;
+    font-size: 11.5px;
     padding: 7px 8px
   }
   .workspace {
@@ -1509,7 +1513,7 @@ footer span:last-child {
     border-radius: 3px;
     padding: 7px 10px;
     background: #faf9f3;
-    font-size: 10px
+    font-size: 12px
   }
   .row-arrow {
     display: none
@@ -1529,18 +1533,18 @@ footer span:last-child {
     font-size: 37px
   }
   .specimen-title .eyebrow {
-    font-size: 7px;
+    font-size: 11px;
     letter-spacing: 1.3px
   }
   .specimen-title>div>p:last-child {
-    font-size: 9px
+    font-size: 11.5px
   }
   .plate-number {
-    font-size: 7px
+    font-size: 11px
   }
   .diagram-heading {
     padding: 0 9px;
-    font-size: 6px;
+    font-size: 11px;
     margin: 3px 0
   }
   #cell-viewport {
@@ -1569,7 +1573,7 @@ footer span:last-child {
     width: 39px
   }
   .zoom-toolbar output {
-    font-size: 10px;
+    font-size: 12px;
     min-width: 44px
   }
   .zoom-toolbar #zoom-reset {
@@ -1577,11 +1581,11 @@ footer span:last-child {
   }
   .zoom-hint {
     margin-left: 9px;
-    font-size: 9px
+    font-size: 13px
   }
   .model-note {
     margin: 0 9px;
-    font-size: 8px
+    font-size: 13px
   }
   .diagram-foot {
     display: none
@@ -1605,7 +1609,7 @@ footer span:last-child {
     max-height: 230px
   }
   .detail-top {
-    font-size: 8px
+    font-size: 11px
   }
   #closeup-parts button {
     font-size: 12px;
@@ -1635,7 +1639,7 @@ footer span:last-child {
     grid-template-columns: repeat(3, 1fr)
   }
   .journey-stages button {
-    font-size: 10px
+    font-size: 12px
   }
   .comparison-cards {
     grid-template-columns: 1fr
@@ -1652,7 +1656,7 @@ footer span:last-child {
     font-size: 13px
   }
   .sources {
-    font-size: 8px
+    font-size: 13px
   }
   footer span:last-child {
     display: none
@@ -1690,7 +1694,7 @@ footer span:last-child {
     font-size: 11px
   }
   #closeup-parts button {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 32px
   }
 }
@@ -1726,7 +1730,7 @@ footer span:last-child {
   gap: 8px
 }
 .tabs small {
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.4;
   margin-top: 3px
 }
@@ -1764,7 +1768,7 @@ footer span:last-child {
   background: #faf8ef
 }
 .art-switch button {
-  font-size: 8px;
+  font-size: 11px;
   background: none;
   border: 0;
   padding: 5px 7px;
@@ -1818,12 +1822,12 @@ footer span:last-child {
   margin-bottom: 15px
 }
 .specimen-context>span {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1.2px;
   color: #9c8aa5
 }
 .specimen-context p {
-  font-size: 10px;
+  font-size: 13px;
   color: #8a8c7b;
   line-height: 1.8;
   margin: 7px 0 0
@@ -1841,7 +1845,7 @@ footer span:last-child {
   overflow: hidden
 }
 .anatomy-schematic {
-  font-size: 9px;
+  font-size: 11.5px;
   color: #80718c;
   border-top: 1px solid #dfddcf;
   margin-bottom: 10px
@@ -1866,12 +1870,12 @@ footer span:last-child {
   background: #f9f7ee
 }
 .specimen-notes span {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.2px;
   color: #8d8194
 }
 .specimen-notes p {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.8;
   color: #898c7b;
   margin: 7px 0 0
@@ -1894,7 +1898,7 @@ body:not([data-page=atlas]) .specimen-notes {
     overflow: visible
   }
   .tabs button {
-    font-size: 10px
+    font-size: 12px
   }
   .specimen-thumb {
     width: 30px
@@ -1919,7 +1923,7 @@ body:not([data-page=atlas]) .specimen-notes {
     min-width: 125px;
     flex: none;
     justify-content: flex-start;
-    font-size: 10px;
+    font-size: 12px;
     padding: 5px 8px
   }
   .specimen-thumb {
@@ -1937,7 +1941,7 @@ body:not([data-page=atlas]) .specimen-notes {
   }
   .art-switch button {
     padding: 4px 6px;
-    font-size: 8px
+    font-size: 11px
   }
   .image-hotspots .image-label {
     font-size: 15px;
@@ -2033,7 +2037,7 @@ body:not([data-page=atlas]) .specimen-notes {
   border: 1px solid #d7cfbc;
   background: #faf6e9e8;
   color: #5f5465;
-  font: 10px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font: 12px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   padding: 4px 8px;
   border-radius: 3px;
   white-space: nowrap;
@@ -2063,7 +2067,7 @@ body:not([data-page=atlas]) .specimen-notes {
   display: flex
 }
 .three-tools button {
-  font-size: 9px;
+  font-size: 11.5px;
   min-height: 29px;
   padding: 5px 9px;
   border: 1px solid #d9d7c7;
@@ -2079,11 +2083,11 @@ body:not([data-page=atlas]) .specimen-notes {
   position: static;
   order: 4;
   text-align: left;
-  font-size: 8px;
+  font-size: 13px;
   max-width: none
 }
 .diagram-panel:has(#cell-viewport[data-mode="3d"]) .model-note {
-  font-size: 8px
+  font-size: 13px
 }
 .sr-only {
   position: absolute;
@@ -2114,23 +2118,23 @@ body:not([data-page=atlas]) .specimen-notes {
     margin: 0 9px
   }
   .three-tools button {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 36px;
     padding: 6px 8px
   }
   .three-label {
-    font-size: 9px;
+    font-size: 11.5px;
     padding: 4px 6px
   }
   .three-label:not(.selected) {
     display: none
   }
   .diagram-panel:has(#cell-viewport[data-mode="3d"]) .zoom-hint {
-    font-size: 9px;
+    font-size: 13px;
     line-height: 1.8
   }
   .art-switch button {
-    font-size: 8px;
+    font-size: 11px;
     padding: 4px 6px
   }
 }
@@ -2206,7 +2210,7 @@ footer nav a {
   max-width: 155px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.5;
   padding: 6px 9px;
@@ -2243,12 +2247,12 @@ footer nav a {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.3px;
   color: #7c8270
 }
 .profile-heading button {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
   border: 0;
   background: transparent;
@@ -2290,7 +2294,7 @@ footer nav a {
 }
 .profile-observation>span:first-child {
   display: block;
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.2px;
   margin-bottom: 4px;
   color: #8b8e7c
@@ -2315,7 +2319,7 @@ footer nav a {
     height: 500px
   }
   .three-label {
-    font-size: 10px;
+    font-size: 12px;
     max-width: 140px
   }
 }
@@ -2326,7 +2330,7 @@ footer nav a {
   }
   .three-label {
     max-width: 135px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 5px 8px
   }
   .three-tools {
@@ -2347,7 +2351,7 @@ footer nav a {
     grid-template-columns: 92px 1fr
   }
   .profile-heading {
-    font-size: 9px
+    font-size: 11.5px
   }
 }
 
@@ -2370,7 +2374,7 @@ footer nav a {
   margin: 0 0 23px
 }
 .cell-fun-fact-label {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1.4px;
   color: #737d59;
   display: flex;
@@ -2393,7 +2397,7 @@ footer nav a {
   margin: 0 0 10px
 }
 .cell-fun-fact a {
-  font-size: 10px;
+  font-size: 13px;
   color: #756085;
   text-underline-offset: 3px
 }
@@ -2610,7 +2614,7 @@ footer nav a {
     font-size: 11px
   }
   .journey-study .eyebrow {
-    font-size: 9px
+    font-size: 11.5px
   }
   .cargo-state dl>div {
     grid-template-columns: 92px 1fr
@@ -2692,7 +2696,7 @@ body[data-page=lab] #comparison {
   color: #7b6787
 }
 .lesson-3d-hint {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.8;
   color: #858b75;
   padding: 9px 20px;
@@ -2749,7 +2753,7 @@ body[data-page=lab] #comparison {
   margin-top: 18px
 }
 #lab-block-control p {
-  font-size: 10px;
+  font-size: 13px;
   margin-bottom: 0
 }
 #lab-predictions {
@@ -2800,7 +2804,7 @@ body[data-page=lab] #comparison {
   color: #647556
 }
 #lab-3d-status {
-  font-size: 10px;
+  font-size: 13px;
   color: #90967e
 }
 #lab-explain {
@@ -2962,7 +2966,7 @@ body[data-page=lab] #comparison {
   line-height: 1
 }
 .studio-nav small {
-  font-size: 9px
+  font-size: 11.5px
 }
 .studio-nav button:hover {
   background: #ece9df;
@@ -3016,13 +3020,13 @@ header nav button {
   max-width: none;
   text-align: left;
   margin: 0 10px;
-  font-size: 10px
+  font-size: 13px
 }
 .diagram-panel .diagram-foot {
   display: none
 }
 .diagram-panel>.model-note:not(#comparison-highlight) {
-  font-size: 10px;
+  font-size: 13px;
   margin: 0 10px
 }
 .diagram-panel .three-tools button {
@@ -3036,11 +3040,11 @@ header nav button {
   font: italic 13px Georgia, serif
 }
 .art-switch button {
-  font-size: 10px;
+  font-size: 12px;
   padding: 6px 8px
 }
 .plate-number {
-  font-size: 9px
+  font-size: 11.5px
 }
 #description,
 .function p,
@@ -3050,21 +3054,21 @@ header nav button {
   color: #69725f
 }
 .detail-top {
-  font-size: 9px;
+  font-size: 11.5px;
   line-height: 1.5
 }
 .detail-top>span:last-child {
-  font-size: 8px
+  font-size: 11px
 }
 #detail-kicker {
-  font-size: 9px
+  font-size: 11.5px
 }
 #detail-title {
   font-size: 32px;
   margin-top: 5px
 }
 .profile-heading {
-  font-size: 9px
+  font-size: 11.5px
 }
 #structure-profile dl,
 .profile-observation,
@@ -3077,7 +3081,7 @@ header nav button {
 .function>span,
 .fact>span,
 .closeup-heading {
-  font-size: 9px
+  font-size: 11.5px
 }
 .habitat-card {
   border: 1px solid #ddd8c9;
@@ -3098,7 +3102,7 @@ header nav button {
   color: #68725b
 }
 .habitat-card>span {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #8b8c7b
 }
@@ -3138,10 +3142,10 @@ body[data-quiz=true] .specimen-actions {
   color: #47573c
 }
 .desk-heading .eyebrow {
-  font-size: 8px
+  font-size: 11px
 }
 .desk-page {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #979482;
   white-space: nowrap
@@ -3166,7 +3170,7 @@ body[data-quiz=true] .specimen-actions {
 }
 .tissue-tiles button>span {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   padding: 7px 3px
 }
 .tissue-tiles .add-tissue {
@@ -3176,7 +3180,7 @@ body[data-quiz=true] .specimen-actions {
   font-size: 25px
 }
 .tissue-tiles .add-tissue span {
-  font-size: 10px;
+  font-size: 12px;
   color: #7e8370
 }
 .study-desk p:not(.eyebrow) {
@@ -3472,7 +3476,7 @@ body[data-quiz=true] .specimen-actions {
   color: #778066
 }
 .comparison-study h4 {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #8b7695;
@@ -3733,7 +3737,7 @@ body[data-quiz=true] .specimen-actions {
     height: 64px
   }
   .tissue-tiles button>span {
-    font-size: 9px
+    font-size: 11.5px
   }
   .compare-pair img {
     width: 60px;
@@ -3860,7 +3864,7 @@ body[data-quiz=true] .specimen-actions {
   background: #f0eddf;
   border: 1px solid #d8d1be;
   border-radius: 4px;
-  font-size: 10px
+  font-size: 12px
 }
 #anatomy-animation-steps button[aria-pressed=true] {
   background: #e9dff0;
@@ -3885,7 +3889,7 @@ body[data-quiz=true] .specimen-actions {
   border-radius: 4px
 }
 .anatomy-playback span {
-  font-size: 9px;
+  font-size: 11.5px;
   color: #8c8c76;
   margin-left: auto
 }
@@ -3908,7 +3912,7 @@ body[data-quiz=true] .specimen-actions {
     line-height: 1.5
   }
   #anatomy-animation-caption {
-    font-size: 10px
+    font-size: 13px
   }
   .three-tools {
     flex-wrap: wrap
@@ -4107,7 +4111,7 @@ body[data-quiz=true] #guided-discovery {
   color: #626b55
 }
 .tabs small {
-  font-size: 10px
+  font-size: 12px
 }
 #organelle-list button {
   font-size: 12px
@@ -4174,7 +4178,7 @@ body[data-quiz=true] #guided-discovery {
   }
   .studio-nav small {
     display: block;
-    font-size: 9px
+    font-size: 11.5px
   }
   .studio-nav button>span {
     font-size: 17px
@@ -4338,7 +4342,7 @@ body[data-quiz=true] #guided-discovery {
   }
   #anatomy-animation-steps button {
     flex: 1;
-    font-size: 10px
+    font-size: 12px
   }
   #anatomy-animation-caption {
     font-size: 12px
