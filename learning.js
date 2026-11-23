@@ -530,7 +530,7 @@ showJourney();
 function setView(view) {
   document.body.dataset.page = view;
   window.Cell3D?.endLesson();
-  history.replaceState(null, '', view === 'atlas' ? '#atlas' : view === 'journey' ? '#protein-journey' : view === 'lab' ? '#virtual-lab' : '#comparison');
+  history.replaceState(null, '', view === 'atlas' ? atlasHash() : view === 'journey' ? '#protein-journey' : view === 'lab' ? '#virtual-lab' : '#comparison');
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
   pauseJourney();
   window.CellLab?.onView(view);
@@ -549,7 +549,48 @@ document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
     behavior: 'instant'
   })
 });
-setView(location.hash === '#protein-journey' ? 'journey' : location.hash === '#virtual-lab' ? 'lab' : location.hash === '#comparison' ? 'compare' : 'atlas');
+const viewRoutes = {
+  '#protein-journey': 'journey',
+  '#virtual-lab': 'lab',
+  '#comparison': 'compare'
+};
+
+// Opens #atlas/<cell>/<structure> links; unknown cells or structures fall back gracefully.
+function applyAtlasLink(hash) {
+  const [, kind, id] = /^#atlas\/([\w-]+)(?:\/([\w-]+))?\/?$/.exec(hash) || [];
+  if (!kind || !specimenCatalog[kind]) return false;
+  if (kind !== type) chooseSpecimen(kind);
+  if (id && specimenCatalog[kind].ids.includes(id) && id !== selected) {
+    selected = id;
+    render();
+  }
+  return true;
+}
+applyAtlasLink(location.hash);
+setView(viewRoutes[location.hash] || 'atlas');
+// A link pasted into the same tab only changes the hash; in-page anchors such as the skip link
+// are not routes and are ignored.
+addEventListener('hashchange', () => {
+  if (viewRoutes[location.hash]) setView(viewRoutes[location.hash]);
+  else if (applyAtlasLink(location.hash) || location.hash === '#atlas') {
+    if (quiz) stopQuiz();
+    setView('atlas');
+    $('#cell-details').scrollTop = 0;
+  }
+});
+$('#share-structure').onclick = async () => {
+  const url = location.href.split('#')[0] + atlasHash(),
+    status = $('#share-status');
+  try {
+    await navigator.clipboard.writeText(url);
+    status.textContent = 'Link copied';
+  } catch {
+    window.prompt('Copy this link:', url);
+    status.textContent = '';
+  }
+  clearTimeout(status.timer);
+  status.timer = setTimeout(() => status.textContent = '', 2500);
+};
 let comparisonFilter = 'all';
 
 function renderComparison() {

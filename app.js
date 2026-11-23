@@ -73,6 +73,13 @@ function render() {
   window.CellStudio?.refresh();
   if (focusId) $(`#cell [data-id="${focusId}"]`)?.focus();
   if (focusSelect) $(`[data-select="${focusSelect}"]`)?.focus();
+  // Keep the address bar a shareable link to what is on screen.
+  if (document.body.dataset.page === 'atlas' && !quiz && location.hash !== atlasHash()) history.replaceState(null, '', atlasHash());
+}
+
+// Shareable links: #atlas/<cell>/<structure>, e.g. #atlas/neuron/axon.
+function atlasHash() {
+  return `#atlas/${type}/${selected}`
 }
 
 function select(id) {
@@ -136,7 +143,7 @@ let questions = [],
   hintsUsed = 0,
   assisted = 0,
   usedHelp = false;
-const explorationPanels = '#cell-fun-fact, aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, #closeup, #structure-profile, .specimen-context, .detail-nav';
+const explorationPanels = '#cell-fun-fact, .share-structure, aside > .function, aside > .fact, #description, #detail-kicker, #detail-icon, #closeup, #structure-profile, .specimen-context, .detail-nav';
 
 function stopQuiz() {
   quiz = false;

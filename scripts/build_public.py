@@ -23,6 +23,7 @@ FILES = [
     "investigations.js",
     "discovery.js",
     "glb-parts.js",
+    "manifest.webmanifest",
 ]
 SPECIMENS = [
     "plant",
@@ -35,7 +36,8 @@ SPECIMENS = [
 ]
 # Ship only the optimized WebP files; the PNG masters stay in the repo (see scripts/optimize_images.py).
 ASSETS = (
-    ["assets/organelles/nucleus.webp", "assets/icon.svg", "assets/apple-touch-icon.png", "assets/social-card.jpg"]
+    ["assets/organelles/nucleus.webp", "assets/icon.svg", "assets/apple-touch-icon.png", "assets/social-card.jpg",
+     "assets/icon-192.png", "assets/icon-512.png", "assets/icon-maskable-512.png"]
     + [f"assets/specimens/{n}.webp" for n in SPECIMENS]
     + [f"assets/specimens/thumbs/{n}.webp" for n in SPECIMENS]
 )
@@ -68,7 +70,7 @@ window.QuizStore={
 PRIVACY = """<section id="privacy"><p class="eyebrow">PUBLIC LEARNING EDITION</p><h2>Privacy</h2>
 <p>This public version is practice only. Quiz answers, scores, hint requests, experiment predictions, and lesson checks stay in your open page. They are not sent to an answer server. There are no student accounts or public admin dashboard.</p>
 <p>Notebook text, saved structures, and protein-journey lesson checks are kept in this browser’s local storage on this device so a reload does not lose them. They are never sent anywhere. Use “Clear saved work” in the notebook to delete notes and saved structures, especially on a shared computer. Review priorities stay in browser memory and reset when you reload or close the page. Images you add are opened locally in your browser and are never uploaded. Snapshot and model downloads are generated in your browser.</p>
-<p>The application does not use analytics, advertising, tracking pixels, or application login cookies, and it uses browser local storage only for the study work described above. Artwork, scripts, and styles are served from the same host. Image generation happened during development; visiting this site does not send prompts or answers to an AI service.</p>
+<p>The application does not use analytics, advertising, tracking pixels, or application login cookies, and it uses browser local storage only for the study work described above. So the site works offline, your browser also keeps a copy of the site’s own pages, scripts, artwork, and any 3D models you open; this copy holds no answers or personal data. Artwork, scripts, and styles are served from the same host. Image generation happened during development; visiting this site does not send prompts or answers to an AI service.</p>
 <p>The hosting provider receives ordinary requests needed to deliver the website and may maintain security or access logs under its own policies. External reference sites receive a request only when you follow their links. Outgoing links request that browsers omit referrer information.</p>
 <p><strong>Optional feedback:</strong> “Give feedback” opens a separate Google Form in a new tab. The form asks about your experience using Cellscape and does not request your name or email address. Your feedback is sent to the site operator through Google Forms only when you submit it. Please avoid personal information in your comments. Google processes visits and submissions under its <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
 <p>The cell models, illustrations, and experiments are simplified teaching aids, not measured reconstructions or clinical tools. Tissue previews are original schematics, not microscope photographs.</p></section>"""
@@ -135,6 +137,45 @@ def stamp_versions(destination):
                 path.read_text(),
             )
         )
+    return hashes, art_version
+
+
+SW_REGISTER = "<script>if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>"
+
+
+def write_service_worker(destination, hashes, art_version):
+    """Generate sw.js, which precaches the exact versioned URLs this release serves.
+
+    3D models are left out of the precache (they are large); they are cached when first viewed.
+    The cache name is a hash of every file, so each release replaces the previous cache.
+    """
+    urls, whole = [], hashlib.sha256()
+    for path in sorted(p for p in destination.rglob("*") if p.is_file()):
+        rel = path.relative_to(destination).as_posix()
+        whole.update(rel.encode())
+        whole.update(path.read_bytes())
+        if rel.startswith(".") or rel.endswith(".glb"):
+            continue
+        if rel == "index.html":
+            urls.append("./")
+        elif rel in hashes and rel.endswith((".js", ".css")):
+            urls.append(f"{rel}?v={hashes[rel]}")
+        elif rel.endswith(".webp") or rel == "models/manifest.json":
+            urls.append(f"{rel}?v={art_version}")
+        else:
+            urls.append(rel)
+    template = (ROOT / "scripts/sw-template.js").read_text()
+    (destination / "sw.js").write_text(
+        template.replace("'__CACHE__'", json.dumps("cellscape-" + whole.hexdigest()[:12])).replace(
+            "__PRECACHE__", json.dumps(urls, indent=1)
+        )
+    )
+    for page in ("index.html", "about.html"):
+        path = destination / page
+        text, added = re.subn(r"</head>", SW_REGISTER + "\n</head>", path.read_text(), count=1)
+        if not added:
+            raise ValueError(f"Could not add service worker registration to {page}")
+        path.write_text(text)
 
 
 def require_esbuild():
@@ -218,7 +259,8 @@ def build(destination, minified=False):
         )
     if minified:
         minify(destination)  # before hashing, so hashes match the files actually served
-    stamp_versions(destination)
+    hashes, art_version = stamp_versions(destination)
+    write_service_worker(destination, hashes, art_version)
     (destination / ".nojekyll").touch()
     (destination / ".cellscape-public-build").write_text(
         "Practice-only static release\n"
@@ -228,7 +270,7 @@ def build(destination, minified=False):
         + ASSETS
         + MODELS
         + VENDOR
-        + ["quiz-store.js", ".nojekyll", ".cellscape-public-build"]
+        + ["quiz-store.js", "sw.js", ".nojekyll", ".cellscape-public-build"]
     )
     actual = {
         p.relative_to(destination).as_posix()

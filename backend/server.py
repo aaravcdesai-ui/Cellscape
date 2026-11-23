@@ -36,6 +36,7 @@ PUBLIC = {
     "lab-data.js",
     "studio.js",
     "glb-parts.js",
+    "manifest.webmanifest",
 }
 
 

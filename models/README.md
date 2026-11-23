@@ -15,6 +15,15 @@ blender -b --factory-startup --python scripts/blender/build_models.py           
 blender -b --factory-startup --python scripts/blender/build_models.py -- muscle  # just one
 ```
 
+The script writes uncompressed files. Compress them before committing (Node.js required);
+`-kn -km -ke` keep every part's name, material and `structureId`, which clicking and labels need:
+
+```bash
+for k in plant animal leukocyte neuron epithelial bacteria muscle; do
+  npx gltfpack@1.0.0 -i models/$k.glb -o models/$k.glb -cc -ce ext -kn -km -ke
+done
+```
+
 Add `--blend` to also save editable `models/<specimen>.blend` files (ignored by Git) if you want
 to refine a model by hand in Blender; export the result as GLB over the generated one.
 Output is seeded, so rebuilding without changes gives the same model.
@@ -72,7 +81,7 @@ leaves out still appear in the list but show nothing in 3D.
 - **Keep it light**: aim for under ~300k triangles and a few MB. Compress before adding:
 
   ```bash
-  npx gltfpack -i plant-raw.glb -o plant.glb -cc -tc
+  npx gltfpack@1.0.0 -i plant-raw.glb -o plant.glb -cc -ce ext -kn -km -ke -tc
   ```
 
   (`gltfpack` uses meshopt compression, which the site decodes; Draco is not supported.)

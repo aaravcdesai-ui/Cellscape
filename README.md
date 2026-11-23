@@ -11,6 +11,8 @@ Explore cell biology through interactive 3D models, guided lessons, and quizzes.
 - A protein’s journey, guided discovery, and experiments comparing protein transport and water balance.
 - Quizzes with hints, explanations, and review of missed concepts.
 - Cell comparisons, a notebook, image workspace, snapshots, and 3D model exports.
+- Shareable links to any cell and structure, such as `#atlas/neuron/axon` ("Copy link to this structure").
+- Works offline after the first visit, and can be installed as an app (public site only).
 - A local admin dashboard for anonymous answers, scores, and concepts needing review.
 
 The live website has **practice-only quizzes** and no admin dashboard. Run the backend locally to save quiz results. Models and experiments are simplified teaching aids, not measured reconstructions.
