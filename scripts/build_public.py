@@ -255,7 +255,7 @@ def build(destination, minified=False):
     (destination / "about.html").write_text(about)
     with (destination / "style.css").open("a") as out:
         out.write(
-            "\n.public-edition{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:0;padding:9px 16px;border-bottom:1px solid #dedfcf;background:#edf0e1;color:#63724f;font:11px/1.6 system-ui,sans-serif}.public-edition strong{font-weight:600;color:#4d603b}@media(max-width:650px){.public-edition{gap:4px 10px;font-size:10px}}\n"
+            "\n.public-edition{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:0;padding:9px 16px;border-bottom:1px solid #dedfcf;background:#edf0e1;color:#63724f;font:12px/1.6 system-ui,sans-serif}.public-edition strong{font-weight:600;color:#4d603b}@media(max-width:650px){.public-edition{gap:4px 10px;font-size:11px}}\n"
         )
     if minified:
         minify(destination)  # before hashing, so hashes match the files actually served
